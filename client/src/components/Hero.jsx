@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import groupPhoto from '../assets/group_photo.jpg';
 import './Hero.css';
 
 const Hero = () => {
@@ -20,22 +21,37 @@ const Hero = () => {
     return (
         <section className="hero">
             <div className="hero-overlay"></div>
-            <div className="container hero-content">
-                <div className="hero-text animate-fade-in">
+            <div className="container hero-container-split">
+
+                {/* Left: Text Content */}
+                <div className="hero-text-side animate-fade-in">
                     <h1 className="title">GareebGang</h1>
-                    <p className="subtitle">A student-driven community from Watumull College, Ulhasnagar</p>
+                    <p className="subtitle">Watumull College's Finest</p>
                     <div className="tagline">Memories &bull; Trips &bull; Brotherhood</div>
 
                     <div className="dynamic-text-wrapper">
                         <p className="dynamic-text" key={textIndex}>{texts[textIndex]}</p>
                     </div>
                 </div>
+
+                {/* Right: Crazy 3D Image Card */}
+                <div className="hero-image-side">
+                    <div className="crazy-card-wrapper">
+                        <div className="crazy-card">
+                            <img src={groupPhoto} alt="GareebGang Squad" className="crazy-img" />
+                            <div className="crazy-border"></div>
+                        </div>
+                        {/* Decorative Elements */}
+                        <div className="deco-circle"></div>
+                        <div className="deco-dots"></div>
+                    </div>
+                </div>
+
             </div>
 
-            {/* Abstract Animated Background Elements */}
-            <div className="shape shape-1 animate-float"></div>
-            <div className="shape shape-2 animate-float" style={{ animationDelay: '1s' }}></div>
-            <div className="shape shape-3 animate-float" style={{ animationDelay: '2s' }}></div>
+            {/* Background Atmosphere */}
+            <div className="shape shape-1" style={{ top: '-10%', left: '-10%', filter: 'blur(100px)' }}></div>
+            <div className="shape shape-2" style={{ bottom: '-10%', right: '-10%', filter: 'blur(100px)' }}></div>
         </section>
     );
 };

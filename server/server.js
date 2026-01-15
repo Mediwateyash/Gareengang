@@ -13,7 +13,9 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection
-connectDB();
+connectDB().then(() => {
+  require('./seed')();
+});
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
