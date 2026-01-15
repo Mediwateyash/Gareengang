@@ -1,0 +1,66 @@
+.wip-section {
+    padding: 80px 0;
+    background-color: #151525;
+    /* Slightly darker */
+    text-align: center;
+}
+
+.wip-badge {
+    display: inline-block;
+    background: #FFD700;
+    color: #000;
+    font-weight: 800;
+    padding: 5px 15px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.wip-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.wip-desc {
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    color: #aaa;
+}
+
+.progress-container {
+    width: 100%;
+    max-width: 500px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    position: absolute;
+    left: 0;
+    animation: loading 2s infinite ease-in-out;
+    border-radius: 10px;
+}
+
+@keyframes loading {
+    0% {
+        transform: translateX(-100%);
+        width: 20%;
+    }
+
+    50% {
+        width: 50%;
+    }
+
+    100% {
+        transform: translateX(200%);
+        width: 20%;
+    }
+}
