@@ -19,7 +19,7 @@ const Leaders = () => {
                         <div className="leader-info">
                             <h3 className="leader-name">Diwate Yash</h3>
                             <p className="leader-title-marathi">अध्यक्ष (President)</p>
-                            <p className="leader-desc">The Visionary in Orange.</p>
+                            <p className="leader-desc">Watumull Mitra Mandal.</p>
                         </div>
                     </div>
 
