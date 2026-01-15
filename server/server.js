@@ -15,7 +15,9 @@ app.use(express.json());
 // Database Connection
 connectDB();
 
-// Basic Route
+// Routes
+app.use('/api/auth', require('./routes/auth'));
+
 app.get('/', (req, res) => {
   res.send('GareebGang API is running...');
 });
