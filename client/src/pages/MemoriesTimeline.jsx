@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import API_URL from '../config';
 
 const MemoriesTimeline = () => {
     const [memories, setMemories] = useState([]);
@@ -8,7 +9,7 @@ const MemoriesTimeline = () => {
     useEffect(() => {
         const fetchMemories = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/memories');
+                const res = await fetch(`${API_URL}/memories`);
                 const data = await res.json();
 
                 // Add displayDate formatted
@@ -69,126 +70,98 @@ const MemoriesTimeline = () => {
         <div className="memories-container">
             <style>
                 {`
-                    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+                    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600&display=swap');
 
                     :root {
+                        --deep-burgundy: #2c0e14;
+                        --rich-maroon: #4a192c;
+                        --soft-pink: #fce4ec;
                         --warm-gold: #ffd700;
                         --rose-gold: #e0bfb8;
-                        --deep-burgundy: #2c0e14;
-                        --soft-pink: #fce4ec;
-                        --text-primary: #fff0f5;
-                        --text-secondary: #e6e6e6;
-                        --card-bg: rgba(44, 14, 20, 0.7);
-                        --card-border: rgba(255, 215, 0, 0.3);
-                    }
-
-                    * {
-                        box-sizing: border-box;
+                        --text-light: #fff0f5;
+                        --card-bg: #fff;
+                        --card-border: #f8f9fa;
                     }
 
                     .memories-container {
-                        background-color: var(--deep-burgundy);
-                        background-image: linear-gradient(to bottom, #2c0e14, #4a1c24, #2c0e14);
-                        min-height: 100vh;
-                        padding: 4rem 2rem;
                         font-family: 'Outfit', sans-serif;
-                        color: var(--text-primary);
-                        overflow-x: hidden;
+                        background: radial-gradient(circle at center, var(--rich-maroon), var(--deep-burgundy));
+                        min-height: 100vh;
+                        color: var(--text-light);
+                        padding: 4rem 2rem;
                         position: relative;
+                        overflow-x: hidden;
                     }
 
-                    /* Animated Background Elements - Soft Bokeh/Hearts */
-                    .bg-shape {
-                        position: absolute;
-                        border-radius: 50%;
-                        filter: blur(60px);
-                        z-index: 0;
-                        animation: float 15s infinite ease-in-out;
-                        opacity: 0.4;
-                    }
-                    .shape-1 { width: 400px; height: 400px; background: #d81b60; top: -100px; left: -100px; animation-delay: 0s; }
-                    .shape-2 { width: 500px; height: 500px; background: #880e4f; bottom: 10%; right: -150px; animation-delay: -5s; }
-                    .shape-3 { width: 300px; height: 300px; background: #ffb74d; top: 40%; left: 20%; opacity: 0.2; animation-delay: -10s; }
-
-                    /* Floating Hearts */
+                    /* Floating Hearts Background */
                     .floating-heart {
                         position: absolute;
-                        color: rgba(255, 255, 255, 0.1);
+                        color: rgba(255, 255, 255, 0.05);
                         font-size: 2rem;
-                        animation: floatUp 10s linear infinite;
+                        animation: floatUp 15s infinite linear;
                         z-index: 0;
-                    }
-
-                    @keyframes float {
-                        0%, 100% { transform: translate(0, 0) scale(1); }
-                        50% { transform: translate(20px, -20px) scale(1.1); }
                     }
 
                     @keyframes floatUp {
-                        0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-                        50% { opacity: 0.5; }
-                        100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+                        0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+                        10% { opacity: 0.3; }
+                        90% { opacity: 0.3; }
+                        100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
                     }
 
-                    .content-wrapper {
-                        position: relative;
-                        z-index: 10;
-                    }
-
+                    /* Header */
                     .memories-header {
                         text-align: center;
-                        margin-bottom: 6rem;
+                        margin-bottom: 5rem;
+                        position: relative;
+                        z-index: 2;
+                        animation: fadeInDown 1.5s ease-out;
                     }
 
                     .memories-title {
                         font-family: 'Great Vibes', cursive;
                         font-size: 5rem;
-                        font-weight: 400;
                         color: var(--warm-gold);
                         margin-bottom: 0.5rem;
-                        text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-                        line-height: 1.2;
+                        text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
                     }
 
                     .memories-subtitle {
                         font-family: 'Playfair Display', serif;
-                        font-size: 1.3rem;
-                        color: var(--rose-gold);
+                        font-size: 1.5rem;
                         font-style: italic;
+                        color: var(--rose-gold);
                         letter-spacing: 1px;
-                        margin-bottom: 2rem;
                     }
 
                     .btn-back {
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 10px;
-                        padding: 10px 25px;
-                        border-radius: 30px;
-                        background: rgba(255, 255, 255, 0.1);
-                        border: 1px solid var(--card-border);
+                        display: inline-block;
+                        margin-top: 2rem;
+                        padding: 0.8rem 2rem;
+                        border: 1px solid var(--warm-gold);
                         color: var(--warm-gold);
                         text-decoration: none;
-                        font-family: 'Outfit', sans-serif;
-                        font-size: 0.9rem;
+                        border-radius: 50px;
                         transition: all 0.3s ease;
-                        backdrop-filter: blur(5px);
+                        font-size: 0.9rem;
                     }
 
                     .btn-back:hover {
-                        background: rgba(255, 215, 0, 0.1);
-                        box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
-                        transform: translateY(-2px);
+                        background: var(--warm-gold);
+                        color: var(--deep-burgundy);
+                        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
                     }
 
+                    /* Timeline */
                     .timeline {
                         position: relative;
-                        max-width: 900px;
+                        max-width: 1000px;
                         margin: 0 auto;
                         padding: 2rem 0;
+                        z-index: 2;
                     }
 
-                    /* The vertical line - Golden Thread */
+                    /* Golden Thread Line */
                     .timeline::after {
                         content: '';
                         position: absolute;
@@ -198,261 +171,200 @@ const MemoriesTimeline = () => {
                         bottom: 0;
                         left: 50%;
                         margin-left: -1px;
-                        box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+                        box-shadow: 0 0 10px var(--warm-gold);
                     }
 
-                    .memory-card-wrapper {
-                        padding: 20px 40px;
+                    .memory-card {
+                        padding: 10px 40px;
                         position: relative;
                         width: 50%;
                         box-sizing: border-box;
-                    }
-
-                    .memory-card-wrapper.left { left: 0; text-align: right; }
-                    .memory-card-wrapper.right { left: 50%; text-align: left; }
-
-                    /* Timeline Dots - Hearts */
-                    .timeline-dot {
-                        position: absolute;
-                        width: 24px;
-                        height: 24px;
-                        right: -52px;
-                        background: var(--deep-burgundy);
-                        border: 2px solid var(--warm-gold);
-                        top: 32px;
-                        border-radius: 50%; /* Or could be heart shape */
-                        z-index: 2;
-                        box-shadow: 0 0 10px var(--warm-gold);
-                        transition: all 0.4s ease;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        color: var(--warm-gold);
-                        font-size: 12px;
-                    }
-
-                    .memory-card-wrapper.right .timeline-dot { left: -52px; right: auto; }
-
-                    .memory-card-wrapper:hover .timeline-dot {
-                        background: var(--warm-gold);
-                        color: var(--deep-burgundy);
-                        transform: scale(1.2);
-                        box-shadow: 0 0 20px var(--warm-gold);
-                    }
-
-                    /* Timeline Connectors - Curved lines */
-                    .timeline-connector {
-                        position: absolute;
-                        height: 1px;
-                        width: 40px;
-                        background: var(--warm-gold);
-                        top: 44px;
-                        right: -40px;
-                        opacity: 0.4;
-                        transition: all 0.3s;
-                    }
-                    .memory-card-wrapper.right .timeline-connector {
-                        left: -40px;
-                        right: auto;
-                    }
-
-                    .memory-card-wrapper:hover .timeline-connector {
-                        opacity: 1;
-                        width: 52px;
-                    }
-
-                    /* Card Styles - Polaroid Vibe */
-                    .memory-card {
-                        background: #fff; /* Polaroid white */
-                        color: #333; /* Dark text for polaroid */
-                        border-radius: 4px;
-                        padding: 12px 12px 20px 12px; /* Polaroid padding */
-                        position: relative;
-                        overflow: hidden;
-                        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
                         opacity: 0;
-                        transform: translateY(50px) rotate(-1deg);
-                    }
-
-                    .memory-card-wrapper.right .memory-card {
-                        transform: translateY(50px) rotate(1deg);
+                        transform: translateY(50px);
+                        transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
                     }
 
                     .memory-card.visible {
                         opacity: 1;
-                        transform: translateY(0) rotate(-1deg);
-                    }
-                    .memory-card-wrapper.right .memory-card.visible {
-                        transform: translateY(0) rotate(1deg);
+                        transform: translateY(0);
                     }
 
-                    .memory-card:hover {
-                        transform: translateY(-10px) rotate(0deg) scale(1.02) !important;
-                        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-                        z-index: 10;
-                    }
+                    .left { left: 0; }
+                    .right { left: 50%; }
 
-                    .card-image-container {
-                        width: 100%;
-                        height: 220px;
-                        overflow: hidden;
-                        position: relative;
-                        background: #eee;
-                        border: 1px solid #ddd;
-                        margin-bottom: 1rem;
-                    }
-
-                    .card-image {
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                        transition: transform 0.8s ease;
-                        filter: sepia(0.2); /* Nostalgic feel */
-                    }
-
-                    .memory-card:hover .card-image {
-                        transform: scale(1.1);
-                        filter: sepia(0);
-                    }
-
-                    .card-date-badge {
+                    /* Heart Icons on Line */
+                    .memory-card::after {
+                        content: '♥';
                         position: absolute;
-                        top: 10px;
-                        right: 10px;
-                        background: rgba(255, 255, 255, 0.9);
-                        color: #333;
-                        font-family: 'Playfair Display', serif;
-                        font-size: 0.8rem;
-                        padding: 5px 10px;
-                        border-radius: 2px;
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-                        z-index: 2;
-                    }
-
-                    .card-content {
-                        padding: 0 0.5rem;
-                        text-align: center; /* Center text for polaroid feel */
-                    }
-
-                    .card-title {
-                        font-family: 'Great Vibes', cursive;
-                        font-size: 2rem;
-                        font-weight: 400;
-                        color: #2c0e14;
-                        margin: 0 0 0.5rem 0;
-                        line-height: 1.1;
-                    }
-
-                    .card-location {
-                        font-family: 'Outfit', sans-serif;
-                        font-size: 0.8rem;
-                        color: #888;
-                        margin-bottom: 0.8rem;
+                        width: 30px;
+                        height: 30px;
+                        background: var(--deep-burgundy);
+                        border: 2px solid var(--warm-gold);
+                        color: var(--warm-gold);
+                        border-radius: 50%;
+                        top: 25px;
+                        z-index: 1;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        gap: 5px;
+                        font-size: 14px;
+                        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+                    }
+
+                    .left::after { right: -17px; }
+                    .right::after { left: -17px; }
+
+                    /* Polaroid Content */
+                    .content {
+                        background: var(--card-bg);
+                        padding: 15px 15px 40px 15px; /* Extra bottom padding for caption like polaroid */
+                        position: relative;
+                        border-radius: 2px;
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                        transform: rotate(-2deg);
+                        transition: transform 0.3s ease;
+                    }
+
+                    .right .content { transform: rotate(2deg); }
+
+                    .content:hover {
+                        transform: rotate(0) scale(1.02);
+                        z-index: 10;
+                        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+                    }
+
+                    .memory-img {
+                        width: 100%;
+                        height: auto;
+                        display: block;
+                        border: 1px solid #ddd;
+                        filter: sepia(0.2); 
+                        transition: filter 0.3s ease;
+                    }
+
+                    .content:hover .memory-img {
+                        filter: sepia(0);
+                    }
+
+                    .date-badge {
+                        position: absolute;
+                        top: -10px;
+                        background: var(--warm-gold);
+                        color: var(--deep-burgundy);
+                        padding: 5px 15px;
+                        font-size: 0.9rem;
+                        font-weight: bold;
+                        border-radius: 2px;
+                        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+                        z-index: 2;
+                        font-family: 'Playfair Display', serif;
+                    }
+
+                    .left .date-badge { right: 10px; transform: rotate(3deg); }
+                    .right .date-badge { left: 10px; transform: rotate(-3deg); }
+
+                    .text-content {
+                        margin-top: 15px;
+                        color: #333;
+                        text-align: center;
+                    }
+
+                    .memory-title {
+                        font-family: 'Great Vibes', cursive;
+                        font-size: 1.8rem;
+                        color: #333;
+                        margin: 0;
+                        line-height: 1.2;
+                    }
+
+                    .memory-location {
+                        font-size: 0.8rem;
+                        color: #888;
                         text-transform: uppercase;
                         letter-spacing: 1px;
+                        margin-top: 5px;
                     }
 
-                    .card-caption {
-                        font-family: 'Playfair Display', serif;
+                    .memory-caption {
+                        font-family: 'Indie Flower', cursive; /* Handwritten style for caption */
                         font-size: 1rem;
-                        line-height: 1.5;
                         color: #555;
-                        font-style: italic;
+                        margin-top: 10px;
+                        line-height: 1.4;
                     }
 
-                    .footer-text {
-                        text-align: center;
-                        margin-top: 8rem;
-                        color: var(--rose-gold);
-                        font-family: 'Great Vibes', cursive;
-                        font-size: 1.5rem;
-                        opacity: 0.8;
-                    }
-
+                    /* Mobile Responsive via CSS Media Queries */
                     @media screen and (max-width: 768px) {
                         .memories-title { font-size: 3.5rem; }
-                        .timeline::after { left: 30px; }
-                        
-                        .memory-card-wrapper {
-                            width: 100%;
-                            padding-left: 70px;
-                            padding-right: 15px;
-                            margin-bottom: 2rem;
-                            text-align: left;
-                        }
-                        .memory-card-wrapper.left { text-align: left; }
-                        
-                        .timeline-dot, .memory-card-wrapper.right .timeline-dot {
-                            left: 18px;
-                            right: auto;
-                        }
-                        
-                        .timeline-connector, .memory-card-wrapper.right .timeline-connector {
-                            left: 30px;
-                            right: auto;
-                            width: 40px;
-                        }
-                        
-                        .memory-card { transform: translateY(30px) rotate(0deg) !important; }
-                        .memory-card.visible { transform: translateY(0) rotate(0deg) !important; }
-                        
-                        .card-content { text-align: left; }
-                        .card-location { justify-content: flex-start; }
+                        .timeline::after { left: 31px; }
+                        .memory-card { width: 100%; padding-left: 70px; padding-right: 25px; }
+                        .left::after, .right::after { left: 15px; }
+                        .left, .right { left: 0; }
+                        .right .content { transform: rotate(-1deg); }
                     }
+
+                    @keyframes fadeInDown {
+                        from { opacity: 0; transform: translateY(-30px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+
+                    .memories-footer {
+                        text-align: center;
+                        margin-top: 4rem;
+                        font-family: 'Great Vibes', cursive;
+                        font-size: 2rem;
+                        color: rgba(255, 255, 255, 0.6);
+                    }
+
                 `}
             </style>
 
-            {/* Background Elements */}
-            <div className="bg-shape shape-1"></div>
-            <div className="bg-shape shape-2"></div>
-            <div className="bg-shape shape-3"></div>
-            {/* Some floating hearts */}
-            <div className="floating-heart" style={{ left: '10%', animationDelay: '0s' }}>♥</div>
-            <div className="floating-heart" style={{ left: '30%', animationDelay: '2s', fontSize: '1.5rem' }}>♡</div>
-            <div className="floating-heart" style={{ left: '70%', animationDelay: '5s' }}>♥</div>
-            <div className="floating-heart" style={{ left: '90%', animationDelay: '3s', fontSize: '1rem' }}>♡</div>
+            {/* Floating Hearts */}
+            <div className="floating-heart" style={{ left: '10%', animationDuration: '12s' }}>♥</div>
+            <div className="floating-heart" style={{ left: '30%', animationDuration: '18s', animationDelay: '2s' }}>♥</div>
+            <div className="floating-heart" style={{ left: '70%', animationDuration: '15s', animationDelay: '5s' }}>♥</div>
+            <div className="floating-heart" style={{ left: '90%', animationDuration: '20s' }}>♥</div>
 
-            <div className="content-wrapper">
-                <div className="memories-header">
-                    <h1 className="memories-title">GareebGang</h1>
-                    <p className="memories-subtitle">A collection of beautiful moments & endless laughter</p>
-                    <div style={{ marginTop: '2rem' }}>
-                        <Link to="/dashboard" className="btn-back">
-                            <span>←</span> Back to Home
-                        </Link>
-                    </div>
+            <div className="memories-header">
+                <h1 className="memories-title">GareebGang</h1>
+                <p className="memories-subtitle">A collection of beautiful moments & endless laughter</p>
+                <Link to="/" className="btn-back">← Back to Home</Link>
+            </div>
+
+            {loading ? (
+                <div style={{ textAlign: 'center', marginTop: '50px', color: 'var(--warm-gold)' }}>
+                    <div className="spinner" style={{
+                        width: '40px', height: '40px', border: '4px solid rgba(255,215,0,0.3)',
+                        borderTop: '4px solid var(--warm-gold)', borderRadius: '50%',
+                        animation: 'spin 1s linear infinite', margin: '0 auto 20px'
+                    }}></div>
+                    <p>Fetching memories...</p>
+                    <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
                 </div>
-
+            ) : memories.length === 0 ? (
+                <div style={{ textAlign: 'center', marginTop: '50px', color: 'rgba(255,255,255,0.5)' }}>
+                    <p>No memories found. Login to Admin Dashboard to add some!</p>
+                </div>
+            ) : (
                 <div className="timeline">
                     {memories.map((memory, index) => (
-                        <div key={index} className={`memory-card-wrapper ${index % 2 === 0 ? 'left' : 'right'}`}>
-                            <div className="timeline-connector"></div>
-                            <div className="timeline-dot">♥</div>
-                            <div className="memory-card">
-                                <div className="card-image-container">
-                                    <img src={memory.image} alt={memory.title} className="card-image" />
-                                    <div className="card-date-badge">{memory.displayDate}</div>
-                                </div>
-                                <div className="card-content">
-                                    <h3 className="card-title">{memory.title}</h3>
-                                    <p className="card-location">
-                                        📍 {memory.location}
-                                    </p>
-                                    <p className="card-caption">"{memory.caption}"</p>
+                        <div key={index} className={`memory-card ${index % 2 === 0 ? 'left' : 'right'}`}>
+                            <div className="content">
+                                <div className="date-badge">{memory.displayDate}</div>
+                                <img src={memory.image} alt={memory.title} className="memory-img" loading="lazy" />
+                                <div className="text-content">
+                                    <h3 className="memory-title">{memory.title}</h3>
+                                    <div className="memory-location">{memory.location}</div>
+                                    <p className="memory-caption">{memory.caption}</p>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
+            )}
 
-                <div className="footer-text">
-                    <p>Friendship isn't a big thing, it's a million little things.</p>
-                </div>
+            <div className="memories-footer">
+                Friendship isn't a big thing, it's a million little things.
             </div>
         </div>
     );

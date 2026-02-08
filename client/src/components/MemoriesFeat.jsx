@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import API_URL from '../config';
 
 const MemoriesFeat = () => {
     const [images, setImages] = useState([
@@ -12,7 +13,7 @@ const MemoriesFeat = () => {
         const fetchBufferedMemories = async () => {
             try {
                 // Fetch latest 3 memories to show in preview
-                const res = await fetch('http://localhost:5000/api/memories');
+                const res = await fetch(`${API_URL}/memories`);
                 const data = await res.json();
 
                 if (data && data.length > 0) {

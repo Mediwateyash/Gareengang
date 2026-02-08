@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -32,7 +33,7 @@ const Dashboard = () => {
 
     const fetchMemories = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/memories');
+            const res = await fetch(`${API_URL}/memories`);
             const data = await res.json();
             setMemories(data);
             setLoading(false);
@@ -63,8 +64,8 @@ const Dashboard = () => {
         e.preventDefault();
         try {
             const url = isEditing
-                ? `http://localhost:5000/api/memories/${editId}`
-                : 'http://localhost:5000/api/memories';
+                ? `${API_URL}/memories/${editId}`
+                : `${API_URL}/memories`;
 
             const method = isEditing ? 'PUT' : 'POST';
 
@@ -108,7 +109,7 @@ const Dashboard = () => {
         if (!window.confirm('Are you sure you want to delete this memory?')) return;
 
         try {
-            await fetch(`http://localhost:5000/api/memories/${id}`, {
+            await fetch(`${API_URL}/memories/${id}`, {
                 method: 'DELETE'
             });
             fetchMemories();
