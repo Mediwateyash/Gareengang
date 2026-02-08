@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import API_URL from '../config';
+import API_URL, { API_BASE_URL } from '../config';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -127,7 +127,7 @@ const Dashboard = () => {
             image: memory.image,
             imageFile: null
         });
-        setPreview(memory.image);
+        setPreview(getImageUrl(memory.image));
         setIsEditing(true);
         setEditId(memory._id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -136,6 +136,12 @@ const Dashboard = () => {
     const handleLogout = () => {
         localStorage.removeItem('adminUser');
         navigate('/login');
+    };
+
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return '';
+        if (imagePath.startsWith('http')) return imagePath;
+        return `${API_BASE_URL}${imagePath}`;
     };
 
     return (
@@ -221,7 +227,7 @@ const Dashboard = () => {
                                         <tr key={memory._id}>
                                             <td>{new Date(memory.date).toLocaleDateString()}</td>
                                             <td>
-                                                <img src={memory.image} alt="thumb" className="thumb-img" />
+                                                <img src={getImageUrl(memory.image)} alt="thumb" className="thumb-img" />
                                             </td>
                                             <td>{memory.title}</td>
                                             <td>{memory.location}</td>

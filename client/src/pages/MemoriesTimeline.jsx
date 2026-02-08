@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import API_URL from '../config';
+import API_URL, { API_BASE_URL } from '../config';
 
 const MemoriesTimeline = () => {
     const [memories, setMemories] = useState([]);
@@ -56,7 +56,7 @@ const MemoriesTimeline = () => {
         setTimeout(() => {
             const cards = document.querySelectorAll('.memory-card');
             cards.forEach(card => observer.observe(card));
-        }, 100); // Small delay to ensure DOM is ready
+        }, 100);
 
         return () => {
             if (observer) {
@@ -65,6 +65,12 @@ const MemoriesTimeline = () => {
             }
         };
     }, [loading, memories]);
+
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return '';
+        if (imagePath.startsWith('http')) return imagePath;
+        return `${API_BASE_URL}${imagePath}`;
+    };
 
     return (
         <div className="memories-container">
@@ -351,7 +357,7 @@ const MemoriesTimeline = () => {
                         <div key={index} className={`memory-card ${index % 2 === 0 ? 'left' : 'right'}`}>
                             <div className="content">
                                 <div className="date-badge">{memory.displayDate}</div>
-                                <img src={memory.image} alt={memory.title} className="memory-img" loading="lazy" />
+                                <img src={getImageUrl(memory.image)} alt={memory.title} className="memory-img" loading="lazy" />
                                 <div className="text-content">
                                     <h3 className="memory-title">{memory.title}</h3>
                                     <div className="memory-location">{memory.location}</div>

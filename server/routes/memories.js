@@ -5,10 +5,11 @@ const path = require('path');
 const fs = require('fs');
 const Memory = require('../models/Memory');
 
-// Configure Multer Storage (Store directly in client/public/uploads/memories)
+// Configure Multer Storage (Store in server/uploads/memories)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, '../../client/public/uploads/memories');
+        // Store relative to server root, not client
+        const uploadPath = path.join(__dirname, '../uploads/memories');
         // Ensure directory exists
         if (!fs.existsSync(uploadPath)) {
             fs.mkdirSync(uploadPath, { recursive: true });

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import API_URL from '../config';
+import API_URL, { API_BASE_URL } from '../config';
 
 const MemoriesFeat = () => {
     const [images, setImages] = useState([
@@ -18,7 +18,7 @@ const MemoriesFeat = () => {
 
                 if (data && data.length > 0) {
                     // Take first 3 images or fallback to data array length
-                    const latestImages = data.slice(0, 3).map(m => m.image);
+                    const latestImages = data.slice(0, 3).map(m => getImageUrl(m.image));
                     // Ensure we have at least 3 images by filling with fallbacks if needed
                     while (latestImages.length < 3 && images.length > 0) {
                         latestImages.push(images[latestImages.length]);
@@ -32,6 +32,12 @@ const MemoriesFeat = () => {
 
         fetchBufferedMemories();
     }, []);
+
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return '';
+        if (imagePath.startsWith('http')) return imagePath;
+        return `${API_BASE_URL}${imagePath}`;
+    };
 
     return (
         <section className="memories-feat-section">

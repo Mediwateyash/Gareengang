@@ -21,6 +21,11 @@ connectDB().then(() => {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/memories', require('./routes/memories'));
 
+const path = require('path');
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 app.get('/', (req, res) => {
   res.send('GareebGang API is running...');
 });
