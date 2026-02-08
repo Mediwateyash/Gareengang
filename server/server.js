@@ -19,6 +19,7 @@ connectDB().then(() => {
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/memories', require('./routes/memories'));
 
 app.get('/', (req, res) => {
   res.send('GareebGang API is running...');
