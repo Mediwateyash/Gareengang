@@ -20,6 +20,7 @@ connectDB().then(() => {
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/memories', require('./routes/memories'));
+app.use('/api/vlogs', require('./routes/vlogs'));
 app.use('/api/setup', require('./routes/setup')); // One-click setup
 
 
@@ -45,3 +46,4 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+// Trigger restart for Vlogs

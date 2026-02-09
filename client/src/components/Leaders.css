@@ -1,124 +1,150 @@
+/* Leaders.css */
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Nanum+Pen+Script&family=Patrick+Hand&display=swap');
+
 .leaders-section {
-    padding: 80px 0;
-    background-color: #1a1a2e;
+    padding: 6rem 0;
+    background-color: #fdfbf7;
+    background-image:
+        radial-gradient(#ccc 1px, transparent 1px),
+        url("https://www.transparenttextures.com/patterns/notebook-paper.png");
+    background-size: 20px 20px, auto;
     position: relative;
     overflow: hidden;
+}
+
+.leaders-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.leaders-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 3.5rem;
+    color: #2c3e50;
+    margin-bottom: 4rem;
+    transform: rotate(2deg);
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+    display: inline-block;
 }
 
 .leaders-grid {
     display: flex;
     justify-content: center;
-    gap: 80px;
+    gap: 4rem;
     flex-wrap: wrap;
-    margin-top: 50px;
+    padding: 0 20px;
 }
 
-.leader-card {
-    position: relative;
+/* Scrapbook Leader Card */
+.leader-card-scrap {
+    background: white;
     width: 300px;
-    text-align: center;
-    transition: transform 0.3s ease;
-    z-index: 2;
-}
-
-.leader-card:hover {
-    transform: translateY(-10px);
-}
-
-.leader-img-wrapper {
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 20px;
-    border-radius: 50%;
-    padding: 5px;
+    padding: 15px 15px 50px 15px;
+    /* Polaroid bottom */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     position: relative;
-    z-index: 5;
-    background: var(--dark);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s ease;
+    border: 1px solid #ddd;
 }
 
-.leader-img {
+/* Tape Effect */
+.leader-card-scrap::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 30px;
+    background: rgba(255, 235, 59, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 5;
+}
+
+/* Individual Rotations */
+.leader-card-scrap:nth-child(1) {
+    transform: rotate(-3deg);
+}
+
+.leader-card-scrap:nth-child(2) {
+    transform: rotate(3deg);
+}
+
+.leader-card-scrap:hover {
+    transform: scale(1.05) rotate(0deg);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    z-index: 10;
+}
+
+.leader-img-box {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 1px solid #eee;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.leader-img-scrap {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.1);
+    filter: sepia(0.2) contrast(1.1);
+    transition: transform 0.5s ease;
 }
 
-/* Aura Effects */
-.aura-ring {
-    position: absolute;
-    top: 50px;
-    /* Adjust to align with image center approx */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    z-index: 1;
-    filter: blur(20px);
-    animation: pulseAura 3s infinite alternate;
+.leader-card-scrap:hover .leader-img-scrap {
+    transform: scale(1.1);
+    filter: sepia(0);
 }
 
-.ring-orange {
-    background: radial-gradient(circle, rgba(255, 165, 0, 0.6) 0%, transparent 70%);
-    box-shadow: 0 0 60px rgba(255, 140, 0, 0.4);
+.leader-info-scrap {
+    text-align: center;
 }
 
-.ring-blue {
-    background: radial-gradient(circle, rgba(0, 191, 255, 0.6) 0%, transparent 70%);
-    box-shadow: 0 0 60px rgba(0, 191, 255, 0.4);
+.leader-name-scrap {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 2rem;
+    color: #2c3e50;
+    margin: 0;
+    line-height: 1;
 }
 
-@keyframes pulseAura {
-    0% {
-        transform: translateX(-50%) scale(0.9);
-        opacity: 0.6;
-    }
-
-    100% {
-        transform: translateX(-50%) scale(1.1);
-        opacity: 1;
-    }
-}
-
-.leader-info {
-    margin-top: 2rem;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 20px;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(5px);
-    position: relative;
-}
-
-.leader-name {
+.leader-role-scrap {
+    font-family: 'Nanum Pen Script', cursive;
     font-size: 1.8rem;
-    margin-bottom: 5px;
-    color: #fff;
-    font-weight: 700;
-    text-transform: uppercase;
+    color: #e74c3c;
+    margin: 5px 0;
+    font-weight: bold;
 }
 
-.leader-title-marathi {
+.leader-desc-scrap {
+    font-family: 'Patrick Hand', cursive;
     font-size: 1.2rem;
-    color: var(--primary);
-    /* Use theme color or specific like orange/gold */
-    font-weight: 600;
-    margin-bottom: 5px;
+    color: #666;
 }
 
-.card-yash .leader-title-marathi {
-    color: #FFA500;
-    /* Orange for Adhyaksha */
+/* Handwritten notes */
+.note-deco {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 1.4rem;
+    color: #888;
+    transform: rotate(-10deg);
 }
 
-.card-manjush .leader-title-marathi {
-    color: #4ECDC4;
-    /* Teal/Blue for Upadhyaksha */
-}
+@media (max-width: 768px) {
+    .leaders-title {
+        font-size: 2.5rem;
+    }
 
-.leader-desc {
-    font-size: 0.9rem;
-    color: #aaa;
+    .leaders-grid {
+        gap: 3rem;
+    }
 }

@@ -1,0 +1,450 @@
+/* MemoriesTimeline.css */
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Nanum+Pen+Script&family=Patrick+Hand&family=Reenie+Beanie&display=swap');
+
+:root {
+    --paper-bg: #fdfbf7;
+    --ink-color: #2c3e50;
+    --string-color: #5d4037;
+    --accent-red: #e74c3c;
+    --tape-yellow: rgba(255, 243, 160, 0.9);
+    --tape-pink: rgba(255, 192, 203, 0.9);
+    --tape-blue: rgba(173, 216, 230, 0.9);
+}
+
+.memories-container {
+    padding: 4rem 2rem;
+    background-color: var(--paper-bg);
+    background-image:
+        linear-gradient(#e5e5e5 1px, transparent 1px),
+        linear-gradient(90deg, #e5e5e5 1px, transparent 1px),
+        url("https://www.transparenttextures.com/patterns/notebook-paper.png");
+    background-size: 40px 40px, 40px 40px, auto;
+    min-height: 100vh;
+    font-family: 'Patrick Hand', cursive;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Background Doodles */
+.bg-doodle {
+    position: absolute;
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 2rem;
+    color: rgba(45, 52, 54, 0.2);
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Header */
+.memories-header {
+    text-align: center;
+    margin-bottom: 6rem;
+    position: relative;
+    z-index: 5;
+}
+
+.memories-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 5rem;
+    color: var(--ink-color);
+    transform: rotate(-2deg);
+    display: inline-block;
+    text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.memories-title::after {
+    content: '';
+    position: absolute;
+    bottom: 15px;
+    left: -20px;
+    width: 120%;
+    height: 25px;
+    background: rgba(255, 107, 107, 0.4);
+    z-index: -1;
+    transform: rotate(-2deg);
+    border-radius: 2px;
+}
+
+.memories-subtitle {
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 2.5rem;
+    color: #555;
+    transform: rotate(1deg);
+}
+
+.btn-back-home {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.5rem 1.5rem;
+    background: white;
+    border: 2px solid var(--ink-color);
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    color: var(--ink-color);
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.btn-back-home:hover {
+    transform: scale(1.05) rotate(-1deg);
+    box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* TIMELINE CORE */
+.timeline {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+/* Central Line - "Vintage Map Trail" */
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    background-image: linear-gradient(to bottom, var(--ink-color) 40%, rgba(255, 255, 255, 0) 0%);
+    background-position: right;
+    background-size: 2px 20px;
+    /* Dashed Map Line */
+    background-repeat: repeat-y;
+    transform: translateX(-50%);
+    opacity: 0.4;
+    z-index: 0;
+    /* Send Vertical Line to background */
+}
+
+.memory-card {
+    padding: 40px 0;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    perspective: 1000px;
+    z-index: 5;
+    /* Bring cards & stickers to front */
+}
+
+.card-left {
+    justify-content: flex-end;
+    padding-right: 50%;
+}
+
+.card-right {
+    justify-content: flex-start;
+    padding-left: 50%;
+}
+
+/* CURVED CONNECTORS - The "Flight Path" */
+.memory-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 80px;
+    height: 60px;
+    border: 2px dashed #95a5a6;
+    z-index: -1;
+    /* Connector behind sticker */
+    opacity: 0.6;
+}
+
+/* Curve for Left Cards: Top-Right Border Radius */
+.card-left::before {
+    right: 50%;
+    top: 50%;
+    margin-top: -30px;
+    /* Shift up to align curve */
+    border-left: none;
+    border-bottom: none;
+    border-radius: 0 40px 0 0;
+    /* Curve top-right */
+}
+
+/* Curve for Right Cards: Bottom-Left Border Radius */
+.card-right::before {
+    left: 50%;
+    top: 50%;
+    margin-top: -30px;
+    border-right: none;
+    border-top: none;
+    border-radius: 0 0 0 40px;
+    /* Curve bottom-left */
+}
+
+
+/* STICKERS - The "Stopovers" */
+.memory-card::after {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 50px;
+    height: 50px;
+    background: white;
+    border: 3px solid #333;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    /* Stickers ALWAYS on top */
+    font-size: 24px;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.memory-card:hover::after {
+    transform: translate(-50%, -50%) scale(1.3) rotate(10deg);
+}
+
+/* Varied Icons */
+.memory-card:nth-child(1)::after {
+    content: '✈️';
+    background: #FFEAA7;
+    transform: translate(-50%, -50%) rotate(-10deg);
+}
+
+.memory-card:nth-child(2)::after {
+    content: '📸';
+    background: #55EFC4;
+    transform: translate(-50%, -50%) rotate(5deg);
+}
+
+.memory-card:nth-child(3)::after {
+    content: '📍';
+    background: #74B9FF;
+    transform: translate(-50%, -50%) rotate(-5deg);
+}
+
+.memory-card:nth-child(4)::after {
+    content: '💖';
+    background: #FF7675;
+    transform: translate(-50%, -50%) rotate(10deg);
+}
+
+.memory-card:nth-child(5)::after {
+    content: '🌍';
+    background: #A29BFE;
+    transform: translate(-50%, -50%) rotate(-8deg);
+}
+
+.memory-card:nth-child(6)::after {
+    content: '🍕';
+    background: #FAB1A0;
+    transform: translate(-50%, -50%) rotate(6deg);
+}
+
+.memory-card:nth-child(n+7)::after {
+    content: '✨';
+    background: #FD79A8;
+}
+
+
+/* Polaroid Styling */
+.polaroid-content {
+    background: white;
+    padding: 15px 15px 60px 15px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    border: 1px solid #ddd;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 320px;
+    max-width: 85%;
+    margin: 0 50px;
+    /* Push away from stickers */
+}
+
+/* Random rotations */
+.card-left .polaroid-content {
+    transform: rotate(-3deg);
+}
+
+.card-right .polaroid-content {
+    transform: rotate(3deg);
+}
+
+.polaroid-content:hover {
+    transform: scale(1.05) rotate(0deg) !important;
+    z-index: 20;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+/* Washi Tape */
+.polaroid-content::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 35px;
+    background: var(--tape-yellow);
+    z-index: 5;
+    opacity: 0.9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    clip-path: polygon(0% 0%, 100% 0%, 98% 10%, 100% 20%, 98% 30%, 100% 40%, 98% 50%, 100% 60%, 98% 70%, 100% 80%, 98% 90%, 100% 100%, 0% 100%, 2% 90%, 0% 80%, 2% 70%, 0% 60%, 2% 50%, 0% 40%, 2% 30%, 0% 20%, 2% 10%);
+}
+
+.memory-card:nth-child(odd) .polaroid-content::before {
+    background: var(--tape-pink);
+    transform: translateX(-50%) rotate(-3deg);
+}
+
+.memory-card:nth-child(3n) .polaroid-content::before {
+    background: var(--tape-blue);
+    transform: translateX(-50%) rotate(2deg);
+}
+
+.memory-img {
+    width: 100%;
+    display: block;
+    filter: sepia(0.15) contrast(1.1) brightness(0.95);
+    border: 1px solid #eee;
+    transition: filter 0.3s ease;
+}
+
+.polaroid-content:hover .memory-img {
+    filter: none;
+}
+
+.text-content {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--ink-color);
+}
+
+.memory-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 1.8rem;
+    margin: 5px 0;
+    line-height: 1.1;
+    color: #2d3436;
+}
+
+.memory-date {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    font-family: 'Nanum Pen Script', cursive;
+    font-size: 1.5rem;
+    color: #7f8c8d;
+    transform: rotate(-5deg);
+}
+
+.memory-location {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.1rem;
+    color: #e67e22;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 1px dashed #e67e22;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.memory-caption {
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 1.4rem;
+    line-height: 1.3;
+    margin-top: 10px;
+    color: #2c3e50;
+    transform: rotate(1deg);
+}
+
+/* View Memory Button - "Handwritten Click Me" */
+.btn-view-memory {
+    display: inline-block;
+    margin-top: 10px;
+    background: transparent;
+    border: none;
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 1rem;
+    color: #e74c3c;
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: 1px dashed #e74c3c;
+    transition: transform 0.2s;
+    opacity: 0.8;
+}
+
+.btn-view-memory:hover {
+    transform: scale(1.05) rotate(-1deg);
+    color: #c0392b;
+    opacity: 1;
+    border-bottom-style: solid;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .timeline::before {
+        left: 40px;
+    }
+
+    .memory-card {
+        display: block;
+        padding-left: 90px;
+        margin-bottom: 4rem;
+        width: auto;
+    }
+
+    .card-left,
+    .card-right {
+        padding-left: 90px;
+        padding-right: 20px;
+        justify-content: flex-start;
+    }
+
+    .polaroid-content {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .memory-card::before {
+        left: 40px;
+        width: 40px;
+        top: 50%;
+        margin-top: -30px;
+        border-radius: 0 0 0 40px;
+        border: 2px dashed #95a5a6;
+        border-top: none;
+        border-right: none;
+    }
+
+    .memory-card::after {
+        left: 40px;
+        top: 50%;
+    }
+
+    .memories-title {
+        font-size: 3rem;
+    }
+
+    /* Hide doodles on mobile to avoid clutter */
+    .bg-doodle {
+        display: none;
+    }
+}
+
+/* Footer */
+.memories-footer {
+    text-align: center;
+    margin-top: 6rem;
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 3rem;
+    color: #7f8c8d;
+    transform: rotate(-2deg);
+    opacity: 0.8;
+}

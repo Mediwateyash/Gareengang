@@ -6,31 +6,24 @@ const MemoriesFeat = () => {
     const [images, setImages] = useState([
         "https://images.unsplash.com/photo-1566419806659-5b7967b57574?q=80&w=2699&auto=format&fit=crop",
         "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2669&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2669&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2673&auto=format&fit=crop"
+        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2669&auto=format&fit=crop"
     ]);
 
     useEffect(() => {
-        const fetchBufferedMemories = async () => {
+        const fetchLatestMemories = async () => {
             try {
                 const res = await fetch(`${API_URL}/memories`);
                 const data = await res.json();
-
                 if (data && data.length > 0) {
-                    // Get latest 5 images for a better loop
-                    const latestImages = data.slice(0, 5).map(m => getImageUrl(m.image));
-                    // Ensure we have enough images for a smooth loop
-                    while (latestImages.length < 5 && images.length > 0) {
-                        latestImages.push(images[latestImages.length % images.length]);
-                    }
-                    setImages(latestImages);
+                    // Get latest 3 images
+                    setImages(data.slice(0, 3).map(m => getImageUrl(m.image)));
                 }
             } catch (error) {
                 console.error("Error fetching featured memories:", error);
             }
         };
 
-        fetchBufferedMemories();
+        fetchLatestMemories();
     }, []);
 
     const getImageUrl = (imagePath) => {
@@ -43,163 +36,129 @@ const MemoriesFeat = () => {
         <section className="memories-feat-section">
             <style>
                 {`
-                    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;600&display=swap');
+                    @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Nanum+Pen+Script&display=swap');
 
                     .memories-feat-section {
-                        /* Deep Space Theme to match Hero */
-                        background: radial-gradient(circle at center, #1a1a2e 0%, #0f0c29 100%);
+                        /* Scrapbook texture */
+                        background: #fdfbf7;
+                        background-image: url("https://www.transparenttextures.com/patterns/notebook-paper.png");
                         padding: 8rem 0;
                         position: relative;
                         overflow: hidden;
                         text-align: center;
-                        color: #ffffff;
+                        color: #333;
                     }
 
                     .feat-title {
-                        font-family: 'Outfit', sans-serif;
+                        font-family: 'Permanent Marker', cursive;
                         font-size: 3.5rem;
-                        font-weight: 700;
-                        background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
-                        -webkit-background-clip: text;
-                        -webkit-text-fill-color: transparent;
+                        color: #e74c3c;
                         margin-bottom: 1rem;
-                        position: relative;
+                        transform: rotate(-1deg);
+                        text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
                         z-index: 2;
-                        letter-spacing: -2px;
+                        position: relative;
                     }
 
                     .feat-subtitle {
-                        font-family: 'Great Vibes', cursive;
+                        font-family: 'Nanum Pen Script', cursive;
                         font-size: 2rem;
-                        color: #ffd700;
+                        color: #555;
                         margin-bottom: 4rem;
-                        position: relative;
                         z-index: 2;
-                        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+                        position: relative;
                     }
 
-                    /* Marquee Container */
-                    .marquee-wrapper {
-                        position: relative;
-                        width: 100%;
-                        overflow: hidden;
-                        padding: 20px 0;
-                        z-index: 2;
-                        mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-                    }
-
-                    .marquee-content {
+                    /* Scrapbook Layout */
+                    .collage-container {
                         display: flex;
-                        gap: 30px;
-                        width: max-content;
-                        animation: scroll 30s linear infinite;
+                        justify-content: center;
+                        gap: 2rem;
+                        flex-wrap: wrap;
+                        perspective: 1000px;
+                        padding-bottom: 3rem;
                     }
 
-                    .marquee-wrapper:hover .marquee-content {
-                        animation-play-state: paused;
-                    }
-
-                    @keyframes scroll {
-                        from { transform: translateX(0); }
-                        to { transform: translateX(-50%); }
-                    }
-
-                    /* Glass Cards */
-                    .memory-card {
-                        width: 300px;
-                        height: 400px;
-                        border-radius: 20px;
-                        overflow: hidden;
+                    .scrap-card {
+                        background: white;
+                        padding: 10px 10px 40px 10px;
+                        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+                        width: 280px;
+                        height: 340px;
                         position: relative;
-                        border: 1px solid rgba(255, 255, 255, 0.1);
-                        background: rgba(255, 255, 255, 0.05);
-                        backdrop-filter: blur(10px);
                         transition: all 0.4s ease;
-                        flex-shrink: 0;
-                        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
                     }
 
-                    .memory-card:hover {
-                        transform: translateY(-10px) scale(1.02);
-                        border-color: rgba(255, 215, 0, 0.5);
-                        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.2);
+                    .scrap-card::before {
+                        content: '';
+                        position: absolute;
+                        top: -10px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 80px;
+                        height: 25px;
+                        background: rgba(255, 235, 59, 0.5); /* Yellow Tape */
+                        z-index: 5;
+                        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
                     }
 
-                    .memory-img {
+                    /* Rotations for randomness */
+                    .scrap-card:nth-child(1) { transform: rotate(-3deg) translateY(20px); }
+                    .scrap-card:nth-child(2) { transform: rotate(2deg) translateY(-10px); z-index: 2; }
+                    .scrap-card:nth-child(3) { transform: rotate(-4deg) translateY(10px); }
+
+                    .scrap-card:hover {
+                        transform: scale(1.05) rotate(0deg) !important;
+                        z-index: 10;
+                        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+                    }
+
+                    .scrap-img {
                         width: 100%;
                         height: 100%;
                         object-fit: cover;
-                        transition: transform 0.5s ease;
+                        filter: sepia(0.2);
+                        transition: filter 0.3s;
                     }
 
-                    .memory-card:hover .memory-img {
-                        transform: scale(1.1);
+                    .scrap-card:hover .scrap-img {
+                        filter: sepia(0);
                     }
 
-                    /* Explore Button */
                     .btn-explore {
-                        margin-top: 4rem;
-                        display: inline-block;
-                        padding: 16px 48px;
-                        background: transparent;
-                        border: 1px solid rgba(255, 255, 255, 0.2);
-                        color: #fff;
-                        font-family: 'Outfit', sans-serif;
-                        font-size: 1.1rem;
-                        font-weight: 600;
-                        text-transform: uppercase;
-                        letter-spacing: 3px;
-                        border-radius: 4px;
+                        font-family: 'Patrick Hand', cursive;
+                        font-size: 1.5rem;
+                        color: #2c3e50;
                         text-decoration: none;
+                        border-bottom: 3px dashed #e74c3c;
+                        padding-bottom: 5px;
                         transition: all 0.3s ease;
-                        position: relative;
-                        z-index: 2;
-                        overflow: hidden;
                     }
 
                     .btn-explore:hover {
-                        background: white;
-                        color: #000;
-                        box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-                        letter-spacing: 5px;
+                        color: #e74c3c;
+                        border-bottom-style: solid;
                     }
-
-                    /* Background Glows */
-                    .glow-spot {
-                        position: absolute;
-                        width: 600px;
-                        height: 600px;
-                        border-radius: 50%;
-                        filter: blur(80px);
-                        opacity: 0.15;
-                        z-index: 1;
-                    }
-                    .glow-1 { top: -200px; left: -200px; background: #4facfe; }
-                    .glow-2 { bottom: -200px; right: -200px; background: #f093fb; }
 
                 `}
             </style>
 
-            <div className="glow-spot glow-1"></div>
-            <div className="glow-spot glow-2"></div>
-
             <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-                <h2 className="feat-title">The Gallery</h2>
-                <p className="feat-subtitle">Moments Frozen in Time</p>
+                <h2 className="feat-title">Our Best Moments</h2>
+                <p className="feat-subtitle">
+                    "We didn't realize we were making memories, we just knew we were having fun."
+                </p>
 
-                <div className="marquee-wrapper">
-                    <div className="marquee-content">
-                        {/* Render images twice for seamless loop */}
-                        {[...images, ...images].map((src, index) => (
-                            <div key={index} className="memory-card">
-                                <img src={src} alt="Memory" className="memory-img" loading="lazy" />
-                            </div>
-                        ))}
-                    </div>
+                <div className="collage-container">
+                    {images.map((src, index) => (
+                        <div key={index} className="scrap-card">
+                            <img src={src} alt="Memory Preview" className="scrap-img" />
+                        </div>
+                    ))}
                 </div>
 
                 <Link to="/memories" className="btn-explore">
-                    View Full Timeline
+                    Open the Full Gallery &rarr;
                 </Link>
             </div>
         </section>

@@ -1,0 +1,282 @@
+/* Vlogs.css */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Outfit:wght@300;400;600&display=swap');
+
+.vlogs-page {
+    background: #f4f1ea;
+    /* Scrapbook paper color */
+    background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+    min-height: 100vh;
+    padding: 8rem 0 4rem;
+    /* Top padding for fixed navbar */
+    color: #333;
+}
+
+.page-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 5rem;
+    text-align: center;
+    color: #2c0e14;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+}
+
+.page-subtitle {
+    font-family: 'Outfit', sans-serif;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 4rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Grid */
+.vlogs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 3rem;
+    padding: 0 2rem;
+}
+
+/* Card - Polaroid Style */
+.vlog-card {
+    background: white;
+    padding: 15px 15px 25px 15px;
+    /* Taller bottom like polaroid */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s ease;
+    cursor: pointer;
+    position: relative;
+    transform: rotate(var(--rotation, 0deg));
+}
+
+.vlog-card:nth-child(even) {
+    transform: rotate(2deg);
+}
+
+.vlog-card:nth-child(odd) {
+    transform: rotate(-2deg);
+}
+
+.vlog-card:nth-child(3n) {
+    transform: rotate(1deg);
+}
+
+.vlog-card:hover {
+    transform: scale(1.05) rotate(0deg);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    z-index: 10;
+}
+
+.thumbnail-wrapper {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background: #000;
+}
+
+.thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    opacity: 0.9;
+}
+
+.vlog-card:hover .thumbnail {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 0, 0, 0.8);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.play-icon {
+    color: white;
+    font-size: 24px;
+    margin-left: 4px;
+    /* Optical center */
+}
+
+.vlog-card:hover .play-overlay {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.vlog-info {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.vlog-category {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #d32f2f;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.vlog-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.vlog-date {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.1rem;
+    color: #888;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Modal */
+.vlog-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+    padding: 2rem;
+}
+
+.vlog-modal-content {
+    width: 100%;
+    max-width: 900px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.4s ease;
+}
+
+.close-btn {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-btn:hover {
+    color: #fecc00;
+}
+
+.iframe-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+}
+
+.iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-info {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #000;
+}
+
+.modal-info h2 {
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.yt-btn {
+    background: #ff0000;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.yt-btn:hover {
+    background: #cc0000;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 3.5rem;
+    }
+
+    .vlogs-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .modal-info {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}

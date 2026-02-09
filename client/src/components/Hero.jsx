@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import groupPhoto from '../assets/group_photo.jpg';
 import './Hero.css';
 
@@ -26,32 +27,31 @@ const Hero = () => {
                 {/* Left: Text Content */}
                 <div className="hero-text-side animate-fade-in">
                     <h1 className="title">GareebGang</h1>
-                    <p className="subtitle">Watumull College's Finest</p>
-                    <div className="tagline">Memories &bull; Trips &bull; Brotherhood</div>
+                    <p className="subtitle">Est. Watumull College</p>
+                    <div className="tagline">Just some kids making memories...</div>
 
                     <div className="dynamic-text-wrapper">
                         <p className="dynamic-text" key={textIndex}>{texts[textIndex]}</p>
                     </div>
+
+                    <div className="hero-buttons">
+                        <Link to="/vlogs" className="btn-hero">Watch Vlogs</Link>
+                        <Link to="/memories" className="btn-hero secondary">View Gallery</Link>
+                    </div>
                 </div>
 
-                {/* Right: Crazy 3D Image Card */}
+                {/* Right: Polaroid Image */}
                 <div className="hero-image-side">
                     <div className="crazy-card-wrapper">
                         <div className="crazy-card">
                             <img src={groupPhoto} alt="GareebGang Squad" className="crazy-img" />
-                            <div className="crazy-border"></div>
                         </div>
                         {/* Decorative Elements */}
                         <div className="deco-circle"></div>
-                        <div className="deco-dots"></div>
                     </div>
                 </div>
 
             </div>
-
-            {/* Background Atmosphere */}
-            <div className="shape shape-1" style={{ top: '-10%', left: '-10%', filter: 'blur(100px)' }}></div>
-            <div className="shape shape-2" style={{ bottom: '-10%', right: '-10%', filter: 'blur(100px)' }}></div>
         </section>
     );
 };

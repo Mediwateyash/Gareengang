@@ -5,35 +5,35 @@ import './Leaders.css';
 const Leaders = () => {
     return (
         <section className="leaders-section">
-            <div className="container">
-                <h2 className="section-title text-center">The Pillars of GareebGang</h2>
+            <div className="leaders-container">
+                <h2 className="leaders-title">The Pillars</h2>
 
                 <div className="leaders-grid">
 
                     {/* President Card */}
-                    <div className="leader-card card-yash">
-                        <div className="aura-ring ring-orange"></div>
-                        <div className="leader-img-wrapper">
-                            <img src={yashImg} alt="Diwate Yash" className="leader-img" />
+                    <div className="leader-card-scrap">
+                        <div className="leader-img-box">
+                            <img src={yashImg} alt="Diwate Yash" className="leader-img-scrap" />
                         </div>
-                        <div className="leader-info">
-                            <h3 className="leader-name">Diwate Yash</h3>
-                            <p className="leader-title-marathi">अध्यक्ष (President)</p>
-                            <p className="leader-desc">Watumull Mitra Mandal.</p>
+                        <div className="leader-info-scrap">
+                            <h3 className="leader-name-scrap">Diwate Yash</h3>
+                            <p className="leader-role-scrap">President (अध्यक्ष)</p>
+                            <p className="leader-desc-scrap">Watumull Mitra Mandal.</p>
                         </div>
+                        <span className="note-deco">Leader #1</span>
                     </div>
 
                     {/* Vice President Card */}
-                    <div className="leader-card card-manjush">
-                        <div className="aura-ring ring-blue"></div>
-                        <div className="leader-img-wrapper">
-                            <img src={manjushImg} alt="Manjush Farad" className="leader-img" />
+                    <div className="leader-card-scrap">
+                        <div className="leader-img-box">
+                            <img src={manjushImg} alt="Manjush Farad" className="leader-img-scrap" />
                         </div>
-                        <div className="leader-info">
-                            <h3 className="leader-name">Manjush Farad</h3>
-                            <p className="leader-title-marathi">उपाध्यक्ष (Vice President)</p>
-                            <p className="leader-desc">Watumull Mitra Mandal.</p>
+                        <div className="leader-info-scrap">
+                            <h3 className="leader-name-scrap">Manjush Farad</h3>
+                            <p className="leader-role-scrap">Vice President (उपाध्यक्ष)</p>
+                            <p className="leader-desc-scrap">Watumull Mitra Mandal.</p>
                         </div>
+                        <span className="note-deco">The VP</span>
                     </div>
 
                 </div>

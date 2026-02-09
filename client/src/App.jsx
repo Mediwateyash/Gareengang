@@ -10,12 +10,18 @@ import Dashboard from './pages/Dashboard'
 import Leaders from './components/Leaders'
 import MemoriesTimeline from './pages/MemoriesTimeline'
 import MemoriesFeat from './components/MemoriesFeat'
+import Vlogs from './pages/Vlogs'
+import HomeVlogs from './components/HomeVlogs'
 import './index.css'
+
+// ... existing imports ...
 
 const LandingPage = () => (
   <>
     <Hero />
     <MemoriesFeat />
+    <HomeVlogs />
+    {/* HomeVlogs will be added here later */}
     <About />
     <Leaders />
     <WorkInProgress />
@@ -34,6 +40,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/memories" element={<MemoriesTimeline />} />
+          <Route path="/vlogs" element={<Vlogs />} />
         </Routes>
       </div>
     </Router>
