@@ -20,6 +20,8 @@ connectDB().then(() => {
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/memories', require('./routes/memories'));
+app.use('/api/setup', require('./routes/setup')); // One-click setup
+
 
 const path = require('path');
 // Serve uploaded files statically
