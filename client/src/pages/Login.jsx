@@ -18,7 +18,7 @@ const Login = () => {
             const data = await res.json();
 
             if (res.ok) {
-                localStorage.setItem('adminUser', data.username);
+                localStorage.setItem('user', JSON.stringify({ name: data.username }));
                 navigate('/dashboard');
             } else {
                 alert(data.message);

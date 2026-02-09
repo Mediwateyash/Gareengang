@@ -33,17 +33,51 @@ const Dashboard = () => {
             {/* Sidebar / Header */}
             <header className="dashboard-header">
                 <div className="brand">
-                    <img src="/logo-placeholder.png" alt="Logo" className="dash-logo" />
+                    <img src="/icon.png" alt="Logo" className="dash-logo" />
                     <h1>Admin Panel</h1>
                 </div>
                 <div className="user-info">
+                    <a href="/" target="_blank" rel="noopener noreferrer" className="btn-visit-site" title="View Public Site">
+                        🚀 Visit Website
+                    </a>
                     <span>Welcome, {user.name}</span>
                     <button onClick={handleLogout} className="btn-logout">Logout</button>
                 </div>
             </header>
 
             <main className="dashboard-content">
-                {renderContent()}
+                {activeView === 'menu' && (
+                    <div className="admin-menu-grid">
+                        <div className="admin-card" onClick={() => setActiveView('memories')}>
+                            <div className="icon">📸</div>
+                            <h3>Manage Memories</h3>
+                            <p>Photo timeline & captions.</p>
+                        </div>
+
+                        <div className="admin-card" onClick={() => setActiveView('vlogs')}>
+                            <div className="icon">🎥</div>
+                            <h3>Manage Vlogs</h3>
+                            <p>YouTube links & library.</p>
+                        </div>
+
+                        <div className="admin-card" onClick={() => setActiveView('home')}>
+                            <div className="icon">🏠</div>
+                            <h3>Home Page Manager</h3>
+                            <p>Feature top content.</p>
+                        </div>
+
+                        <div className="admin-card" onClick={() => setActiveView('users')}>
+                            <div className="icon">👥</div>
+                            <h3>Manage Users</h3>
+                            <p>Admin access control.</p>
+                        </div>
+                    </div>
+                )}
+
+                {activeView === 'memories' && <AdminMemories onBack={() => setActiveView('menu')} />}
+                {activeView === 'vlogs' && <AdminVlogs onBack={() => setActiveView('menu')} />}
+                {activeView === 'users' && <AdminUsers onBack={() => setActiveView('menu')} />}
+                {activeView === 'home' && <AdminHome onBack={() => setActiveView('menu')} />}
             </main>
         </div>
     );
