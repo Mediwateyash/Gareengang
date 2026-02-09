@@ -5,11 +5,19 @@ import API_URL, { API_BASE_URL } from '../config';
 const MemoriesTimeline = () => {
     const [memories, setMemories] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchMemories = async () => {
             try {
+                // Debug log
+                console.log("Fetching from:", `${API_URL}/memories`);
                 const res = await fetch(`${API_URL}/memories`);
+
+                if (!res.ok) {
+                    throw new Error(`HTTP error! Status: ${res.status}`);
+                }
+
                 const data = await res.json();
 
                 // Add displayDate formatted
@@ -25,6 +33,7 @@ const MemoriesTimeline = () => {
                 setLoading(false);
             } catch (err) {
                 console.error('Error fetching memories:', err);
+                setError(err.message);
                 setLoading(false);
             }
         };
@@ -346,6 +355,14 @@ const MemoriesTimeline = () => {
                     }}></div>
                     <p>Fetching memories...</p>
                     <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+                </div>
+            ) : error ? (
+                <div style={{ textAlign: 'center', marginTop: '50px', color: '#ff6b6b' }}>
+                    <h3>Oops! Something went wrong.</h3>
+                    <p>{error}</p>
+                    <p style={{ fontSize: '0.8rem', marginTop: '10px', color: '#aaa' }}>
+                        Trying to connect to: {API_URL}
+                    </p>
                 </div>
             ) : memories.length === 0 ? (
                 <div style={{ textAlign: 'center', marginTop: '50px', color: 'rgba(255,255,255,0.5)' }}>
