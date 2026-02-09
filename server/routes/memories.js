@@ -11,9 +11,11 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 // Configure Cloudinary Storage
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: {
-        folder: 'gareebgang',
-        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+    params: async (req, file) => {
+        return {
+            folder: 'gareebgang',
+            allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+        };
     },
 });
 

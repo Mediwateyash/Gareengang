@@ -32,6 +32,16 @@ app.get('/', (req, res) => {
   res.send('GareebGang API is running...');
 });
 
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    message: 'Internal Server Error',
+    error: err.message,
+    stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
