@@ -2,26 +2,19 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs'); // Not needed for Cloudinary
 const Memory = require('../models/Memory');
 
-// Configure Multer Storage (Store in server/uploads/memories)
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        // Store relative to server root, not client
-        const uploadPath = path.join(__dirname, '../uploads/memories');
-        // Ensure directory exists
-        if (!fs.existsSync(uploadPath)) {
-            fs.mkdirSync(uploadPath, { recursive: true });
-        }
-        cb(null, uploadPath);
+const cloudinary = require('../config/cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// Configure Cloudinary Storage
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'gareebgang',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
     },
-    filename: (req, file, cb) => {
-        // Create unique filename: memory-{timestamp}-{random}.ext
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const ext = path.extname(file.originalname);
-        cb(null, 'memory-' + uniqueSuffix + ext);
-    }
 });
 
 const upload = multer({
@@ -71,8 +64,8 @@ router.post('/', upload.single('imageFile'), async (req, res) => {
         let imagePath = image; // Default to URL if provided
 
         if (req.file) {
-            // If file uploaded, use the relative path accessible from public folder
-            imagePath = `/uploads/memories/${req.file.filename}`;
+            // Cloudinary - req.file.path contains the cloud URL
+            imagePath = req.file.path;
         }
 
         // Validate that we have some image source
@@ -115,8 +108,7 @@ router.put('/:id', upload.single('imageFile'), async (req, res) => {
 
         // Update image if new file uploaded
         if (req.file) {
-            memory.image = `/uploads/memories/${req.file.filename}`;
-            // Optional: Delete old image if it was a local file to save space
+            memory.image = req.file.path;
         } else if (image) {
             // Allow updating to a URL string if explicitly provided
             memory.image = image;
