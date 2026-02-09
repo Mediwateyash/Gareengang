@@ -207,6 +207,46 @@ const Dashboard = () => {
                     </form>
                 </section>
 
+                {/* Admin Management Section */}
+                <section className="form-section">
+                    <h2>Add New Admin</h2>
+                    <form onSubmit={async (e) => {
+                        e.preventDefault();
+                        const username = e.target.adminUser.value;
+                        const password = e.target.adminPass.value;
+
+                        try {
+                            const res = await fetch(`${API_URL}/auth/register`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ username, password }),
+                            });
+                            const data = await res.json();
+                            if (res.ok) {
+                                alert('New Admin Added Successfully!');
+                                e.target.reset();
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            alert('Failed to add admin');
+                        }
+                    }} className="memory-form">
+                        <div className="form-group">
+                            <label>New Admin Username</label>
+                            <input type="text" name="adminUser" required />
+                        </div>
+                        <div className="form-group">
+                            <label>New Admin Password</label>
+                            <input type="password" name="adminPass" required />
+                        </div>
+                        <div className="form-actions">
+                            <button type="submit" className="btn-submit">Add Admin</button>
+                        </div>
+                    </form>
+                </section>
+
                 {/* List Section */}
                 <section className="list-section">
                     <h2>Manage Memories ({memories.length})</h2>
