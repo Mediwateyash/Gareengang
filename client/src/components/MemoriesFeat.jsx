@@ -12,11 +12,11 @@ const MemoriesFeat = () => {
     useEffect(() => {
         const fetchLatestMemories = async () => {
             try {
-                const res = await fetch(`${API_URL}/memories`);
+                // Fetch only featured memories
+                const res = await fetch(`${API_URL}/memories/featured`);
                 const data = await res.json();
                 if (data && data.length > 0) {
-                    // Get latest 3 images
-                    setImages(data.slice(0, 3).map(m => getImageUrl(m.image)));
+                    setImages(data.map(m => getImageUrl(m.image)));
                 }
             } catch (error) {
                 console.error("Error fetching featured memories:", error);

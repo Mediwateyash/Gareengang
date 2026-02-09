@@ -46,7 +46,7 @@ router.get('/', async (req, res) => {
 // @desc    Get featured memories
 router.get('/featured', async (req, res) => {
     try {
-        const memories = await Memory.find({ featured: true }).sort({ date: -1 }).limit(3);
+        const memories = await Memory.find({ featured: true }).sort({ featuredOrder: -1, date: -1 }).limit(3);
         res.json(memories);
     } catch (err) {
         res.status(500).json({ message: 'Server Error' });
@@ -106,7 +106,9 @@ router.put('/:id', upload.single('imageFile'), async (req, res) => {
         if (date) memory.date = date;
         if (location) memory.location = location;
         if (caption) memory.caption = caption;
+        if (caption) memory.caption = caption;
         if (featured) memory.featured = featured === 'true';
+        if (req.body.featuredOrder) memory.featuredOrder = parseInt(req.body.featuredOrder);
 
         // Update image if new file uploaded
         if (req.file) {

@@ -13,7 +13,15 @@ const getYoutubeID = (url) => {
 // @desc    Get all vlogs
 router.get('/', async (req, res) => {
     try {
-        const vlogs = await Vlog.find().sort({ date: -1 });
+        let query = {};
+        let sort = { date: -1 };
+
+        if (req.query.featured === 'true') {
+            query.featured = true;
+            sort = { featuredOrder: -1, date: -1 };
+        }
+
+        const vlogs = await Vlog.find(query).sort(sort);
         res.json(vlogs);
     } catch (err) {
         res.status(500).json({ message: 'Server Error' });
@@ -52,9 +60,16 @@ router.post('/', async (req, res) => {
 // @desc    Update a vlog
 router.put('/:id', async (req, res) => {
     try {
-        const { title, videoUrl, category, description } = req.body;
+        const { title, videoUrl, category, description, featured, featuredOrder } = req.body;
 
-        let updateData = { title, category, description, videoUrl };
+        // Build update object dynamically to only include provided fields
+        let updateData = {};
+        if (title !== undefined) updateData.title = title;
+        if (videoUrl !== undefined) updateData.videoUrl = videoUrl;
+        if (category !== undefined) updateData.category = category;
+        if (description !== undefined) updateData.description = description;
+        if (featured !== undefined) updateData.featured = featured;
+        if (featuredOrder !== undefined) updateData.featuredOrder = featuredOrder;
 
         // If URL changed, update ID
         if (videoUrl) {

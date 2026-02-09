@@ -6,10 +6,11 @@ const HomeVlogs = () => {
     const [vlogs, setVlogs] = useState([]);
 
     useEffect(() => {
-        fetch(`${API_URL}/vlogs`)
+        fetch(`${API_URL}/vlogs?featured=true`)
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) {
+                    // Take top 3 (already sorted by server)
                     setVlogs(data.slice(0, 3));
                 } else {
                     console.error("Vlogs data is not an array:", data);

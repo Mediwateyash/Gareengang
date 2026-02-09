@@ -29,6 +29,10 @@ const VlogSchema = new mongoose.Schema({
     featured: {
         type: Boolean,
         default: false
+    },
+    featuredOrder: {
+        type: Number,
+        default: 0
     }
 }, { timestamps: true });
 
