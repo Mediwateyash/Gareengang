@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
 // @desc    Add a new vlog
 router.post('/', async (req, res) => {
     try {
-        const { title, videoUrl, category, date, featured } = req.body;
+        const { title, videoUrl, category, description, date, featured } = req.body;
 
         const youtubeId = getYoutubeID(videoUrl);
         if (!youtubeId) {
@@ -36,6 +36,7 @@ router.post('/', async (req, res) => {
             videoUrl,
             youtubeId,
             category,
+            description,
             date,
             featured
         });
@@ -44,6 +45,34 @@ router.post('/', async (req, res) => {
         res.json(vlog);
     } catch (err) {
         res.status(500).json({ message: 'Server Error', error: err.message });
+    }
+});
+
+// @route   PUT /api/vlogs/:id
+// @desc    Update a vlog
+router.put('/:id', async (req, res) => {
+    try {
+        const { title, videoUrl, category, description } = req.body;
+
+        let updateData = { title, category, description, videoUrl };
+
+        // If URL changed, update ID
+        if (videoUrl) {
+            const youtubeId = getYoutubeID(videoUrl);
+            if (youtubeId) {
+                updateData.youtubeId = youtubeId;
+            }
+        }
+
+        const vlog = await Vlog.findByIdAndUpdate(
+            req.params.id,
+            { $set: updateData },
+            { new: true }
+        );
+
+        res.json(vlog);
+    } catch (err) {
+        res.status(500).json({ message: 'Server Error' });
     }
 });
 

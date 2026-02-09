@@ -18,6 +18,10 @@ const VlogSchema = new mongoose.Schema({
         enum: ['Trip', 'Event', 'Fun', 'Other'],
         default: 'Other'
     },
+    description: {
+        type: String,
+        default: ''
+    },
     date: {
         type: Date,
         default: Date.now

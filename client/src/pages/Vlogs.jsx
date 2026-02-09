@@ -63,6 +63,7 @@ const Vlogs = () => {
                                 <div className="vlog-info">
                                     <span className="vlog-category">{vlog.category}</span>
                                     <h3 className="vlog-title">{vlog.title}</h3>
+                                    {vlog.description && <p className="vlog-desc">{vlog.description}</p>}
                                     <span className="vlog-date">{new Date(vlog.date).toLocaleDateString()}</span>
                                 </div>
                             </div>

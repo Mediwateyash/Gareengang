@@ -4,10 +4,13 @@ import API_URL, { API_BASE_URL } from '../config';
 const AdminVlogs = ({ onBack }) => {
     const [vlogs, setVlogs] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editId, setEditId] = useState(null);
     const [formData, setFormData] = useState({
         title: '',
         videoUrl: '',
-        category: 'Trip'
+        category: 'Trip',
+        description: ''
     });
 
     useEffect(() => {
@@ -30,38 +33,48 @@ const AdminVlogs = ({ onBack }) => {
         }
     };
 
-    const extractYoutubeId = (url) => {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-        const match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : null;
-    };
-
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleEdit = (vlog) => {
+        setIsEditing(true);
+        setEditId(vlog._id);
+        setFormData({
+            title: vlog.title,
+            videoUrl: vlog.videoUrl,
+            category: vlog.category,
+            description: vlog.description || ''
+        });
+        // Scroll to form
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const cancelEdit = () => {
+        setIsEditing(false);
+        setEditId(null);
+        setFormData({ title: '', videoUrl: '', category: 'Trip', description: '' });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const youtubeId = extractYoutubeId(formData.videoUrl);
 
-        if (!youtubeId) {
-            alert('Invalid YouTube URL');
-            return;
-        }
+        const url = isEditing ? `${API_URL}/vlogs/${editId}` : `${API_URL}/vlogs`;
+        const method = isEditing ? 'PUT' : 'POST';
 
         try {
-            const res = await fetch(`${API_URL}/vlogs`, {
-                method: 'POST',
+            const res = await fetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...formData, youtubeId })
+                body: JSON.stringify(formData)
             });
 
             if (res.ok) {
-                alert('Vlog Added!');
-                setFormData({ title: '', videoUrl: '', category: 'Trip' });
+                alert(isEditing ? 'Vlog Updated!' : 'Vlog Added!');
+                cancelEdit(); // Resets form
                 fetchVlogs();
             } else {
-                alert('Failed to add vlog');
+                alert('Failed to save vlog');
             }
         } catch (err) {
             console.error(err);
@@ -86,7 +99,7 @@ const AdminVlogs = ({ onBack }) => {
             </div>
 
             <section className="form-section">
-                <h3>Add New Vlog</h3>
+                <h3>{isEditing ? 'Edit Vlog' : 'Add New Vlog'}</h3>
                 <form onSubmit={handleSubmit} className="memory-form">
                     <div className="form-group">
                         <label>Title</label>
@@ -105,8 +118,23 @@ const AdminVlogs = ({ onBack }) => {
                             <option value="Other">Other</option>
                         </select>
                     </div>
+                    <div className="form-group">
+                        <label>Description (1-2 lines)</label>
+                        <textarea
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            placeholder="Brief catchy description..."
+                            rows="2"
+                        ></textarea>
+                    </div>
                     <div className="form-actions">
-                        <button type="submit" className="btn-submit">Add Vlog</button>
+                        {isEditing && (
+                            <button type="button" className="btn-cancel" onClick={cancelEdit}>Cancel</button>
+                        )}
+                        <button type="submit" className="btn-submit">
+                            {isEditing ? 'Update Vlog' : 'Add Vlog'}
+                        </button>
                     </div>
                 </form>
             </section>
@@ -136,6 +164,7 @@ const AdminVlogs = ({ onBack }) => {
                                     <td>{vlog.title}</td>
                                     <td>{vlog.category}</td>
                                     <td>
+                                        <button className="btn-action edit" onClick={() => handleEdit(vlog)} style={{ marginRight: '10px' }}>Edit</button>
                                         <button className="btn-action delete" onClick={() => handleDelete(vlog._id)}>Delete</button>
                                     </td>
                                 </tr>
