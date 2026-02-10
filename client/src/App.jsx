@@ -9,6 +9,7 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Leaders from './components/Leaders'
 import MemoriesTimeline from './pages/MemoriesTimeline'
+import MemoryDetail from './pages/MemoryDetail'
 import MemoriesFeat from './components/MemoriesFeat'
 import Vlogs from './pages/Vlogs'
 import HomeVlogs from './components/HomeVlogs'
@@ -40,6 +41,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/memories" element={<MemoriesTimeline />} />
+          <Route path="/memories/:id" element={<MemoryDetail />} />
           <Route path="/vlogs" element={<Vlogs />} />
         </Routes>
       </div>

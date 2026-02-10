@@ -5,16 +5,15 @@ const AdminMemories = ({ onBack }) => {
     const [memories, setMemories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
-        title: '',
-        date: '',
-        location: '',
-        caption: '',
-        image: '',
-        imageFile: null
+        title: '', date: '', location: '', caption: '', image: '', imageFile: null,
+        story: '', peopleText: '', relatedVlogUrl: '', galleryText: ''
     });
-    const [preview, setPreview] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editId, setEditId] = useState(null);
+    const [preview, setPreview] = useState(null);
+    const [imageMethod, setImageMethod] = useState('file');
+    const [galleryMethod, setGalleryMethod] = useState('file'); // 'file' or 'url'
+    const [galleryFiles, setGalleryFiles] = useState([]);
 
     useEffect(() => {
         fetchMemories();
@@ -24,6 +23,8 @@ const AdminMemories = ({ onBack }) => {
         try {
             const res = await fetch(`${API_URL}/memories`);
             const data = await res.json();
+            // Sort by date desc
+            data.sort((a, b) => new Date(b.date) - new Date(a.date));
             setMemories(data);
             setLoading(false);
         } catch (err) {
@@ -32,26 +33,40 @@ const AdminMemories = ({ onBack }) => {
         }
     };
 
-    const getImageUrl = (imagePath) => {
-        if (!imagePath) return '';
-        if (imagePath.startsWith('http')) return imagePath;
-        return `${API_BASE_URL}${imagePath}`;
+    const getImageUrl = (img) => {
+        if (!img) return 'https://via.placeholder.com/150';
+        if (img.startsWith('http')) return img;
+        return `${API_BASE_URL}${img}`;
     };
 
     const handleChange = (e) => {
-        if (e.target.name === 'imageFile') {
-            const file = e.target.files[0];
-            setFormData({ ...formData, imageFile: file });
-            if (file) {
-                const reader = new FileReader();
-                reader.onloadend = () => setPreview(reader.result);
-                reader.readAsDataURL(file);
-            } else {
-                setPreview(null);
-            }
-        } else {
-            setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setFormData({ ...formData, imageFile: file });
+        if (file) {
+            setPreview(URL.createObjectURL(file));
         }
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this memory?')) return;
+        try {
+            const res = await fetch(`${API_URL}/memories/${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                setMemories(memories.filter(m => m._id !== id));
+            } else {
+                alert('Error deleting memory');
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleGalleryFileChange = (e) => {
+        setGalleryFiles(Array.from(e.target.files));
     };
 
     const handleSubmit = async (e) => {
@@ -60,13 +75,29 @@ const AdminMemories = ({ onBack }) => {
             const url = isEditing ? `${API_URL}/memories/${editId}` : `${API_URL}/memories`;
             const method = isEditing ? 'PUT' : 'POST';
 
+            // Process Arrays
+            const peopleArray = formData.peopleText.split(',').map(s => s.trim()).filter(Boolean);
+            const galleryArray = formData.galleryText.split(',').map(s => s.trim()).filter(Boolean);
+
             const data = new FormData();
             data.append('title', formData.title);
             data.append('date', formData.date);
             data.append('location', formData.location);
             data.append('caption', formData.caption);
+            data.append('story', formData.story);
+            data.append('relatedVlogUrl', formData.relatedVlogUrl);
+            data.append('people', JSON.stringify(peopleArray));
+            data.append('gallery', JSON.stringify(galleryArray));
+
             if (formData.imageFile) data.append('imageFile', formData.imageFile);
             else if (formData.image) data.append('image', formData.image);
+
+            // Append Gallery Files
+            if (galleryFiles.length > 0) {
+                galleryFiles.forEach(file => {
+                    data.append('galleryFiles', file);
+                });
+            }
 
             const res = await fetch(url, { method, body: data });
 
@@ -83,13 +114,7 @@ const AdminMemories = ({ onBack }) => {
         }
     };
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('Delete this memory?')) return;
-        try {
-            await fetch(`${API_URL}/memories/${id}`, { method: 'DELETE' });
-            fetchMemories();
-        } catch (err) { console.error(err); }
-    };
+    // ... (handleDelete)
 
     const handleEdit = (memory) => {
         setFormData({
@@ -98,7 +123,11 @@ const AdminMemories = ({ onBack }) => {
             location: memory.location,
             caption: memory.caption,
             image: memory.image,
-            imageFile: null
+            imageFile: null,
+            story: memory.story || '',
+            peopleText: memory.people ? memory.people.join(', ') : '',
+            relatedVlogUrl: memory.relatedVlogUrl || '',
+            galleryText: memory.gallery ? memory.gallery.join(', ') : ''
         });
         setPreview(getImageUrl(memory.image));
         setIsEditing(true);
@@ -107,10 +136,15 @@ const AdminMemories = ({ onBack }) => {
     };
 
     const resetForm = () => {
-        setFormData({ title: '', date: '', location: '', caption: '', image: '', imageFile: null });
+        setFormData({
+            title: '', date: '', location: '', caption: '', image: '', imageFile: null,
+            story: '', peopleText: '', relatedVlogUrl: '', galleryText: ''
+        });
         setPreview(null);
         setIsEditing(false);
         setEditId(null);
+        setGalleryFiles([]);
+        setGalleryMethod('file');
     };
 
     return (
@@ -135,17 +169,110 @@ const AdminMemories = ({ onBack }) => {
                         <label>Location</label>
                         <input type="text" name="location" value={formData.location} onChange={handleChange} />
                     </div>
+
+
                     <div className="form-group">
-                        <label>Image</label>
-                        <input type="file" name="imageFile" accept="image/*" onChange={handleChange} />
-                        <small>Or URL:</small>
-                        <input type="text" name="image" value={formData.image} onChange={handleChange} placeholder="Image URL" />
-                        {preview && <img src={preview} alt="Preview" className="img-preview-small" />}
+                        <label>Image Source</label>
+                        <div className="radio-group" style={{ display: 'flex', gap: '20px', marginBottom: '10px' }}>
+                            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                                <input
+                                    type="radio"
+                                    checked={imageMethod === 'file'}
+                                    onChange={() => setImageMethod('file')}
+                                    style={{ marginRight: '8px' }}
+                                />
+                                Upload File
+                            </label>
+                            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                                <input
+                                    type="radio"
+                                    checked={imageMethod === 'url'}
+                                    onChange={() => setImageMethod('url')}
+                                    style={{ marginRight: '8px' }}
+                                />
+                                Direct Link (URL)
+                            </label>
+                        </div>
+
+                        {imageMethod === 'file' ? (
+                            <input type="file" name="imageFile" accept="image/*" onChange={handleImageChange} />
+                        ) : (
+                            <input type="text" name="image" value={formData.image} onChange={handleChange} placeholder="https://example.com/image.jpg" />
+                        )}
+
+                        {preview && (
+                            <div style={{ marginTop: '10px' }}>
+                                <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '5px' }}>Preview:</p>
+                                <img src={preview} alt="Preview" className="img-preview-small" style={{ maxHeight: '150px', borderRadius: '8px', border: '1px solid #ddd' }} />
+                            </div>
+                        )}
                     </div>
                     <div className="form-group full-width">
-                        <label>Caption</label>
+                        <label>Caption (Short)</label>
                         <textarea name="caption" value={formData.caption} onChange={handleChange} rows="2"></textarea>
                     </div>
+
+                    <div className="form-group full-width">
+                        <label>The Full Story (Detail Page)</label>
+                        <textarea name="story" value={formData.story} onChange={handleChange} rows="5" placeholder="Write the full memory story here..."></textarea>
+                    </div>
+
+                    <div className="form-group">
+                        <label>People Involved (comma separated)</label>
+                        <input type="text" name="peopleText" value={formData.peopleText} onChange={handleChange} placeholder="Yash, Manjush, Aditya" />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Related Vlog URL (YouTube)</label>
+                        <input type="text" name="relatedVlogUrl" value={formData.relatedVlogUrl} onChange={handleChange} placeholder="https://youtube.com/..." />
+                    </div>
+
+                    <div className="form-group full-width">
+                        <label>Gallery Images</label>
+                        <div className="radio-group" style={{ display: 'flex', gap: '20px', marginBottom: '10px' }}>
+                            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                                <input
+                                    type="radio"
+                                    checked={galleryMethod === 'file'}
+                                    onChange={() => setGalleryMethod('file')}
+                                    style={{ marginRight: '8px' }}
+                                />
+                                Upload Files
+                            </label>
+                            <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
+                                <input
+                                    type="radio"
+                                    checked={galleryMethod === 'url'}
+                                    onChange={() => setGalleryMethod('url')}
+                                    style={{ marginRight: '8px' }}
+                                />
+                                Direct Links (URLs)
+                            </label>
+                        </div>
+
+                        {galleryMethod === 'file' ? (
+                            <input
+                                type="file"
+                                multiple
+                                accept="image/*"
+                                onChange={handleGalleryFileChange}
+                            />
+                        ) : (
+                            <textarea
+                                name="galleryText"
+                                value={formData.galleryText}
+                                onChange={handleChange}
+                                rows="3"
+                                placeholder="http://img1.jpg, http://img2.jpg"
+                            ></textarea>
+                        )}
+                        <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>
+                            {galleryMethod === 'file'
+                                ? `${galleryFiles.length} files selected`
+                                : 'Separate multiple URLs with commas'}
+                        </small>
+                    </div>
+
                     <div className="form-actions">
                         <button type="submit" className="btn-submit">{isEditing ? 'Update' : 'Add'}</button>
                         {isEditing && <button type="button" className="btn-cancel" onClick={resetForm}>Cancel</button>}
@@ -161,17 +288,33 @@ const AdminMemories = ({ onBack }) => {
                             <tr><th>Date</th><th>Image</th><th>Title</th><th>Actions</th></tr>
                         </thead>
                         <tbody>
-                            {memories.map(m => (
-                                <tr key={m._id}>
-                                    <td>{new Date(m.date).toLocaleDateString()}</td>
-                                    <td><img src={getImageUrl(m.image)} className="thumb-img" alt="" /></td>
-                                    <td>{m.title}</td>
-                                    <td>
-                                        <button className="btn-action edit" onClick={() => handleEdit(m)}>Edit</button>
-                                        <button className="btn-action delete" onClick={() => handleDelete(m._id)}>Delete</button>
+                            {Array.isArray(memories) && memories.length > 0 ? (
+                                memories.map(m => (
+                                    <tr key={m._id}>
+                                        <td>{new Date(m.date).toLocaleDateString()}</td>
+                                        <td>
+                                            <img
+                                                src={m.image ? getImageUrl(m.image) : 'https://via.placeholder.com/50'}
+                                                className="thumb-img"
+                                                alt=""
+                                                onError={(e) => e.target.style.display = 'none'}
+                                            />
+                                        </td>
+                                        <td>{m.title}</td>
+                                        <td>
+                                            <button className="btn-action view" onClick={() => window.open(`/memories/${m._id}`, '_blank')} style={{ marginRight: '5px', background: '#3498db' }}>View</button>
+                                            <button className="btn-action edit" onClick={() => handleEdit(m)}>Edit</button>
+                                            <button className="btn-action delete" onClick={() => handleDelete(m._id)}>Delete</button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" style={{ textAlign: 'center', padding: '2rem' }}>
+                                        {loading ? 'Loading memories...' : 'No memories found.'}
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>

@@ -27,6 +27,32 @@ const MemorySchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    // --- Detail Page Fields ---
+    story: {
+        type: String, // Long text for the full story
+        default: ''
+    },
+    gallery: [{
+        type: String // Array of image URLs
+    }],
+    people: [{
+        type: String // Array of names
+    }],
+    relatedVlogUrl: {
+        type: String, // Optional YouTube link
+        default: ''
+    },
+    highlights: [{
+        title: String,
+        description: String,
+        icon: String // Emoji or icon class
+    }],
+    reactions: {
+        heart: { type: Number, default: 0 },
+        laugh: { type: Number, default: 0 },
+        cry: { type: Number, default: 0 },
+        fire: { type: Number, default: 0 }
+    },
     createdAt: {
         type: Date,
         default: Date.now

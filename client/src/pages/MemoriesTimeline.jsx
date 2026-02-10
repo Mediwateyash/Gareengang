@@ -87,9 +87,9 @@ const MemoriesTimeline = () => {
                                     <div className="memory-date">{memory.displayDate}</div>
                                     <div className="memory-location">📍 {memory.location}</div>
                                     <p className="memory-caption">{memory.caption}</p>
-                                    <button className="btn-view-memory">
+                                    <Link to={`/memories/${memory._id}`} className="btn-view-memory" style={{ display: 'inline-block', textDecoration: 'none', textAlign: 'center' }}>
                                         Dive into Memory ➜
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

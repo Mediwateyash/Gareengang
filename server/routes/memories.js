@@ -53,35 +53,62 @@ router.get('/featured', async (req, res) => {
     }
 });
 
+// @route   GET /api/memories/:id
+// @desc    Get a single memory by ID
+router.get('/:id', async (req, res) => {
+    try {
+        const memory = await Memory.findById(req.params.id);
+        if (!memory) return res.status(404).json({ message: 'Memory not found' });
+        res.json(memory);
+    } catch (err) {
+        if (err.kind === 'ObjectId') return res.status(404).json({ message: 'Memory not found' });
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 // @route   POST /api/memories
 // @desc    Create a new memory (with optional file upload)
-router.post('/', upload.single('imageFile'), async (req, res) => {
-    // Note: 'imageFile' is the form field name for the file
-    // 'image' field in req.body might contain a URL string if no file is uploaded (fallback/edit)
-
+router.post('/', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'galleryFiles', maxCount: 50 }]), async (req, res) => {
     try {
-        const { title, date, location, caption, image, featured } = req.body;
+        const {
+            title, date, location, caption, image, featured, featuredOrder,
+            story, gallery, people, relatedVlogUrl, highlights
+        } = req.body;
 
-        // Determine image source: Uploaded file OR URL string
-        let imagePath = image; // Default to URL if provided
-
-        if (req.file) {
-            // Cloudinary - req.file.path contains the cloud URL
-            imagePath = req.file.path;
+        // Determine image source
+        let imagePath = image;
+        if (req.files && req.files['imageFile']) {
+            imagePath = req.files['imageFile'][0].path;
         }
 
-        // Validate that we have some image source
-        if (!imagePath) {
-            return res.status(400).json({ message: 'Image is required (File upload or URL)' });
+        if (!imagePath) return res.status(400).json({ message: 'Image is required' });
+
+        // Parse JSON fields
+        const parseJSON = (field) => {
+            if (typeof field === 'string') {
+                try { return JSON.parse(field); } catch (e) { return []; }
+            }
+            return field || [];
+        };
+
+        let galleryPaths = parseJSON(gallery);
+
+        // Add uploaded gallery images
+        if (req.files && req.files['galleryFiles']) {
+            const uploadedGallery = req.files['galleryFiles'].map(file => file.path);
+            galleryPaths = [...galleryPaths, ...uploadedGallery];
         }
 
         const newMemory = new Memory({
-            title,
-            date,
-            location,
-            caption,
+            title, date, location, caption,
             image: imagePath,
-            featured: featured === 'true' // FormData sends booleans as strings
+            featured: featured === 'true',
+            featuredOrder: featuredOrder || 0,
+            story: story || '',
+            gallery: galleryPaths,
+            people: parseJSON(people),
+            relatedVlogUrl: relatedVlogUrl || '',
+            highlights: parseJSON(highlights)
         });
 
         const memory = await newMemory.save();
@@ -94,27 +121,59 @@ router.post('/', upload.single('imageFile'), async (req, res) => {
 
 // @route   PUT /api/memories/:id
 // @desc    Update a memory
-router.put('/:id', upload.single('imageFile'), async (req, res) => {
+router.put('/:id', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'galleryFiles', maxCount: 50 }]), async (req, res) => {
     try {
-        const { title, date, location, caption, image, featured } = req.body;
+        const {
+            title, date, location, caption, image, featured, featuredOrder,
+            story, gallery, people, relatedVlogUrl, highlights
+        } = req.body;
 
         let memory = await Memory.findById(req.params.id);
         if (!memory) return res.status(404).json({ msg: 'Memory not found' });
 
-        // Update fields
+        // Update basic fields
         if (title) memory.title = title;
         if (date) memory.date = date;
         if (location) memory.location = location;
         if (caption) memory.caption = caption;
-        if (caption) memory.caption = caption;
-        if (featured) memory.featured = featured === 'true';
-        if (req.body.featuredOrder) memory.featuredOrder = parseInt(req.body.featuredOrder);
+        if (featured !== undefined) memory.featured = featured === 'true';
+        if (featuredOrder !== undefined) memory.featuredOrder = parseInt(featuredOrder);
 
-        // Update image if new file uploaded
-        if (req.file) {
-            memory.image = req.file.path;
+        // Update detail fields
+        if (story !== undefined) memory.story = story;
+        if (relatedVlogUrl !== undefined) memory.relatedVlogUrl = relatedVlogUrl;
+
+        const parseJSON = (field) => {
+            if (typeof field === 'string') {
+                try { return JSON.parse(field); } catch (e) { return null; }
+            }
+            return field;
+        };
+
+        // Handle Gallery Update
+        let currentGallery = memory.gallery || [];
+
+        // If gallery URLs are sent (preserving existing ones or adding new URLs)
+        if (gallery) {
+            const parsedGallery = parseJSON(gallery);
+            if (parsedGallery) currentGallery = parsedGallery;
+        }
+
+        // Add new uploaded files to gallery
+        if (req.files && req.files['galleryFiles']) {
+            const uploadedGallery = req.files['galleryFiles'].map(file => file.path);
+            currentGallery = [...currentGallery, ...uploadedGallery];
+        }
+
+        memory.gallery = currentGallery;
+
+        if (people) { const p = parseJSON(people); if (p) memory.people = p; }
+        if (highlights) { const h = parseJSON(highlights); if (h) memory.highlights = h; }
+
+        // Update main image if new file uploaded
+        if (req.files && req.files['imageFile']) {
+            memory.image = req.files['imageFile'][0].path;
         } else if (image) {
-            // Allow updating to a URL string if explicitly provided
             memory.image = image;
         }
 
