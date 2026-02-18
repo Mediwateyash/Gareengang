@@ -3,11 +3,7 @@ import { useEffect, useState } from 'react';
 import API_URL, { API_BASE_URL } from '../config';
 
 const MemoriesFeat = () => {
-    const [images, setImages] = useState([
-        "https://images.unsplash.com/photo-1566419806659-5b7967b57574?q=80&w=2699&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2669&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=2669&auto=format&fit=crop"
-    ]);
+    const [memories, setMemories] = useState([]);
 
     useEffect(() => {
         const fetchLatestMemories = async () => {
@@ -16,7 +12,7 @@ const MemoriesFeat = () => {
                 const res = await fetch(`${API_URL}/memories/featured`);
                 const data = await res.json();
                 if (data && data.length > 0) {
-                    setImages(data.map(m => getImageUrl(m.image)));
+                    setMemories(data);
                 }
             } catch (error) {
                 console.error("Error fetching featured memories:", error);
@@ -87,6 +83,10 @@ const MemoriesFeat = () => {
                         height: 340px;
                         position: relative;
                         transition: all 0.4s ease;
+                        cursor: pointer;
+                        text-decoration: none;
+                        color: inherit;
+                        display: block;
                     }
 
                     .scrap-card::before {
@@ -115,7 +115,7 @@ const MemoriesFeat = () => {
 
                     .scrap-img {
                         width: 100%;
-                        height: 100%;
+                        height: 85%; /* Leave space for caption */
                         object-fit: cover;
                         filter: sepia(0.2);
                         transition: filter 0.3s;
@@ -123,6 +123,13 @@ const MemoriesFeat = () => {
 
                     .scrap-card:hover .scrap-img {
                         filter: sepia(0);
+                    }
+                    
+                    .scrap-caption {
+                        font-family: 'nanum pen script';
+                        font-size: 1.5rem;
+                        margin-top: 5px;
+                        line-height: 1;
                     }
 
                     .btn-explore {
@@ -150,11 +157,16 @@ const MemoriesFeat = () => {
                 </p>
 
                 <div className="collage-container">
-                    {images.map((src, index) => (
-                        <div key={index} className="scrap-card">
-                            <img src={src} alt="Memory Preview" className="scrap-img" />
-                        </div>
-                    ))}
+                    {memories.length > 0 ? (
+                        memories.map((m) => (
+                            <Link key={m._id} to={`/memories/${m._id}`} className="scrap-card">
+                                <img src={getImageUrl(m.image)} alt={m.title} className="scrap-img" />
+                                <div className="scrap-caption">{m.title}</div>
+                            </Link>
+                        ))
+                    ) : (
+                        <p>Loading best moments...</p>
+                    )}
                 </div>
 
                 <Link to="/memories" className="btn-explore">

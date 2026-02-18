@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import API_URL, { API_BASE_URL } from '../config';
 
 const AdminMemories = ({ onBack }) => {
@@ -6,7 +6,7 @@ const AdminMemories = ({ onBack }) => {
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
         title: '', date: '', location: '', caption: '', image: '', imageFile: null,
-        story: '', peopleText: '', relatedVlogUrl: '', galleryText: ''
+        story: '', peopleText: '', relatedVlogUrl: '', galleryText: '', featured: false
     });
     const [isEditing, setIsEditing] = useState(false);
     const [editId, setEditId] = useState(null);
@@ -14,6 +14,8 @@ const AdminMemories = ({ onBack }) => {
     const [imageMethod, setImageMethod] = useState('file');
     const [galleryMethod, setGalleryMethod] = useState('file'); // 'file' or 'url'
     const [galleryFiles, setGalleryFiles] = useState([]);
+    const [isDragging, setIsDragging] = useState(false);
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         fetchMemories();
@@ -88,6 +90,7 @@ const AdminMemories = ({ onBack }) => {
             data.append('relatedVlogUrl', formData.relatedVlogUrl);
             data.append('people', JSON.stringify(peopleArray));
             data.append('gallery', JSON.stringify(galleryArray));
+            data.append('featured', formData.featured); // Add Featured
 
             if (formData.imageFile) data.append('imageFile', formData.imageFile);
             else if (formData.image) data.append('image', formData.image);
@@ -114,6 +117,31 @@ const AdminMemories = ({ onBack }) => {
         }
     };
 
+
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        setIsDragging(false);
+        const files = Array.from(e.dataTransfer.files);
+        if (files.length > 0) {
+            setGalleryFiles(prev => [...prev, ...files]);
+        }
+    };
+
+    const removeGalleryFile = (index) => {
+        setGalleryFiles(prev => prev.filter((_, i) => i !== index));
+    };
+
     // ... (handleDelete)
 
     const handleEdit = (memory) => {
@@ -127,7 +155,8 @@ const AdminMemories = ({ onBack }) => {
             story: memory.story || '',
             peopleText: memory.people ? memory.people.join(', ') : '',
             relatedVlogUrl: memory.relatedVlogUrl || '',
-            galleryText: memory.gallery ? memory.gallery.join(', ') : ''
+            galleryText: memory.gallery ? memory.gallery.join(', ') : '',
+            featured: memory.featured || false
         });
         setPreview(getImageUrl(memory.image));
         setIsEditing(true);
@@ -138,7 +167,7 @@ const AdminMemories = ({ onBack }) => {
     const resetForm = () => {
         setFormData({
             title: '', date: '', location: '', caption: '', image: '', imageFile: null,
-            story: '', peopleText: '', relatedVlogUrl: '', galleryText: ''
+            story: '', peopleText: '', relatedVlogUrl: '', galleryText: '', featured: false
         });
         setPreview(null);
         setIsEditing(false);
@@ -227,6 +256,19 @@ const AdminMemories = ({ onBack }) => {
                         <input type="text" name="relatedVlogUrl" value={formData.relatedVlogUrl} onChange={handleChange} placeholder="https://youtube.com/..." />
                     </div>
 
+                    <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#fff3cd', padding: '10px', borderRadius: '5px', border: '1px solid #ffeeba' }}>
+                        <input
+                            type="checkbox"
+                            name="featured"
+                            checked={formData.featured}
+                            onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                            style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                        />
+                        <label style={{ margin: 0, fontWeight: 'bold', color: '#856404', cursor: 'pointer' }} onClick={() => setFormData({ ...formData, featured: !formData.featured })}>
+                            Feature this in "Our Best Moments" ?
+                        </label>
+                    </div>
+
                     <div className="form-group full-width">
                         <label>Gallery Images</label>
                         <div className="radio-group" style={{ display: 'flex', gap: '20px', marginBottom: '10px' }}>
@@ -251,12 +293,38 @@ const AdminMemories = ({ onBack }) => {
                         </div>
 
                         {galleryMethod === 'file' ? (
-                            <input
-                                type="file"
-                                multiple
-                                accept="image/*"
-                                onChange={handleGalleryFileChange}
-                            />
+                            <div
+                                className={`drop-zone ${isDragging ? 'dragging' : ''}`}
+                                onDragOver={handleDragOver}
+                                onDragLeave={handleDragLeave}
+                                onDrop={handleDrop}
+                                onClick={() => fileInputRef.current.click()}
+                                style={{
+                                    border: isDragging ? '2px dashed #3498db' : '2px dashed #ccc',
+                                    borderRadius: '8px',
+                                    padding: '20px',
+                                    textAlign: 'center',
+                                    backgroundColor: isDragging ? 'rgba(52, 152, 219, 0.1)' : '#f9f9f9',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease'
+                                }}
+                            >
+                                <p style={{ margin: 0, color: '#666' }}>
+                                    {isDragging ? 'Drop images here...' : 'Drag & Drop photos here or Click to Select'}
+                                </p>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    multiple
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        if (e.target.files.length > 0) {
+                                            setGalleryFiles(prev => [...prev, ...Array.from(e.target.files)]);
+                                        }
+                                    }}
+                                    style={{ display: 'none' }}
+                                />
+                            </div>
                         ) : (
                             <textarea
                                 name="galleryText"
@@ -268,9 +336,46 @@ const AdminMemories = ({ onBack }) => {
                         )}
                         <small style={{ display: 'block', marginTop: '5px', color: '#666' }}>
                             {galleryMethod === 'file'
-                                ? `${galleryFiles.length} files selected`
+                                ? `${galleryFiles.length} files selected (Max 50)`
                                 : 'Separate multiple URLs with commas'}
                         </small>
+
+                        {/* Gallery Previews */}
+                        {galleryFiles.length > 0 && galleryMethod === 'file' && (
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                                {galleryFiles.map((file, index) => (
+                                    <div key={index} style={{ position: 'relative' }}>
+                                        <img
+                                            src={URL.createObjectURL(file)}
+                                            alt={`preview-${index}`}
+                                            style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #ddd' }}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => removeGalleryFile(index)}
+                                            style={{
+                                                position: 'absolute',
+                                                top: '-5px',
+                                                right: '-5px',
+                                                background: 'red',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '50%',
+                                                width: '20px',
+                                                height: '20px',
+                                                cursor: 'pointer',
+                                                fontSize: '12px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="form-actions">
@@ -299,8 +404,12 @@ const AdminMemories = ({ onBack }) => {
                                                 alt=""
                                                 onError={(e) => e.target.style.display = 'none'}
                                             />
+
                                         </td>
-                                        <td>{m.title}</td>
+                                        <td>
+                                            {m.title}
+                                            {m.featured && <span style={{ marginLeft: '10px', fontSize: '1.2rem' }} title="Featured Memory">⭐</span>}
+                                        </td>
                                         <td>
                                             <button className="btn-action view" onClick={() => window.open(`/memories/${m._id}`, '_blank')} style={{ marginRight: '5px', background: '#3498db' }}>View</button>
                                             <button className="btn-action edit" onClick={() => handleEdit(m)}>Edit</button>
