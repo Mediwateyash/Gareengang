@@ -66,6 +66,16 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+// Helper to normalize gallery items to objects
+const normalizeGallery = (items) => {
+    return items.map(item => {
+        if (typeof item === 'string') {
+            return { url: item, likes: 0, comments: [] };
+        }
+        return item;
+    });
+};
+
 // @route   POST /api/memories
 // @desc    Create a new memory (with optional file upload)
 router.post('/', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'galleryFiles', maxCount: 50 }]), async (req, res) => {
@@ -99,13 +109,16 @@ router.post('/', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'gal
             galleryPaths = [...galleryPaths, ...uploadedGallery];
         }
 
+        // Convert all gallery items to objects
+        const galleryObjects = normalizeGallery(galleryPaths);
+
         const newMemory = new Memory({
             title, date, location, caption,
             image: imagePath,
             featured: featured === 'true',
             featuredOrder: featuredOrder || 0,
             story: story || '',
-            gallery: galleryPaths,
+            gallery: galleryObjects,
             people: parseJSON(people),
             relatedVlogUrl: relatedVlogUrl || '',
             highlights: parseJSON(highlights)
@@ -156,13 +169,20 @@ router.put('/:id', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'g
         // If gallery URLs are sent (preserving existing ones or adding new URLs)
         if (gallery) {
             const parsedGallery = parseJSON(gallery);
-            if (parsedGallery) currentGallery = parsedGallery;
+            if (parsedGallery) {
+                // If it's a mix of objects (existing) and strings (new/legacy), normalize only strings
+                // However, simpler to just re-normalize everything if we trust the input structure
+                // But wait, existing objects have IDs, likes, comments. We shouldn't crush them.
+                // Strategy: If input is string, make new object. If object, keep it.
+                currentGallery = normalizeGallery(parsedGallery);
+            }
         }
 
         // Add new uploaded files to gallery
         if (req.files && req.files['galleryFiles']) {
             const uploadedGallery = req.files['galleryFiles'].map(file => file.path);
-            currentGallery = [...currentGallery, ...uploadedGallery];
+            const newObjects = normalizeGallery(uploadedGallery);
+            currentGallery = [...currentGallery, ...newObjects];
         }
 
         memory.gallery = currentGallery;
@@ -201,6 +221,47 @@ router.delete('/:id', async (req, res) => {
 
         res.json({ msg: 'Memory removed' });
     } catch (err) {
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   POST /api/memories/:id/gallery/:itemId/like
+// @desc    Like a gallery image
+router.post('/:id/gallery/:itemId/like', async (req, res) => {
+    try {
+        const memory = await Memory.findById(req.params.id);
+        if (!memory) return res.status(404).json({ msg: 'Memory not found' });
+
+        const item = memory.gallery.id(req.params.itemId);
+        if (!item) return res.status(404).json({ msg: 'Image not found' });
+
+        item.likes += 1;
+        await memory.save();
+        res.json(memory);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   POST /api/memories/:id/gallery/:itemId/comment
+// @desc    Comment on a gallery image
+router.post('/:id/gallery/:itemId/comment', async (req, res) => {
+    try {
+        const { text } = req.body;
+        if (!text) return res.status(400).json({ msg: 'Text is required' });
+
+        const memory = await Memory.findById(req.params.id);
+        if (!memory) return res.status(404).json({ msg: 'Memory not found' });
+
+        const item = memory.gallery.id(req.params.itemId);
+        if (!item) return res.status(404).json({ msg: 'Image not found' });
+
+        item.comments.push({ text });
+        await memory.save();
+        res.json(memory);
+    } catch (err) {
+        console.error(err);
         res.status(500).send('Server Error');
     }
 });

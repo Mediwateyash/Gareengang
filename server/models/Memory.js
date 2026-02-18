@@ -33,7 +33,12 @@ const MemorySchema = new mongoose.Schema({
         default: ''
     },
     gallery: [{
-        type: String // Array of image URLs
+        url: { type: String, required: true },
+        likes: { type: Number, default: 0 },
+        comments: [{
+            text: { type: String, required: true },
+            createdAt: { type: Date, default: Date.now }
+        }]
     }],
     people: [{
         type: String // Array of names
