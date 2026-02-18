@@ -5,37 +5,54 @@ import './MemoriesTimeline.css';
 
 const MemoriesTimeline = () => {
     const [memories, setMemories] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [visibleCount, setVisibleCount] = useState(4);
 
     useEffect(() => {
-        const fetchMemories = async () => {
+        const fetchData = async () => {
             try {
-                const res = await fetch(`${API_URL}/memories`);
-                if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-                const data = await res.json();
+                const [memRes, catRes] = await Promise.all([
+                    fetch(`${API_URL}/memories`),
+                    fetch(`${API_URL}/categories`)
+                ]);
 
-                const formattedData = data.map(memory => {
-                    const dateObj = new Date(memory.date);
-                    return {
-                        ...memory,
-                        displayDate: dateObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-                    };
-                });
+                const memData = await memRes.json();
+                memData.sort((a, b) => new Date(b.date) - new Date(a.date));
+                setMemories(memData);
 
-                // Sort by date descending
-                formattedData.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                setMemories(formattedData);
+                if (catRes.ok) {
+                    setCategories(await catRes.json());
+                }
                 setLoading(false);
             } catch (err) {
-                console.error('Error fetching memories:', err);
-                setError(err.message);
+                console.error(err);
                 setLoading(false);
             }
         };
-        fetchMemories();
+        fetchData();
     }, []);
+
+    const handleLoadMore = () => {
+        setVisibleCount(prev => prev + 4);
+    };
+
+    const getGroupedMemories = () => {
+        const groups = categories.map(cat => ({
+            name: cat.name,
+            items: memories.filter(m => m.category === cat.name)
+        }));
+
+        // Add "Uncategorized" if any exist
+        const uncategorizedItems = memories.filter(m => !m.category || m.category === 'Uncategorized');
+        if (uncategorizedItems.length > 0) {
+            groups.push({ name: 'Uncategorized', items: uncategorizedItems });
+        }
+
+        return groups.filter(g => g.items.length > 0);
+    };
+
+    const groupedMemories = getGroupedMemories();
 
     const getImageUrl = (imagePath) => {
         if (!imagePath) return '';
@@ -43,59 +60,74 @@ const MemoriesTimeline = () => {
         return `${API_BASE_URL}${imagePath}`;
     };
 
+    if (loading) return <div style={{ background: '#141414', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'white' }}>Loading...</div>;
+
     return (
         <div className="memories-container">
-            {/* Background Doodles & Text */}
-            <div className="bg-doodle" style={{ top: '15%', left: '5%', transform: 'rotate(-15deg)' }}>✈️ Fly High!</div>
-            <div className="bg-doodle" style={{ top: '25%', right: '8%', transform: 'rotate(10deg)', color: '#ff7675' }}>Pure Chaos 💥</div>
-            <div className="bg-doodle" style={{ top: '45%', left: '10%', transform: 'rotate(-5deg)', fontSize: '1.5rem', color: '#6c5ce7' }}>Unforgettable 💖</div>
-            <div className="bg-doodle" style={{ top: '60%', right: '5%', transform: 'rotate(15deg)' }}>Road trippin' 🚗</div>
-            <div className="bg-doodle" style={{ top: '80%', left: '8%', transform: 'rotate(-10deg)', color: '#00b894' }}>Epic Moments 📸</div>
-
-            {/* More Scribbles */}
-            <div className="bg-doodle" style={{ top: '10%', right: '20%', transform: 'rotate(5deg)', fontSize: '1.2rem', opacity: 0.1 }}>cannot believe we did this...</div>
-            <div className="bg-doodle" style={{ top: '35%', left: '15%', transform: 'rotate(-8deg)', fontSize: '2.5rem', opacity: 0.15 }}>LOL 😂</div>
-            <div className="bg-doodle" style={{ top: '50%', right: '12%', transform: 'rotate(12deg)', fontSize: '1.2rem', border: '1px solid #333', padding: '2px 8px', borderRadius: '50% 20% / 10% 40%', opacity: 0.2 }}>Date?</div>
-            <div className="bg-doodle" style={{ top: '70%', left: '20%', transform: 'rotate(-3deg)', fontSize: '1.5rem', color: '#fdcb6e' }}>✨✨✨</div>
-            <div className="bg-doodle" style={{ top: '90%', right: '15%', transform: 'rotate(8deg)', fontFamily: 'Permanent Marker', opacity: 0.1 }}>BEST DAY EVER</div>
-            <div className="bg-doodle" style={{ top: '5%', left: '30%', transform: 'rotate(20deg)', fontSize: '1rem', borderBottom: '2px wavy #ff7675' }}>Wild & Free</div>
-
             <div className="memories-header">
                 <h1 className="memories-title">Our Journey</h1>
-                <p className="memories-subtitle">Every picture tells a story...</p>
-                <Link to="/" className="btn-back-home">← Back to Home</Link>
+                <p className="memories-subtitle">A collection of moments worth remembering.</p>
+                <Link to="/" className="btn-back-home">← Home</Link>
             </div>
 
-            {loading ? (
-                <div style={{ textAlign: 'center', marginTop: '50px', fontSize: '1.5rem', fontFamily: 'Permanent Marker' }}>
-                    Parsing Memories... ⏳
-                </div>
-            ) : error ? (
-                <div style={{ textAlign: 'center', color: '#e74c3c' }}>Error: {error}</div>
-            ) : memories.length === 0 ? (
-                <div style={{ textAlign: 'center', fontSize: '1.5rem', color: '#888' }}>
-                    <p>No memories found. Start adding some!</p>
-                </div>
-            ) : (
+            {/* 1. TIMELINE SECTION */}
+            <div className="timeline-section">
                 <div className="timeline">
-                    {memories.map((memory, index) => (
+                    {memories.slice(0, visibleCount).map((memory, index) => (
                         <div key={memory._id} className={`memory-card ${index % 2 === 0 ? 'card-left' : 'card-right'}`}>
-                            <div className="polaroid-content">
-                                <img src={getImageUrl(memory.image)} alt={memory.title} className="memory-img" loading="lazy" />
-                                <div className="text-content">
-                                    <h3 className="memory-title">{memory.title}</h3>
-                                    <div className="memory-date">{memory.displayDate}</div>
-                                    <div className="memory-location">📍 {memory.location}</div>
-                                    <p className="memory-caption">{memory.caption}</p>
-                                    <Link to={`/memories/${memory._id}`} className="btn-view-memory" style={{ display: 'inline-block', textDecoration: 'none', textAlign: 'center' }}>
-                                        Dive into Memory ➜
-                                    </Link>
+                            <div className="timeline-content">
+                                <img src={getImageUrl(memory.image)} alt={memory.title} className="timeline-img" loading="lazy" />
+                                <div className="timeline-info">
+                                    <h3 className="timeline-title">{memory.title}</h3>
+                                    <div className="timeline-date">{new Date(memory.date).toLocaleDateString()}</div>
+                                    <p className="timeline-desc">{memory.caption}</p>
+                                    <Link to={`/memories/${memory._id}`} className="btn-dive">Dive In ➜</Link>
                                 </div>
                             </div>
                         </div>
                     ))}
+                    {/* Add fade overlay if there are more items */}
+                    {visibleCount < memories.length && <div className="timeline-overlay-fade"></div>}
                 </div>
-            )}
+
+                {visibleCount < memories.length && (
+                    <div className="timeline-footer">
+                        <button className="btn-load-more" onClick={handleLoadMore}>Continue Journey ↓</button>
+                    </div>
+                )}
+            </div>
+
+            {/* 2. NETFLIX-STYLE ROWS (Scrapbook Mode) */}
+            <div className="category-rows">
+                <h2 style={{ paddingLeft: '5px', marginBottom: '2rem', fontSize: '2.5rem', color: '#e74c3c', fontFamily: 'Permanent Marker' }}>Browse by Collection</h2>
+
+                {groupedMemories.map((group) => (
+                    <div key={group.name} className="category-row">
+                        <h3 className="row-title">{group.name}</h3>
+                        <div className="row-scroll-container">
+                            {/* Render up to 10 items normally, then the 'See All' button */}
+                            {group.items.slice(0, 10).map(m => (
+                                <Link to={`/memories/${m._id}`} key={m._id} className="netflix-card">
+                                    <div className="pin-tape"></div>
+                                    <img src={getImageUrl(m.image)} alt={m.title} className="netflix-img" loading="lazy" />
+                                    <div className="netflix-info">
+                                        <div className="netflix-title">{m.title}</div>
+                                    </div>
+                                </Link>
+                            ))}
+
+                            {/* 'See All' Button Card */}
+                            <div className="netflix-card view-all-card" onClick={() => alert(`Showing all ${group.items.length} memories for ${group.name}`)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffeaa7', minWidth: '200px' }}>
+                                <div className="pin-tape"></div>
+                                <div style={{ textAlign: 'center' }}>
+                                    <span style={{ fontSize: '2rem', display: 'block' }}>📚</span>
+                                    <span style={{ fontFamily: 'Patrick Hand', fontSize: '1.2rem', fontWeight: 'bold' }}>See All<br />{group.items.length} Memories</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

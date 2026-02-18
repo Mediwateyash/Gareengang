@@ -81,7 +81,7 @@ const normalizeGallery = (items) => {
 router.post('/', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'galleryFiles', maxCount: 50 }]), async (req, res) => {
     try {
         const {
-            title, date, location, caption, image, featured, featuredOrder,
+            title, date, location, category, caption, image, featured, featuredOrder,
             story, gallery, people, relatedVlogUrl, highlights
         } = req.body;
 
@@ -114,6 +114,7 @@ router.post('/', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'gal
 
         const newMemory = new Memory({
             title, date, location, caption,
+            category: category || 'Uncategorized',
             image: imagePath,
             featured: featured === 'true',
             featuredOrder: featuredOrder || 0,
@@ -137,7 +138,7 @@ router.post('/', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'gal
 router.put('/:id', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'galleryFiles', maxCount: 50 }]), async (req, res) => {
     try {
         const {
-            title, date, location, caption, image, featured, featuredOrder,
+            title, date, location, category, caption, image, featured, featuredOrder,
             story, gallery, people, relatedVlogUrl, highlights
         } = req.body;
 
@@ -148,6 +149,7 @@ router.put('/:id', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'g
         if (title) memory.title = title;
         if (date) memory.date = date;
         if (location) memory.location = location;
+        if (category) memory.category = category;
         if (caption) memory.caption = caption;
         if (featured !== undefined) memory.featured = featured === 'true';
         if (featuredOrder !== undefined) memory.featuredOrder = parseInt(featuredOrder);

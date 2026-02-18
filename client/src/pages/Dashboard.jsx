@@ -4,6 +4,7 @@ import AdminMemories from '../components/AdminMemories';
 import AdminVlogs from '../components/AdminVlogs';
 import AdminUsers from '../components/AdminUsers'; // Import User Management
 import AdminHome from '../components/AdminHome'; // Import Home Manager
+import AdminCategories from '../components/AdminCategories'; // Import Category Manager
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -71,6 +72,12 @@ const Dashboard = () => {
                             <h3>Manage Users</h3>
                             <p>Admin access control.</p>
                         </div>
+
+                        <div className="admin-card" onClick={() => setActiveView('categories')}>
+                            <div className="icon">🏷️</div>
+                            <h3>Categories</h3>
+                            <p>Create & Edit Categories.</p>
+                        </div>
                     </div>
                 )}
 
@@ -78,6 +85,7 @@ const Dashboard = () => {
                 {activeView === 'vlogs' && <AdminVlogs onBack={() => setActiveView('menu')} />}
                 {activeView === 'users' && <AdminUsers onBack={() => setActiveView('menu')} />}
                 {activeView === 'home' && <AdminHome onBack={() => setActiveView('menu')} />}
+                {activeView === 'categories' && <AdminCategories onBack={() => setActiveView('menu')} />}
             </main>
         </div>
     );

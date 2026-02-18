@@ -21,6 +21,7 @@ connectDB().then(() => {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/memories', require('./routes/memories'));
 app.use('/api/vlogs', require('./routes/vlogs'));
+app.use('/api/categories', require('./routes/categories')); // Dynamic Categories
 app.use('/api/setup', require('./routes/setup')); // One-click setup
 
 

@@ -12,6 +12,10 @@ const MemorySchema = new mongoose.Schema({
     location: {
         type: String
     },
+    category: {
+        type: String,
+        default: 'Uncategorized'
+    },
     caption: {
         type: String
     },

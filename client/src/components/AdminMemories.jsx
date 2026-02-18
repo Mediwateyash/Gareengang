@@ -3,23 +3,25 @@ import API_URL, { API_BASE_URL } from '../config';
 
 const AdminMemories = ({ onBack }) => {
     const [memories, setMemories] = useState([]);
+    const [categories, setCategories] = useState([]); // Dynamic Categories
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
-        title: '', date: '', location: '', caption: '', image: '', imageFile: null,
+        title: '', date: '', location: '', category: 'Uncategorized', caption: '', image: '', imageFile: null,
         story: '', peopleText: '', relatedVlogUrl: '', galleryText: '', featured: false
     });
-    const [isEditing, setIsEditing] = useState(false);
-    const [editId, setEditId] = useState(null);
-    const [preview, setPreview] = useState(null);
-    const [imageMethod, setImageMethod] = useState('file');
-    const [galleryMethod, setGalleryMethod] = useState('file'); // 'file' or 'url'
-    const [galleryFiles, setGalleryFiles] = useState([]);
-    const [isDragging, setIsDragging] = useState(false);
-    const fileInputRef = useRef(null);
+    // ... rest of state
 
     useEffect(() => {
         fetchMemories();
+        fetchCategories(); // Fetch on load
     }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const res = await fetch(`${API_URL}/categories`);
+            if (res.ok) setCategories(await res.json());
+        } catch (err) { console.error(err); }
+    };
 
     const fetchMemories = async () => {
         try {
@@ -85,6 +87,7 @@ const AdminMemories = ({ onBack }) => {
             data.append('title', formData.title);
             data.append('date', formData.date);
             data.append('location', formData.location);
+            data.append('category', formData.category);
             data.append('caption', formData.caption);
             data.append('story', formData.story);
             data.append('relatedVlogUrl', formData.relatedVlogUrl);
@@ -149,13 +152,14 @@ const AdminMemories = ({ onBack }) => {
             title: memory.title,
             date: memory.date.split('T')[0],
             location: memory.location,
+            category: memory.category || 'Uncategorized',
             caption: memory.caption,
             image: memory.image,
             imageFile: null,
             story: memory.story || '',
             peopleText: memory.people ? memory.people.join(', ') : '',
             relatedVlogUrl: memory.relatedVlogUrl || '',
-            galleryText: memory.gallery ? memory.gallery.join(', ') : '',
+            galleryText: memory.gallery ? memory.gallery.map(g => typeof g === 'string' ? g : g.url).join(', ') : '',
             featured: memory.featured || false
         });
         setPreview(getImageUrl(memory.image));
@@ -166,7 +170,7 @@ const AdminMemories = ({ onBack }) => {
 
     const resetForm = () => {
         setFormData({
-            title: '', date: '', location: '', caption: '', image: '', imageFile: null,
+            title: '', date: '', location: '', category: 'Uncategorized', caption: '', image: '', imageFile: null,
             story: '', peopleText: '', relatedVlogUrl: '', galleryText: '', featured: false
         });
         setPreview(null);
@@ -197,6 +201,16 @@ const AdminMemories = ({ onBack }) => {
                     <div className="form-group">
                         <label>Location</label>
                         <input type="text" name="location" value={formData.location} onChange={handleChange} />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Category</label>
+                        <select name="category" value={formData.category} onChange={handleChange} style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}>
+                            <option value="Uncategorized">Uncategorized</option>
+                            {categories.map(cat => (
+                                <option key={cat._id} value={cat.name}>{cat.name}</option>
+                            ))}
+                        </select>
                     </div>
 
 
