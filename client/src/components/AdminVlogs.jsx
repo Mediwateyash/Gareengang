@@ -10,7 +10,8 @@ const AdminVlogs = ({ onBack }) => {
         title: '',
         videoUrl: '',
         category: 'Trip',
-        description: ''
+        description: '',
+        featured: false
     });
 
     useEffect(() => {
@@ -44,7 +45,8 @@ const AdminVlogs = ({ onBack }) => {
             title: vlog.title,
             videoUrl: vlog.videoUrl,
             category: vlog.category,
-            description: vlog.description || ''
+            description: vlog.description || '',
+            featured: vlog.featured || false
         });
         // Scroll to form
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -53,7 +55,7 @@ const AdminVlogs = ({ onBack }) => {
     const cancelEdit = () => {
         setIsEditing(false);
         setEditId(null);
-        setFormData({ title: '', videoUrl: '', category: 'Trip', description: '' });
+        setFormData({ title: '', videoUrl: '', category: 'Trip', description: '', featured: false });
     };
 
     const handleSubmit = async (e) => {
@@ -128,6 +130,20 @@ const AdminVlogs = ({ onBack }) => {
                             rows="2"
                         ></textarea>
                     </div>
+
+                    <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#fff3cd', padding: '10px', borderRadius: '5px', border: '1px solid #ffeeba' }}>
+                        <input
+                            type="checkbox"
+                            name="featured"
+                            checked={formData.featured}
+                            onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                            style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                        />
+                        <label style={{ margin: 0, fontWeight: 'bold', color: '#856404', cursor: 'pointer' }} onClick={() => setFormData({ ...formData, featured: !formData.featured })}>
+                            Feature this Vlog on Home Page?
+                        </label>
+                    </div>
+
                     <div className="form-actions">
                         {isEditing && (
                             <button type="button" className="btn-cancel" onClick={cancelEdit}>Cancel</button>
@@ -161,7 +177,10 @@ const AdminVlogs = ({ onBack }) => {
                                             className="thumb-img"
                                         />
                                     </td>
-                                    <td>{vlog.title}</td>
+                                    <td>
+                                        {vlog.title}
+                                        {vlog.featured && <span style={{ marginLeft: '10px', fontSize: '1.2rem' }} title="Featured Vlog">⭐</span>}
+                                    </td>
                                     <td>{vlog.category}</td>
                                     <td>
                                         <button className="btn-action edit" onClick={() => handleEdit(vlog)} style={{ marginRight: '10px' }}>Edit</button>
