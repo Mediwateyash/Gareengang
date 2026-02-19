@@ -9,7 +9,16 @@ const AdminMemories = ({ onBack }) => {
         title: '', date: '', location: '', category: 'Uncategorized', caption: '', image: '', imageFile: null,
         story: '', peopleText: '', relatedVlogUrl: '', galleryText: '', featured: false
     });
-    // ... rest of state
+
+    // Restored State
+    const [isEditing, setIsEditing] = useState(false);
+    const [editId, setEditId] = useState(null);
+    const [preview, setPreview] = useState(null);
+    const [imageMethod, setImageMethod] = useState('file');
+    const [galleryMethod, setGalleryMethod] = useState('file'); // 'file' or 'url'
+    const [galleryFiles, setGalleryFiles] = useState([]);
+    const [isDragging, setIsDragging] = useState(false);
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         fetchMemories();

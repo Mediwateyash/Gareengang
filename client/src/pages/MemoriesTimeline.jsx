@@ -38,18 +38,15 @@ const MemoriesTimeline = () => {
     };
 
     const getGroupedMemories = () => {
-        const groups = categories.map(cat => ({
-            name: cat.name,
-            items: memories.filter(m => m.category === cat.name)
-        }));
+        // Use the populated memories from the category object itself (Admin "Playlist" order)
+        const groups = categories
+            .filter(cat => cat.memories && cat.memories.length > 0)
+            .map(cat => ({
+                name: cat.name,
+                items: cat.memories
+            }));
 
-        // Add "Uncategorized" if any exist
-        const uncategorizedItems = memories.filter(m => !m.category || m.category === 'Uncategorized');
-        if (uncategorizedItems.length > 0) {
-            groups.push({ name: 'Uncategorized', items: uncategorizedItems });
-        }
-
-        return groups.filter(g => g.items.length > 0);
+        return groups;
     };
 
     const groupedMemories = getGroupedMemories();
@@ -103,7 +100,10 @@ const MemoriesTimeline = () => {
 
                 {groupedMemories.map((group) => (
                     <div key={group.name} className="category-row">
-                        <h3 className="row-title">{group.name}</h3>
+                        <div className="row-header">
+                            <h3 className="row-title">{group.name}</h3>
+                            <button className="btn-watch-all">Watch All ▶</button>
+                        </div>
                         <div className="row-scroll-container">
                             {/* Render up to 10 items normally, then the 'See All' button */}
                             {group.items.slice(0, 10).map(m => (
@@ -115,18 +115,13 @@ const MemoriesTimeline = () => {
                                     </div>
                                 </Link>
                             ))}
-
-                            {/* 'See All' Button Card */}
-                            <div className="netflix-card view-all-card" onClick={() => alert(`Showing all ${group.items.length} memories for ${group.name}`)} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#ffeaa7', minWidth: '200px' }}>
-                                <div className="pin-tape"></div>
-                                <div style={{ textAlign: 'center' }}>
-                                    <span style={{ fontSize: '2rem', display: 'block' }}>📚</span>
-                                    <span style={{ fontFamily: 'Patrick Hand', fontSize: '1.2rem', fontWeight: 'bold' }}>See All<br />{group.items.length} Memories</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 ))}
+
+                <div className="scroll-hint-container">
+                    <span className="scroll-hint-text">Scroll to see more ➔</span>
+                </div>
             </div>
         </div>
     );

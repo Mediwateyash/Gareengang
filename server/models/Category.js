@@ -11,6 +11,10 @@ const CategorySchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    memories: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Memory'
+    }],
     createdAt: {
         type: Date,
         default: Date.now

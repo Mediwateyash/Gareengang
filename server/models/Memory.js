@@ -37,7 +37,7 @@ const MemorySchema = new mongoose.Schema({
         default: ''
     },
     gallery: [{
-        url: { type: String, required: true },
+        url: { type: String },
         likes: { type: Number, default: 0 },
         comments: [{
             text: { type: String, required: true },
