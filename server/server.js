@@ -22,7 +22,9 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/memories', require('./routes/memories'));
 app.use('/api/vlogs', require('./routes/vlogs'));
 app.use('/api/categories', require('./routes/categories')); // Dynamic Categories
+app.use('/api/settings', require('./routes/settings')); // Site Settings
 app.use('/api/setup', require('./routes/setup')); // One-click setup
+app.use('/api/faces', require('./routes/faces')); // Faces of GareebGang
 
 
 const path = require('path');

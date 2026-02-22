@@ -1,0 +1,141 @@
+.faces-section {
+    padding: 4rem 5%;
+    background-color: var(--color-background-elevated);
+    text-align: center;
+}
+
+.faces-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.faces-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--color-accent) 0%, #7b2cbf 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.faces-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+}
+
+.faces-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /* Smaller cards */
+    gap: 1.5rem;
+    justify-items: center;
+}
+
+.face-card {
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    width: 100%;
+    max-width: 220px;
+    /* Restrict max width to keep them small */
+    display: flex;
+    flex-direction: column;
+}
+
+.face-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    border-color: var(--color-accent);
+}
+
+.face-image-container {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    /* Square images */
+    overflow: hidden;
+    position: relative;
+    background-color: var(--color-background-elevated);
+}
+
+.face-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.face-card:hover .face-image {
+    transform: scale(1.05);
+}
+
+.face-info {
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.face-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.face-trait {
+    font-size: 0.85rem;
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
+/* Loading/Error States */
+.faces-loading,
+.faces-error {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: var(--color-text-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .faces-title {
+        font-size: 2rem;
+    }
+
+    .faces-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        /* Even smaller on mobile */
+        gap: 1rem;
+    }
+
+    .face-card {
+        max-width: 180px;
+    }
+
+    .face-name {
+        font-size: 1rem;
+    }
+
+    .face-trait {
+        font-size: 0.8rem;
+    }
+
+    .face-info {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .faces-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 columns on very small screens */
+    }
+}

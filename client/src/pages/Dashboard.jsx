@@ -5,12 +5,13 @@ import AdminVlogs from '../components/AdminVlogs';
 import AdminUsers from '../components/AdminUsers'; // Import User Management
 import AdminHome from '../components/AdminHome'; // Import Home Manager
 import AdminCategories from '../components/AdminCategories'; // Import Category Manager
+import AdminFaces from '../components/AdminFaces'; // Import Faces Manager
 import './Dashboard.css';
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    const [activeView, setActiveView] = useState('menu'); // 'menu', 'memories', 'vlogs', 'users', 'home'
+    const [activeView, setActiveView] = useState('menu'); // 'menu', 'memories', 'vlogs', 'users', 'home', 'faces'
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -78,6 +79,12 @@ const Dashboard = () => {
                             <h3>Categories</h3>
                             <p>Create & Edit Categories.</p>
                         </div>
+
+                        <div className="admin-card" onClick={() => setActiveView('faces')}>
+                            <div className="icon">👤</div>
+                            <h3>Faces of GareebGang</h3>
+                            <p>Manage members and unique traits.</p>
+                        </div>
                     </div>
                 )}
 
@@ -86,6 +93,7 @@ const Dashboard = () => {
                 {activeView === 'users' && <AdminUsers onBack={() => setActiveView('menu')} />}
                 {activeView === 'home' && <AdminHome onBack={() => setActiveView('menu')} />}
                 {activeView === 'categories' && <AdminCategories onBack={() => setActiveView('menu')} />}
+                {activeView === 'faces' && <AdminFaces onBack={() => setActiveView('menu')} />}
             </main>
         </div>
     );

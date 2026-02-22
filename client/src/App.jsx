@@ -11,8 +11,10 @@ import Leaders from './components/Leaders'
 import MemoriesTimeline from './pages/MemoriesTimeline'
 import MemoryDetail from './pages/MemoryDetail'
 import MemoriesFeat from './components/MemoriesFeat'
+import Faces from './components/Faces'
 import Vlogs from './pages/Vlogs'
 import HomeVlogs from './components/HomeVlogs'
+import Stats from './components/Stats'
 import './index.css'
 
 // ... existing imports ...
@@ -21,10 +23,12 @@ const LandingPage = () => (
   <>
     <Hero />
     <MemoriesFeat />
+    <Stats />
     <HomeVlogs />
     {/* HomeVlogs will be added here later */}
     <About />
     <Leaders />
+    <Faces />
     <WorkInProgress />
     <Socials />
     <Footer />
