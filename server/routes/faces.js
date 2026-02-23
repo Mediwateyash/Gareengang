@@ -67,6 +67,31 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 });
 
+// @route   PUT /api/faces/reorder
+// @desc    Bulk update face ordering
+// @access  Private/Admin
+router.put('/bulk/reorder', async (req, res) => {
+    try {
+        const { faces } = req.body; // Array of { id: '...', order: 0 }
+        if (!faces || !Array.isArray(faces)) {
+            return res.status(400).json({ message: 'Faces array is required' });
+        }
+
+        const bulkOps = faces.map((face) => ({
+            updateOne: {
+                filter: { _id: face.id },
+                update: { order: face.order }
+            }
+        }));
+
+        await Face.bulkWrite(bulkOps);
+        res.json({ message: 'Order updated successfully' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 // @route   PUT /api/faces/:id
 // @desc    Update a face
 // @access  Private/Admin
@@ -142,31 +167,6 @@ router.delete('/:id', async (req, res) => {
         if (err.kind === 'ObjectId') {
             return res.status(404).json({ message: 'Face not found' });
         }
-        res.status(500).send('Server Error');
-    }
-});
-
-// @route   PUT /api/faces/reorder
-// @desc    Bulk update face ordering
-// @access  Private/Admin
-router.put('/bulk/reorder', async (req, res) => {
-    try {
-        const { faces } = req.body; // Array of { id: '...', order: 0 }
-        if (!faces || !Array.isArray(faces)) {
-            return res.status(400).json({ message: 'Faces array is required' });
-        }
-
-        const bulkOps = faces.map((face) => ({
-            updateOne: {
-                filter: { _id: face.id },
-                update: { order: face.order }
-            }
-        }));
-
-        await Face.bulkWrite(bulkOps);
-        res.json({ message: 'Order updated successfully' });
-    } catch (err) {
-        console.error(err.message);
         res.status(500).send('Server Error');
     }
 });
