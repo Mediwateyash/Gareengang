@@ -25,6 +25,7 @@ app.use('/api/categories', require('./routes/categories')); // Dynamic Categorie
 app.use('/api/settings', require('./routes/settings')); // Site Settings
 app.use('/api/setup', require('./routes/setup')); // One-click setup
 app.use('/api/faces', require('./routes/faces')); // Faces of GareebGang
+app.use('/api/reviews', require('./routes/reviews')); // Video Reviews
 
 
 const path = require('path');

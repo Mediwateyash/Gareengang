@@ -1,0 +1,151 @@
+/* VideoReviews.css */
+
+.video-reviews-section {
+    padding: 6rem 5%;
+    background-color: #f7f9fc;
+    text-align: center;
+    position: relative;
+    border-top: 1px dashed #ccc;
+    border-bottom: 1px dashed #ccc;
+}
+
+.video-reviews-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.reviews-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 3.5rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.05);
+}
+
+.reviews-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 3rem;
+    font-weight: 500;
+}
+
+/* Horizontal Scrolling Container */
+.reviews-carousel-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.reviews-horizontal-scroll {
+    display: flex;
+    gap: 2rem;
+    overflow-x: auto;
+    padding: 1rem 0 2rem 0;
+    /* padding for shadows */
+    scroll-behavior: smooth;
+
+    /* Hide scrollbar but keep functionality */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.reviews-horizontal-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* Individual Review Card */
+.review-card {
+    flex: 0 0 auto;
+    width: 400px;
+    /* Desktop size */
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    /* 16:9 Aspect Ratio */
+    padding-bottom: 56.25%;
+    height: 0;
+    background: #000;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px 15px 0 0;
+}
+
+.review-info {
+    padding: 1.5rem;
+    text-align: left;
+    background: white;
+}
+
+.reviewer-name {
+    margin: 0 0 5px 0;
+    font-size: 1.4rem;
+    color: #1f2937;
+    font-weight: 700;
+}
+
+.reviewer-role {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #6366f1;
+    /* Vibrant accent color */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Loading and Error states */
+.reviews-loading,
+.reviews-error {
+    font-size: 1.2rem;
+    color: #666;
+    padding: 3rem;
+}
+
+/* Responsive constraints */
+@media (max-width: 768px) {
+    .reviews-title {
+        font-size: 2.5rem;
+    }
+
+    .review-card {
+        width: 320px;
+        /* Better fit for tablets */
+    }
+}
+
+@media (max-width: 480px) {
+    .video-reviews-section {
+        padding: 4rem 1rem;
+    }
+
+    .reviews-title {
+        font-size: 2.2rem;
+    }
+
+    .review-card {
+        width: 280px;
+        /* Better fit for mobile */
+    }
+}

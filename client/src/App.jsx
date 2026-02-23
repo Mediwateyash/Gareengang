@@ -12,6 +12,7 @@ import MemoriesTimeline from './pages/MemoriesTimeline'
 import MemoryDetail from './pages/MemoryDetail'
 import MemoriesFeat from './components/MemoriesFeat'
 import Faces from './components/Faces'
+import VideoReviews from './components/VideoReviews'
 import Vlogs from './pages/Vlogs'
 import HomeVlogs from './components/HomeVlogs'
 import Stats from './components/Stats'
@@ -28,6 +29,7 @@ const LandingPage = () => (
     {/* HomeVlogs will be added here later */}
     <About />
     <Leaders />
+    <VideoReviews />
     <Faces />
     <WorkInProgress />
     <Socials />

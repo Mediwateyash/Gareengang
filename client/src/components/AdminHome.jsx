@@ -4,10 +4,13 @@ import API_URL from '../config';
 const AdminHome = ({ onBack }) => {
     const [memories, setMemories] = useState([]);
     const [vlogs, setVlogs] = useState([]);
+    const [stats, setStats] = useState({ trips: 0, cities: 0, memories: 0, years: 0 });
     const [loading, setLoading] = useState(true);
+    const [saveLoading, setSaveLoading] = useState(false);
 
     useEffect(() => {
         fetchContent();
+        fetchStats();
     }, []);
 
     const fetchContent = async () => {
@@ -26,6 +29,42 @@ const AdminHome = ({ onBack }) => {
         } catch (err) {
             console.error("Error fetching content:", err);
             setLoading(false);
+        }
+    };
+
+    const fetchStats = async () => {
+        try {
+            const res = await fetch(`${API_URL}/settings`);
+            if (res.ok) {
+                const data = await res.json();
+                setStats(data.stats);
+            }
+        } catch (err) {
+            console.error("Error fetching stats:", err);
+        }
+    };
+
+    const handleStatChange = (e) => {
+        const { name, value } = e.target;
+        setStats(prev => ({ ...prev, [name]: parseInt(value) || 0 }));
+    };
+
+    const saveStats = async () => {
+        setSaveLoading(true);
+        try {
+            const res = await fetch(`${API_URL}/settings`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ stats })
+            });
+            if (res.ok) {
+                alert("Stats updated successfully!");
+                fetchStats();
+            }
+        } catch (err) {
+            console.error("Error saving stats:", err);
+        } finally {
+            setSaveLoading(false);
         }
     };
 
@@ -110,6 +149,35 @@ const AdminHome = ({ onBack }) => {
             <div className="subview-header">
                 <button onClick={onBack} className="btn-back">← Back to Dashboard</button>
                 <h2>Home Page Manager</h2>
+            </div>
+
+            <div className="stats-manager" style={{ background: '#f8f9fa', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem', border: '1px solid #dee2e6' }}>
+                <h3 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>📈 Manage Journey Stats</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+                    <div className="input-group">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: '#666' }}>Trips Done</label>
+                        <input type="number" name="trips" value={stats.trips} onChange={handleStatChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ced4da' }} />
+                    </div>
+                    <div className="input-group">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: '#666' }}>Cities Visited</label>
+                        <input type="number" name="cities" value={stats.cities} onChange={handleStatChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ced4da' }} />
+                    </div>
+                    <div className="input-group">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: '#666' }}>Memories Created</label>
+                        <input type="number" name="memories" value={stats.memories} onChange={handleStatChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ced4da' }} />
+                    </div>
+                    <div className="input-group">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: '#666' }}>Years Together</label>
+                        <input type="number" name="years" value={stats.years} onChange={handleStatChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ced4da' }} />
+                    </div>
+                </div>
+                <button
+                    onClick={saveStats}
+                    disabled={saveLoading}
+                    style={{ marginTop: '1rem', background: '#0984e3', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '6px', cursor: saveLoading ? 'not-allowed' : 'pointer', fontWeight: 'bold' }}
+                >
+                    {saveLoading ? 'Saving...' : 'Save Settings'}
+                </button>
             </div>
 
             <p style={{ marginBottom: '2rem', color: '#666' }}>

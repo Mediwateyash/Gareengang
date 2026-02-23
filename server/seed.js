@@ -34,6 +34,25 @@ const seedData = async () => {
     } else {
         console.log('Faces already seeded.');
     }
+
+    // Seed Initial Video Reviews
+    try {
+        const Review = require('./models/Review');
+        const reviewCount = await Review.countDocuments();
+        if (reviewCount === 0) {
+            const initialReviews = [
+                { name: 'Rahul Sharma', role: 'Community Member', youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', order: 0 },
+                { name: 'Priya Patel', role: 'Student Alumni', youtubeUrl: 'https://www.youtube.com/watch?v=y6120QOlsfU', order: 1 },
+                { name: 'Amit Kumar', role: 'Volunteer', youtubeUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw', order: 2 },
+            ];
+            await Review.insertMany(initialReviews);
+            console.log('Seeded 3 initial video reviews.');
+        } else {
+            console.log('Video Reviews already seeded.');
+        }
+    } catch (err) {
+        console.error('Error seeding reviews:', err);
+    }
 };
 
 module.exports = seedData;

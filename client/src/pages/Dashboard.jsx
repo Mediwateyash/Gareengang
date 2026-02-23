@@ -6,6 +6,7 @@ import AdminUsers from '../components/AdminUsers'; // Import User Management
 import AdminHome from '../components/AdminHome'; // Import Home Manager
 import AdminCategories from '../components/AdminCategories'; // Import Category Manager
 import AdminFaces from '../components/AdminFaces'; // Import Faces Manager
+import AdminReviews from '../components/AdminReviews'; // Import Reviews Manager
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -85,6 +86,12 @@ const Dashboard = () => {
                             <h3>Faces of GareebGang</h3>
                             <p>Manage members and unique traits.</p>
                         </div>
+
+                        <div className="admin-card" onClick={() => setActiveView('reviews')}>
+                            <div className="icon">⭐️</div>
+                            <h3>Video Reviews</h3>
+                            <p>Manage YouTube video testimonials.</p>
+                        </div>
                     </div>
                 )}
 
@@ -94,6 +101,7 @@ const Dashboard = () => {
                 {activeView === 'home' && <AdminHome onBack={() => setActiveView('menu')} />}
                 {activeView === 'categories' && <AdminCategories onBack={() => setActiveView('menu')} />}
                 {activeView === 'faces' && <AdminFaces onBack={() => setActiveView('menu')} />}
+                {activeView === 'reviews' && <AdminReviews onBack={() => setActiveView('menu')} />}
             </main>
         </div>
     );
