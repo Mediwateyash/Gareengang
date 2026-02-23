@@ -1,17 +1,20 @@
 /* VideoReviews.css */
 
 .video-reviews-section {
-    padding: 6rem 5%;
+    padding: 6rem 0;
+    /* Full width for Netflix style, padding left/right applied to inner items */
     background-color: #f7f9fc;
     text-align: center;
     position: relative;
     border-top: 1px dashed #ccc;
     border-bottom: 1px dashed #ccc;
+    overflow: hidden;
 }
 
 .video-reviews-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
+    padding: 0 5%;
 }
 
 .reviews-title {
@@ -25,7 +28,7 @@
 .reviews-subtitle {
     font-size: 1.2rem;
     color: #666;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     font-weight: 500;
 }
 
@@ -33,45 +36,82 @@
 .reviews-carousel-wrapper {
     position: relative;
     width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Right blur fade to indicate more content */
+.reviews-carousel-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 15px;
+    /* Stay above scrollbar */
+    width: 100px;
+    background: linear-gradient(to right, rgba(247, 249, 252, 0) 0%, rgba(247, 249, 252, 1) 100%);
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Left blur fade */
+.reviews-carousel-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 15px;
+    width: 60px;
+    background: linear-gradient(to left, rgba(247, 249, 252, 0) 0%, rgba(247, 249, 252, 1) 100%);
+    pointer-events: none;
+    z-index: 5;
 }
 
 .reviews-horizontal-scroll {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     overflow-x: auto;
-    padding: 1rem 0 2rem 0;
-    /* padding for shadows */
+    padding: 2rem 5% 2rem 5%;
+    /* padding for shadows and edges */
     scroll-behavior: smooth;
 
-    /* Hide scrollbar but keep functionality */
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
+    /* Styling scrollbar for Netflix feel */
+    scrollbar-color: #94a3b8 rgba(0, 0, 0, 0.05);
+    scrollbar-width: auto;
 }
 
 .reviews-horizontal-scroll::-webkit-scrollbar {
-    display: none;
+    height: 10px;
+}
+
+.reviews-horizontal-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 5px;
+    margin: 0 5%;
+}
+
+.reviews-horizontal-scroll::-webkit-scrollbar-thumb {
+    background-color: #94a3b8;
+    border-radius: 5px;
 }
 
 /* Individual Review Card */
 .review-card {
     flex: 0 0 auto;
-    width: 400px;
+    width: 380px;
     /* Desktop size */
-    background: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    background: #000;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease, z-index 0.4s ease;
 }
 
 .review-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    z-index: 10;
 }
 
 .video-container {
@@ -89,30 +129,50 @@
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 15px 15px 0 0;
+    border-radius: 10px;
 }
 
+/* The name and role info hidden until hover */
 .review-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     padding: 1.5rem;
+    padding-top: 3.5rem;
+    /* Fade slope */
     text-align: left;
-    background: white;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%);
+    color: white;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+    /* Let clicks pass through to the video */
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.review-card:hover .review-info {
+    transform: translateY(0);
 }
 
 .reviewer-name {
     margin: 0 0 5px 0;
-    font-size: 1.4rem;
-    color: #1f2937;
+    font-size: 1.3rem;
+    color: #ffffff;
     font-weight: 700;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .reviewer-role {
     margin: 0;
-    font-size: 0.95rem;
-    color: #6366f1;
+    font-size: 0.9rem;
+    color: #a5b4fc;
     /* Vibrant accent color */
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 /* Loading and Error states */
@@ -130,14 +190,21 @@
     }
 
     .review-card {
-        width: 320px;
+        width: 300px;
         /* Better fit for tablets */
+    }
+
+    .review-info {
+        /* On mobile devices where hover doesn't exist, we might want to permanently show it, 
+           or show it slightly */
+        transform: translateY(0);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
     }
 }
 
 @media (max-width: 480px) {
     .video-reviews-section {
-        padding: 4rem 1rem;
+        padding: 4rem 0;
     }
 
     .reviews-title {
@@ -145,7 +212,7 @@
     }
 
     .review-card {
-        width: 280px;
+        width: 260px;
         /* Better fit for mobile */
     }
 }
