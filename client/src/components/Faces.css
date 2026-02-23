@@ -42,7 +42,9 @@
     transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     /* Limit height initially to show ~1.5 rows. Assuming cards are ~250px + gap implies ~450px is good. */
-    max-height: 400px;
+    max-height: 480px;
+    padding-top: 30px;
+    /* added generous padding for top tape and hover scale */
     padding-bottom: 2rem;
 }
 
@@ -58,7 +60,8 @@
     justify-content: center;
     gap: 2rem;
     flex-wrap: wrap;
-    padding: 0 10px;
+    padding: 0 10px 50px 10px;
+    /* Ensure bottom hover doesn't cut */
 }
 
 /* Blur Overlay & Button */
