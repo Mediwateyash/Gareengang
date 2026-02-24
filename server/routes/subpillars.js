@@ -1,12 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { cloudinary, storage } = require('../cloudinarySetup');
+const cloudinary = require('../config/cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const SubPillar = require('../models/SubPillar');
 
 // NOTE: Since the user doesn't have the auth middleware applied to faces or reviews 
 // currently (as per previous codebase constraints), we skip it here too to remain consistent, 
 // though adding a protect layer is recommended.
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: async (req, file) => {
+        return {
+            folder: 'gareebgang_action_moments',
+            resource_type: 'auto',
+            allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'mp4', 'mov', 'webm'],
+        };
+    },
+});
 
 const upload = multer({
     storage: storage,
