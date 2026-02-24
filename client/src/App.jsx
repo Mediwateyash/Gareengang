@@ -29,8 +29,8 @@ const LandingPage = () => (
     {/* HomeVlogs will be added here later */}
     <About />
     <Leaders />
-    <VideoReviews />
     <Faces />
+    <VideoReviews />
     <SocialScrapbook />
     <DonateSection />
     <Footer />
