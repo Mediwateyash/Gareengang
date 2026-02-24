@@ -16,8 +16,13 @@ const DonateSection = () => {
                     className={`donate-toggle-btn ${isExpanded ? 'expanded' : ''}`}
                     onClick={() => setIsExpanded(!isExpanded)}
                 >
-                    <span className="donate-heart">💛</span>
-                    Preserve The Memories
+                    <div className="donate-btn-content">
+                        <span className="donate-main-text">
+                            <span className="donate-heart">💛</span>
+                            Preserve The Memories
+                        </span>
+                        <span className="donate-sub-text">Click here to see how you can help keep our story alive!</span>
+                    </div>
                     <span className="donate-chevron">{isExpanded ? '▲' : '▼'}</span>
                 </button>
 
