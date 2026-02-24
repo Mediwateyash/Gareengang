@@ -10,6 +10,7 @@ const AdminSocials = ({ onBack }) => {
     const [platform, setPlatform] = useState('Instagram');
     const [accountName, setAccountName] = useState('');
     const [url, setUrl] = useState('');
+    const [file, setFile] = useState(null);
     const [editingId, setEditingId] = useState(null);
     const [orderChanged, setOrderChanged] = useState(false);
 
@@ -40,16 +41,18 @@ const AdminSocials = ({ onBack }) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
 
-        const payload = {
-            platform,
-            accountName,
-            url
-        };
+        const formData = new FormData();
+        formData.append('platform', platform);
+        formData.append('accountName', accountName);
+        formData.append('url', url);
+        if (file) {
+            formData.append('imageFile', file);
+        }
 
         // Automatically set order to the end if adding new
         if (!editingId) {
             const maxOrder = socialLinks.length > 0 ? Math.max(...socialLinks.map(s => s.order || 0)) : 0;
-            payload.order = maxOrder + 1;
+            formData.append('order', maxOrder + 1);
         }
 
         try {
@@ -61,10 +64,9 @@ const AdminSocials = ({ onBack }) => {
             const res = await fetch(endpoint, {
                 method,
                 headers: {
-                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(payload),
+                body: formData,
             });
 
             if (!res.ok) {
@@ -83,6 +85,7 @@ const AdminSocials = ({ onBack }) => {
         setPlatform(item.platform);
         setAccountName(item.accountName);
         setUrl(item.url);
+        setFile(null); // Clear file input on edit
         setEditingId(item._id);
         window.scrollTo(0, 0);
     };
@@ -108,6 +111,7 @@ const AdminSocials = ({ onBack }) => {
         setPlatform('Instagram');
         setAccountName('');
         setUrl('');
+        setFile(null);
         setEditingId(null);
     };
 
@@ -196,6 +200,12 @@ const AdminSocials = ({ onBack }) => {
                         <input type="url" value={url} onChange={(e) => setUrl(e.target.value)} required />
                     </div>
 
+                    <div className="form-group full-width">
+                        <label>Profile Image (Optional - overrides default icon)</label>
+                        <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
+                        {editingId && <small>Leave blank to keep current image/icon.</small>}
+                    </div>
+
                     <div className="form-actions">
                         <button type="submit" className="btn-submit">
                             {editingId ? 'Update Link' : 'Add Link'}
@@ -228,6 +238,7 @@ const AdminSocials = ({ onBack }) => {
                         <thead>
                             <tr>
                                 <th style={{ width: '40px' }}>≡</th>
+                                <th>Image</th>
                                 <th>Platform</th>
                                 <th>Account Name</th>
                                 <th>URL</th>
@@ -253,6 +264,13 @@ const AdminSocials = ({ onBack }) => {
                                             }}
                                         >
                                             <td style={{ cursor: 'grab', color: '#9ca3af', fontSize: '1.2rem' }}>⣿</td>
+                                            <td>
+                                                {item.imageUrl ? (
+                                                    <img src={item.imageUrl} alt="Profile" style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '50%' }} />
+                                                ) : (
+                                                    <div style={{ width: '40px', height: '40px', background: '#e5e7eb', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>No Img</div>
+                                                )}
+                                            </td>
                                             <td>
                                                 <strong style={{
                                                     color: item.platform === 'Instagram' ? '#e1306c' :

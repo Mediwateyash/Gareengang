@@ -17,6 +17,14 @@ const socialLinkSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    imageUrl: {
+        type: String,
+        required: false,
+    },
+    cloudinaryId: {
+        type: String,
+        required: false,
+    },
     order: {
         type: Number,
         default: 0

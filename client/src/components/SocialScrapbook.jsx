@@ -53,8 +53,16 @@ const SocialScrapbook = () => {
                             rel="noreferrer"
                             className="social-polaroid"
                         >
-                            <div className="social-icon-box">
-                                {getIcon(link.platform)}
+                            <div className="social-icon-box" style={{ padding: link.imageUrl ? '0' : 'auto' }}>
+                                {link.imageUrl ? (
+                                    <img
+                                        src={link.imageUrl.startsWith('http') ? link.imageUrl : `${apiUrl.replace('/api', '')}/${link.imageUrl}`}
+                                        alt={link.accountName}
+                                        className="social-profile-img"
+                                    />
+                                ) : (
+                                    getIcon(link.platform)
+                                )}
                             </div>
                             <h3 className="social-account-name">{link.accountName}</h3>
                         </a>

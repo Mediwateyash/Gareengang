@@ -1,6 +1,25 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const cloudinary = require('../config/cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const SocialLink = require('../models/SocialLink');
+
+// Cloudinary Storage Config
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'gareebgang_socials',
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+    },
+});
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+    }
+});
 
 // @route   GET /api/socials
 // @desc    Get all social links
@@ -18,14 +37,24 @@ router.get('/', async (req, res) => {
 // @route   POST /api/socials
 // @desc    Add a new social link
 // @access  Private/Admin
-router.post('/', async (req, res) => {
+router.post('/', upload.single('imageFile'), async (req, res) => {
     try {
         const { platform, accountName, url, order } = req.body;
+
+        let imageUrl = '';
+        let cloudinaryId = '';
+
+        if (req.file) {
+            imageUrl = req.file.path;
+            cloudinaryId = req.file.filename;
+        }
 
         const newLink = new SocialLink({
             platform,
             accountName,
             url,
+            imageUrl,
+            cloudinaryId,
             order: order || 0
         });
 
@@ -65,15 +94,30 @@ router.put('/bulk/reorder', async (req, res) => {
 });
 
 // @route   PUT /api/socials/:id
-// @desc    Update a social link
+// @desc    Update a social link (handles optional image update)
 // @access  Private/Admin
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.single('imageFile'), async (req, res) => {
     try {
         const { platform, accountName, url } = req.body;
         let link = await SocialLink.findById(req.params.id);
 
         if (!link) {
             return res.status(404).json({ message: 'Link not found' });
+        }
+
+        // If a new file is uploaded, update imageUrl and cloudinaryId
+        if (req.file) {
+            // Delete old image from Cloudinary if it exists
+            if (link.cloudinaryId) {
+                try {
+                    await cloudinary.uploader.destroy(link.cloudinaryId);
+                } catch (cloudinaryErr) {
+                    console.error('Error deleting old social image from cloudinary:', cloudinaryErr);
+                    // Do not block the update if deletion fails.
+                }
+            }
+            link.imageUrl = req.file.path;
+            link.cloudinaryId = req.file.filename;
         }
 
         link.platform = platform || link.platform;
@@ -97,6 +141,15 @@ router.delete('/:id', async (req, res) => {
 
         if (!link) {
             return res.status(404).json({ message: 'Link not found' });
+        }
+
+        // Delete image from Cloudinary
+        if (link.cloudinaryId) {
+            try {
+                await cloudinary.uploader.destroy(link.cloudinaryId);
+            } catch (err) {
+                console.error('Error deleting image from cloudinary:', err);
+            }
         }
 
         await link.deleteOne();
