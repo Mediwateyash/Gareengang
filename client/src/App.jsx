@@ -1,8 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Hero from './components/Hero'
 import About from './components/About'
-import WorkInProgress from './components/WorkInProgress'
-import Socials from './components/Socials'
 import Footer from './components/Footer'
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -33,10 +31,8 @@ const LandingPage = () => (
     <Leaders />
     <VideoReviews />
     <Faces />
-    <WorkInProgress />
     <SocialScrapbook />
     <DonateSection />
-    <Socials />
     <Footer />
   </>
 );
