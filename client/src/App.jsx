@@ -16,6 +16,7 @@ import VideoReviews from './components/VideoReviews'
 import Vlogs from './pages/Vlogs'
 import HomeVlogs from './components/HomeVlogs'
 import Stats from './components/Stats'
+import SocialScrapbook from './components/SocialScrapbook'
 import DonateSection from './components/DonateSection'
 import './index.css'
 
@@ -33,6 +34,7 @@ const LandingPage = () => (
     <VideoReviews />
     <Faces />
     <WorkInProgress />
+    <SocialScrapbook />
     <DonateSection />
     <Socials />
     <Footer />

@@ -27,6 +27,7 @@ app.use('/api/setup', require('./routes/setup')); // One-click setup
 app.use('/api/faces', require('./routes/faces')); // Faces of GareebGang
 app.use('/api/reviews', require('./routes/reviews')); // Video Reviews
 app.use('/api/subpillars', require('./routes/subpillars')); // Pillar Action Moments
+app.use('/api/socials', require('./routes/socials')); // Scrapbook Social Links
 
 
 const path = require('path');

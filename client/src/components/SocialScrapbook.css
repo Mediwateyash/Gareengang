@@ -1,0 +1,156 @@
+/* SocialScrapbook.css */
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Patrick+Hand&display=swap');
+
+.social-scrapbook-section {
+    padding: 3rem 0;
+    /* Corkboard/Notebook background to match the theme */
+    background-color: #f5eedc;
+    background-image:
+        linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+        linear-gradient(#eee .1em, transparent .1em);
+    background-size: 100% 1.2em;
+    position: relative;
+    border-top: 2px dashed #ccc;
+    border-bottom: 2px dashed #ccc;
+    overflow: hidden;
+}
+
+.social-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    padding: 0 20px;
+}
+
+.social-title {
+    font-family: 'Permanent Marker', cursive;
+    font-size: 2.8rem;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    transform: rotate(-2deg);
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+}
+
+.social-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+}
+
+/* Polaroid/Torn Paper Link Card */
+.social-polaroid {
+    background: white;
+    padding: 15px 15px 35px 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: #333;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+}
+
+/* Tape Effect */
+.social-polaroid::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 80px;
+    height: 25px;
+    background: rgba(255, 235, 59, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 5;
+}
+
+/* Random Rotations for Scrapbook Feel */
+.social-polaroid:nth-child(even) {
+    transform: rotate(4deg);
+}
+
+.social-polaroid:nth-child(odd) {
+    transform: rotate(-3deg);
+}
+
+.social-polaroid:nth-child(3n) {
+    transform: rotate(2deg);
+}
+
+/* Hover Animation: "Un-pin" and tilt towards user */
+.social-polaroid:hover {
+    transform: scale(1.1) rotate(0deg) translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.social-icon-box {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #f8f9fa;
+    border: 1px solid #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+/* Platform specific branding inside the polaroid */
+.social-icon {
+    font-size: 4rem;
+    transition: transform 0.3s ease;
+}
+
+.social-polaroid:hover .social-icon {
+    transform: scale(1.1);
+}
+
+.social-icon.instagram {
+    color: #E1306C;
+}
+
+.social-icon.youtube {
+    color: #FF0000;
+}
+
+.social-icon.facebook {
+    color: #1877F2;
+}
+
+.social-icon.website {
+    color: #2c3e50;
+}
+
+.social-account-name {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 1.4rem;
+    color: #333;
+    margin: 0;
+    text-align: center;
+    line-height: 1.2;
+}
+
+@media (max-width: 600px) {
+    .social-polaroid {
+        width: 160px;
+        padding: 10px 10px 25px 10px;
+    }
+
+    .social-icon {
+        font-size: 3rem;
+    }
+
+    .social-account-name {
+        font-size: 1.2rem;
+    }
+}
