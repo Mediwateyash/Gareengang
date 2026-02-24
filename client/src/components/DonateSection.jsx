@@ -6,6 +6,8 @@ const DonateSection = () => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentSuccess, setPaymentSuccess] = useState(false);
+    const [showCustomInput, setShowCustomInput] = useState(false);
+    const [customAmountStr, setCustomAmountStr] = useState('');
 
     // Hardcoded goal and raised amounts
     // Ideally this could be pulled from the backend in the future based on successful payments
@@ -91,12 +93,13 @@ const DonateSection = () => {
         }
     };
 
-    const handleCustomAmount = () => {
-        const amount = prompt("Enter the amount you would like to contribute (in ₹):");
-        if (amount && !isNaN(amount) && parseInt(amount) > 0) {
-            handlePayment(parseInt(amount));
-        } else if (amount !== null) {
-            alert("Please enter a valid amount.");
+    const handleCustomSubmit = (e) => {
+        e.preventDefault();
+        const amt = parseInt(customAmountStr, 10);
+        if (amt && amt >= 1) { // Razorpay minimum is often 1 INR
+            handlePayment(amt);
+        } else {
+            alert("Please enter a valid amount of ₹1 or more.");
         }
     };
 
@@ -205,15 +208,35 @@ const DonateSection = () => {
                                             <div className="tier-amount">₹1000</div>
                                             <div className="tier-desc">Annual Supporter</div>
                                         </button>
-                                        <button
-                                            onClick={handleCustomAmount}
-                                            className="tier-card custom"
-                                            disabled={isProcessing}
-                                            style={{ border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left' }}
-                                        >
-                                            <div className="tier-amount">Custom Amount</div>
-                                            <div className="tier-desc">Enter any amount via Razorpay</div>
-                                        </button>
+                                        {showCustomInput ? (
+                                            <form onSubmit={handleCustomSubmit} className="tier-card custom custom-input-active" style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '15px' }}>
+                                                <div style={{ textAlign: 'left', fontSize: '0.9rem', color: '#64748b' }}>Enter your amount (₹)</div>
+                                                <input
+                                                    type="number"
+                                                    min="1"
+                                                    placeholder="e.g. 500"
+                                                    value={customAmountStr}
+                                                    onChange={(e) => setCustomAmountStr(e.target.value)}
+                                                    required
+                                                    autoFocus
+                                                    style={{ padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1.1rem', width: '100%' }}
+                                                />
+                                                <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                                                    <button type="button" onClick={() => setShowCustomInput(false)} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', cursor: 'pointer', color: '#64748b' }}>Cancel</button>
+                                                    <button type="submit" disabled={isProcessing} style={{ flex: 1, padding: '8px', borderRadius: '8px', border: 'none', background: '#3b82f6', color: 'white', cursor: 'pointer', fontWeight: 'bold' }}>Donate</button>
+                                                </div>
+                                            </form>
+                                        ) : (
+                                            <button
+                                                onClick={() => setShowCustomInput(true)}
+                                                className="tier-card custom"
+                                                disabled={isProcessing}
+                                                style={{ border: 'none', background: 'none', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left' }}
+                                            >
+                                                <div className="tier-amount">Custom Amount</div>
+                                                <div className="tier-desc">Enter any amount via Razorpay</div>
+                                            </button>
+                                        )}
                                     </div>
                                     <p className="upi-note"><small><i>Payments securely processed via <strong>Razorpay</strong></i></small></p>
                                 </div>
