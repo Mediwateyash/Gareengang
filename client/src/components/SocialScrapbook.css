@@ -32,9 +32,33 @@
 .social-grid {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
+    /* Center if they fit, start if they scroll */
+    flex-wrap: nowrap;
     gap: 3rem;
     align-items: center;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+    /* Space for scrollbar */
+    /* Hide scrollbar for a cleaner look if preferred, but leaving it visible is more accessible */
+}
+
+/* Custom scrollbar for webkit */
+.social-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.social-grid::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.social-grid::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.social-grid::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
 /* Individual Profile Card Container */
@@ -43,6 +67,8 @@
     flex-direction: column;
     align-items: center;
     width: 220px;
+    flex-shrink: 0;
+    /* Important: prevent them from squishing too much */
     text-decoration: none;
     color: #334155;
     transition: transform 0.3s ease;
@@ -171,7 +197,11 @@
 
 @media (max-width: 600px) {
     .social-grid {
-        gap: 2rem;
+        justify-content: flex-start;
+        /* Better scrolling behavior on mobile */
+        gap: 1.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 
     .social-profile-card {
