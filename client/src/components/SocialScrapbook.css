@@ -34,7 +34,8 @@
     justify-content: center;
     /* Center if they fit, start if they scroll */
     flex-wrap: nowrap;
-    gap: 3rem;
+    gap: 1.5rem;
+    /* Reduced gap to fit more items */
     align-items: center;
     overflow-x: auto;
     padding-bottom: 1rem;
@@ -66,7 +67,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 220px;
+    width: 170px;
+    /* Make smaller to fit more in a row */
     flex-shrink: 0;
     /* Important: prevent them from squishing too much */
     text-decoration: none;
@@ -80,10 +82,11 @@
 
 /* Gradient Ring around Avatar */
 .social-avatar-container {
-    width: 140px;
-    height: 140px;
+    width: 120px;
+    /* Smaller avatar */
+    height: 120px;
     border-radius: 50%;
-    padding: 4px;
+    padding: 3px;
     /* Thickness of the gradient ring */
     background: #e2e8f0;
     /* Default gray ring */
@@ -145,11 +148,13 @@
 
 /* Username Text */
 .social-username {
-    font-size: 1.2rem;
+    font-size: 1rem;
+    /* Smaller username font */
     font-weight: 600;
-    margin: 0 0 1.2rem 0;
+    margin: 0 0 1rem 0;
     color: #1e293b;
     word-break: break-all;
+    text-align: center;
 }
 
 /* Pill-shaped Follow Button */
@@ -157,11 +162,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 0.6rem 0.5rem;
+    /* Smaller padding */
     border-radius: 50px;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
+    /* Smaller font text */
     font-weight: 600;
     color: white;
     border: none;
@@ -205,15 +212,20 @@
     }
 
     .social-profile-card {
-        width: 180px;
+        width: 150px;
     }
 
     .social-avatar-container {
-        width: 110px;
-        height: 110px;
+        width: 100px;
+        height: 100px;
     }
 
     .social-username {
-        font-size: 1.1rem;
+        font-size: 0.95rem;
+    }
+
+    .social-follow-btn {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.4rem;
     }
 }
