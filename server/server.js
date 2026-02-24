@@ -28,6 +28,7 @@ app.use('/api/faces', require('./routes/faces')); // Faces of GareebGang
 app.use('/api/reviews', require('./routes/reviews')); // Video Reviews
 app.use('/api/subpillars', require('./routes/subpillars')); // Pillar Action Moments
 app.use('/api/socials', require('./routes/socials')); // Scrapbook Social Links
+app.use('/api/payment', require('./routes/payment')); // Razorpay Payments
 
 
 const path = require('path');
