@@ -7,6 +7,7 @@ import AdminHome from '../components/AdminHome'; // Import Home Manager
 import AdminCategories from '../components/AdminCategories'; // Import Category Manager
 import AdminFaces from '../components/AdminFaces'; // Import Faces Manager
 import AdminReviews from '../components/AdminReviews'; // Import Reviews Manager
+import AdminSubPillars from '../components/AdminSubPillars'; // Import Pillar Media Manager
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -92,6 +93,12 @@ const Dashboard = () => {
                             <h3>Video Reviews</h3>
                             <p>Manage YouTube video testimonials.</p>
                         </div>
+
+                        <div className="admin-card" onClick={() => setActiveView('pillarmedia')}>
+                            <div className="icon">📸</div>
+                            <h3>Pillar Moments</h3>
+                            <p>Behind-the-scenes action photos & videos.</p>
+                        </div>
                     </div>
                 )}
 
@@ -102,6 +109,7 @@ const Dashboard = () => {
                 {activeView === 'categories' && <AdminCategories onBack={() => setActiveView('menu')} />}
                 {activeView === 'faces' && <AdminFaces onBack={() => setActiveView('menu')} />}
                 {activeView === 'reviews' && <AdminReviews onBack={() => setActiveView('menu')} />}
+                {activeView === 'pillarmedia' && <AdminSubPillars onBack={() => setActiveView('menu')} />}
             </main>
         </div>
     );

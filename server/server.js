@@ -26,6 +26,7 @@ app.use('/api/settings', require('./routes/settings')); // Site Settings
 app.use('/api/setup', require('./routes/setup')); // One-click setup
 app.use('/api/faces', require('./routes/faces')); // Faces of GareebGang
 app.use('/api/reviews', require('./routes/reviews')); // Video Reviews
+app.use('/api/subpillars', require('./routes/subpillars')); // Pillar Action Moments
 
 
 const path = require('path');
