@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import apiUrl, { API_BASE_URL } from '../config';
 import './Faces.css';
 
 const Faces = () => {
@@ -11,7 +12,6 @@ const Faces = () => {
         const fetchFaces = async () => {
             try {
                 // Adjust URL based on environment if needed, or use relative if proxy is set
-                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
                 const res = await fetch(`${apiUrl}/faces`);
                 if (!res.ok) throw new Error('Failed to load Faces of GareebGang');
                 const data = await res.json();
@@ -68,7 +68,7 @@ const Faces = () => {
                             <div key={face._id} className="face-card">
                                 <div className="face-image-container">
                                     <img
-                                        src={face.imageUrl.startsWith('http') ? face.imageUrl : `http://localhost:5000/${face.imageUrl}`}
+                                        src={face.imageUrl.startsWith('http') ? face.imageUrl : `${API_BASE_URL}/${face.imageUrl}`}
                                         alt={face.name}
                                         className="face-image"
                                         loading="lazy"

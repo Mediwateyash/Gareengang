@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import apiUrl from '../config';
 
 const AdminReviews = ({ onBack }) => {
     const [reviews, setReviews] = useState([]);
@@ -21,7 +22,7 @@ const AdminReviews = ({ onBack }) => {
 
     const fetchReviews = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/reviews');
+            const res = await fetch(`${apiUrl}/reviews`);
             if (!res.ok) throw new Error('Failed to fetch video reviews');
             const data = await res.json();
             // Sort by order initially
@@ -66,8 +67,8 @@ const AdminReviews = ({ onBack }) => {
 
         try {
             const url = editingId
-                ? `http://localhost:5000/api/reviews/${editingId}`
-                : 'http://localhost:5000/api/reviews';
+                ? `${apiUrl}/reviews/${editingId}`
+                : `${apiUrl}/reviews`;
             const method = editingId ? 'PUT' : 'POST';
 
             const res = await fetch(url, {
@@ -103,7 +104,7 @@ const AdminReviews = ({ onBack }) => {
         if (!window.confirm('Are you sure you want to delete this video review?')) return;
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch(`http://localhost:5000/api/reviews/${id}`, {
+            const res = await fetch(`${apiUrl}/reviews/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -156,7 +157,7 @@ const AdminReviews = ({ onBack }) => {
         const token = localStorage.getItem('token');
         try {
             const payload = reviews.map(r => ({ id: r._id, order: r.order }));
-            const res = await fetch('http://localhost:5000/api/reviews/bulk/reorder', {
+            const res = await fetch(`${apiUrl}/reviews/bulk/reorder`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

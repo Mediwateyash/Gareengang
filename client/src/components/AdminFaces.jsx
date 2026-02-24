@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import apiUrl, { API_BASE_URL } from '../config';
 
 const AdminFaces = ({ onBack }) => {
     const [faces, setFaces] = useState([]);
@@ -21,7 +22,7 @@ const AdminFaces = ({ onBack }) => {
 
     const fetchFaces = async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/faces');
+            const res = await fetch(`${apiUrl}/faces`);
             if (!res.ok) throw new Error('Failed to fetch faces');
             const data = await res.json();
             // Sort by order initially
@@ -52,8 +53,8 @@ const AdminFaces = ({ onBack }) => {
 
         try {
             const url = editingId
-                ? `http://localhost:5000/api/faces/${editingId}`
-                : 'http://localhost:5000/api/faces';
+                ? `${apiUrl}/faces/${editingId}`
+                : `${apiUrl}/faces`;
             const method = editingId ? 'PUT' : 'POST';
 
             const res = await fetch(url, {
@@ -88,7 +89,7 @@ const AdminFaces = ({ onBack }) => {
         if (!window.confirm('Are you sure you want to delete this face?')) return;
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch(`http://localhost:5000/api/faces/${id}`, {
+            const res = await fetch(`${apiUrl}/faces/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -141,7 +142,7 @@ const AdminFaces = ({ onBack }) => {
         const token = localStorage.getItem('token');
         try {
             const payload = faces.map(f => ({ id: f._id, order: f.order }));
-            const res = await fetch('http://localhost:5000/api/faces/bulk/reorder', {
+            const res = await fetch(`${apiUrl}/faces/bulk/reorder`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -241,7 +242,7 @@ const AdminFaces = ({ onBack }) => {
                                     >
                                         <td style={{ cursor: 'grab', color: '#9ca3af', fontSize: '1.2rem' }}>⣿</td>
                                         <td>
-                                            <img src={face.imageUrl.startsWith('http') ? face.imageUrl : `http://localhost:5000/${face.imageUrl}`} alt={face.name} className="thumb-img" />
+                                            <img src={face.imageUrl.startsWith('http') ? face.imageUrl : `${API_BASE_URL}/${face.imageUrl}`} alt={face.name} className="thumb-img" />
                                         </td>
                                         <td>{face.name}</td>
                                         <td>{face.uniqueTrait}</td>

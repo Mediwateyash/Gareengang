@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import apiUrl from '../config';
 import './VideoReviews.css';
 
 const VideoReviews = () => {
@@ -9,7 +10,6 @@ const VideoReviews = () => {
     useEffect(() => {
         const fetchReviews = async () => {
             try {
-                const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
                 const res = await fetch(`${apiUrl}/reviews`);
                 if (!res.ok) throw new Error('Failed to load Video Reviews');
                 const data = await res.json();
