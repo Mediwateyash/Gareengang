@@ -1,18 +1,15 @@
-/* SocialScrapbook.css */
-@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Patrick+Hand&display=swap');
+/* SocialScrapbook.css (Now Profile Cards) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 .social-scrapbook-section {
-    padding: 3rem 0;
-    /* Corkboard/Notebook background to match the theme */
-    background-color: #f5eedc;
-    background-image:
-        linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
-        linear-gradient(#eee .1em, transparent .1em);
-    background-size: 100% 1.2em;
+    padding: 4rem 0;
+    background-color: #f8fafc;
+    /* Clean, modern light gray background */
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
     position: relative;
-    border-top: 2px dashed #ccc;
-    border-bottom: 2px dashed #ccc;
     overflow: hidden;
+    font-family: 'Inter', sans-serif;
 }
 
 .social-container {
@@ -25,140 +22,168 @@
 }
 
 .social-title {
-    font-family: 'Permanent Marker', cursive;
-    font-size: 2.8rem;
-    color: #2c3e50;
-    margin-bottom: 2rem;
-    transform: rotate(-2deg);
-    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.1);
-    display: inline-block;
+    font-size: 2.2rem;
+    color: #1e293b;
+    margin-bottom: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 .social-grid {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 3rem;
     align-items: center;
 }
 
-/* Polaroid/Torn Paper Link Card */
-.social-polaroid {
-    background: white;
-    padding: 15px 15px 35px 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    border: 1px solid #ddd;
-    text-decoration: none;
-    color: #333;
-    position: relative;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+/* Individual Profile Card Container */
+.social-profile-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 200px;
+    width: 220px;
+    text-decoration: none;
+    color: #334155;
+    transition: transform 0.3s ease;
 }
 
-/* Tape Effect */
-.social-polaroid::before {
-    content: '';
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-3deg);
-    width: 80px;
-    height: 25px;
-    background: rgba(255, 235, 59, 0.7);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    z-index: 5;
+.social-profile-card:hover {
+    transform: translateY(-5px);
 }
 
-/* Random Rotations for Scrapbook Feel */
-.social-polaroid:nth-child(even) {
-    transform: rotate(4deg);
-}
-
-.social-polaroid:nth-child(odd) {
-    transform: rotate(-3deg);
-}
-
-.social-polaroid:nth-child(3n) {
-    transform: rotate(2deg);
-}
-
-/* Hover Animation: "Un-pin" and tilt towards user */
-.social-polaroid:hover {
-    transform: scale(1.1) rotate(0deg) translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-}
-
-.social-icon-box {
-    width: 100%;
-    aspect-ratio: 1;
-    background: #f8f9fa;
-    border: 1px solid #eee;
+/* Gradient Ring around Avatar */
+.social-avatar-container {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    padding: 4px;
+    /* Thickness of the gradient ring */
+    background: #e2e8f0;
+    /* Default gray ring */
+    margin-bottom: 1.2rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 10px;
-    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
 }
 
-/* Platform specific branding inside the polaroid */
-.social-icon {
-    font-size: 4rem;
-    transition: transform 0.3s ease;
+/* Instagram Gradient Ring */
+.social-profile-card.instagram .social-avatar-container {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    box-shadow: 0 4px 15px rgba(225, 48, 108, 0.2);
 }
 
-.social-profile-img {
+/* YouTube Red Ring */
+.social-profile-card.youtube .social-avatar-container {
+    background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.2);
+}
+
+/* Facebook Blue Ring */
+.social-profile-card.facebook .social-avatar-container {
+    background: linear-gradient(135deg, #1877F2 0%, #0c5bbd 100%);
+    box-shadow: 0 4px 15px rgba(24, 119, 242, 0.2);
+}
+
+/* Other Ring */
+.social-profile-card.other .social-avatar-container {
+    background: linear-gradient(135deg, #475569 0%, #1e293b 100%);
+}
+
+.social-profile-card:hover .social-avatar-container {
+    padding: 6px;
+    /* Ring gets slightly thicker on hover */
+}
+
+/* The actual image or fallback icon */
+.social-profile-img,
+.social-icon-fallback {
     width: 100%;
     height: 100%;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    /* White border inside the ring */
     object-fit: cover;
-    transition: transform 0.3s ease;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.social-polaroid:hover .social-icon,
-.social-polaroid:hover .social-profile-img {
-    transform: scale(1.1);
+.social-icon-fallback {
+    font-size: 3rem;
+    color: #94a3b8;
 }
 
-.social-icon.instagram {
-    color: #E1306C;
+/* Username Text */
+.social-username {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 1.2rem 0;
+    color: #1e293b;
+    word-break: break-all;
 }
 
-.social-icon.youtube {
-    color: #FF0000;
+/* Pill-shaped Follow Button */
+.social-follow-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.social-icon.facebook {
-    color: #1877F2;
+.social-profile-card.instagram .social-follow-btn {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
 }
 
-.social-icon.website {
-    color: #2c3e50;
+.social-profile-card.youtube .social-follow-btn {
+    background: #ff0000;
 }
 
-.social-account-name {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 1.4rem;
-    color: #333;
-    margin: 0;
-    text-align: center;
-    line-height: 1.2;
+.social-profile-card.facebook .social-follow-btn {
+    background: #1877F2;
+}
+
+.social-profile-card.other .social-follow-btn {
+    background: #334155;
+}
+
+.social-profile-card:hover .social-follow-btn {
+    filter: brightness(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.social-follow-btn svg {
+    font-size: 1.1rem;
 }
 
 @media (max-width: 600px) {
-    .social-polaroid {
-        width: 160px;
-        padding: 10px 10px 25px 10px;
+    .social-grid {
+        gap: 2rem;
     }
 
-    .social-icon {
-        font-size: 3rem;
+    .social-profile-card {
+        width: 180px;
     }
 
-    .social-account-name {
-        font-size: 1.2rem;
+    .social-avatar-container {
+        width: 110px;
+        height: 110px;
+    }
+
+    .social-username {
+        font-size: 1.1rem;
     }
 }

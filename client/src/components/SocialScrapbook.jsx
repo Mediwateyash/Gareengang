@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import apiUrl from '../config';
 import './SocialScrapbook.css';
-import { FaInstagram, FaYoutube, FaFacebook, FaLink } from 'react-icons/fa'; // Assuming react-icons is installed, if not we fall back to emojis/text
+import { FaInstagram, FaYoutube, FaFacebook, FaLink } from 'react-icons/fa';
 
 const SocialScrapbook = () => {
     const [socialLinks, setSocialLinks] = useState([]);
@@ -26,47 +26,70 @@ const SocialScrapbook = () => {
 
     if (loading || socialLinks.length === 0) return null;
 
-    const getIcon = (platform) => {
+    const getPlatformTheme = (platform) => {
         switch (platform) {
-            case 'Instagram':
-                return <span className="social-icon instagram" style={{ fontFamily: 'sans-serif' }}>📸</span>; // Fallback to emoji if react-icons fails
-            case 'YouTube':
-                return <span className="social-icon youtube" style={{ fontFamily: 'sans-serif' }}>▶️</span>;
-            case 'Facebook':
-                return <span className="social-icon facebook" style={{ fontFamily: 'sans-serif' }}>📘</span>;
-            default:
-                return <span className="social-icon website" style={{ fontFamily: 'sans-serif' }}>🔗</span>;
+            case 'Instagram': return 'instagram';
+            case 'YouTube': return 'youtube';
+            case 'Facebook': return 'facebook';
+            default: return 'other';
+        }
+    };
+
+    const getButtonText = (platform) => {
+        switch (platform) {
+            case 'Instagram': return 'Follow on Instagram';
+            case 'YouTube': return 'Subscribe on YouTube';
+            case 'Facebook': return 'Like on Facebook';
+            default: return 'Visit Website';
+        }
+    };
+
+    const getButtonIcon = (platform) => {
+        switch (platform) {
+            case 'Instagram': return <FaInstagram />;
+            case 'YouTube': return <FaYoutube />;
+            case 'Facebook': return <FaFacebook />;
+            default: return <FaLink />;
         }
     };
 
     return (
         <section className="social-scrapbook-section">
             <div className="social-container">
-                <h2 className="social-title">Catch Us Online!</h2>
+                <h2 className="social-title">Connect With Us</h2>
 
                 <div className="social-grid">
-                    {socialLinks.map((link) => (
-                        <a
-                            key={link._id}
-                            href={link.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="social-polaroid"
-                        >
-                            <div className="social-icon-box" style={{ padding: link.imageUrl ? '0' : 'auto' }}>
-                                {link.imageUrl ? (
-                                    <img
-                                        src={link.imageUrl.startsWith('http') ? link.imageUrl : `${apiUrl.replace('/api', '')}/${link.imageUrl}`}
-                                        alt={link.accountName}
-                                        className="social-profile-img"
-                                    />
-                                ) : (
-                                    getIcon(link.platform)
-                                )}
-                            </div>
-                            <h3 className="social-account-name">{link.accountName}</h3>
-                        </a>
-                    ))}
+                    {socialLinks.map((link) => {
+                        const theme = getPlatformTheme(link.platform);
+                        return (
+                            <a
+                                key={link._id}
+                                href={link.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={`social-profile-card ${theme}`}
+                            >
+                                <div className="social-avatar-container">
+                                    {link.imageUrl ? (
+                                        <img
+                                            src={link.imageUrl.startsWith('http') ? link.imageUrl : `${apiUrl.replace('/api', '')}/${link.imageUrl}`}
+                                            alt={link.accountName}
+                                            className="social-profile-img"
+                                        />
+                                    ) : (
+                                        <div className="social-icon-fallback">
+                                            {getButtonIcon(link.platform)}
+                                        </div>
+                                    )}
+                                </div>
+                                <h3 className="social-username">{link.accountName}</h3>
+                                <button className="social-follow-btn">
+                                    {getButtonIcon(link.platform)}
+                                    {getButtonText(link.platform)}
+                                </button>
+                            </a>
+                        );
+                    })}
                 </div>
             </div>
         </section>
