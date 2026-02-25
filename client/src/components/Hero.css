@@ -6,10 +6,9 @@
     height: 100vh;
     display: flex;
     align-items: center;
-    background: #ffffff;
-    /* Solid white */
-    background-image: radial-gradient(#cccccc 1px, transparent 1px);
-    background-size: 20px 20px;
+    background: #fdfbf7 !important;
+    background-image: url("https://www.transparenttextures.com/patterns/notebook-paper.png") !important;
+    background-size: auto !important;
     overflow: hidden;
     padding-top: 60px;
     /* Navbar space if needed */
