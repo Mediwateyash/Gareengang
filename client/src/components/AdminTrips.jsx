@@ -14,6 +14,7 @@ const AdminTrips = ({ onBack }) => {
         destination: '',
         dateDisplay: '',
         status: 'Coming Soon',
+        section: 'Upcoming Trips',
         bookingFee: 50,
         totalSlots: 20,
         shortDescription: '',
@@ -74,6 +75,7 @@ const AdminTrips = ({ onBack }) => {
         submitData.append('destination', formData.destination);
         submitData.append('dateDisplay', formData.dateDisplay);
         submitData.append('status', formData.status);
+        submitData.append('section', formData.section);
         submitData.append('bookingFee', formData.bookingFee);
         submitData.append('totalSlots', formData.totalSlots);
         submitData.append('shortDescription', formData.shortDescription);
@@ -118,6 +120,7 @@ const AdminTrips = ({ onBack }) => {
             destination: trip.destination,
             dateDisplay: trip.dateDisplay,
             status: trip.status,
+            section: trip.section || 'Upcoming Trips',
             bookingFee: trip.bookingFee,
             totalSlots: trip.totalSlots,
             shortDescription: trip.shortDescription || '',
@@ -152,7 +155,7 @@ const AdminTrips = ({ onBack }) => {
 
     const resetTripForm = () => {
         setFormData({
-            title: '', destination: '', dateDisplay: '', status: 'Coming Soon',
+            title: '', destination: '', dateDisplay: '', status: 'Coming Soon', section: 'Upcoming Trips',
             bookingFee: 50, totalSlots: 20, shortDescription: '', overview: '', mapEmbedUrl: '',
             checklist: '', gallery: '', coverImage: null,
             tripLeader: { name: 'Yash Diwate', phone: '8799903365', instagram: '' },
@@ -259,6 +262,11 @@ const AdminTrips = ({ onBack }) => {
                                     <option value="Completed">Completed (Shows External Gallery)</option>
                                     <option value="Cancelled">Cancelled</option>
                                 </select>
+                            </div>
+                            <div className="form-group">
+                                <label>Trip Section / Category</label>
+                                <input type="text" value={formData.section} onChange={e => setFormData({ ...formData, section: e.target.value })} required placeholder="e.g. Upcoming Trips, Manifested Trips" />
+                                <small style={{ color: '#64748b' }}>Groups trips together on the public page under this exact exact spelling.</small>
                             </div>
                             <div className="form-group">
                                 <label>Advance Booking Fee (₹)</label>
@@ -387,8 +395,8 @@ const AdminTrips = ({ onBack }) => {
                                             borderTop: '1px dashed #cbd5e1', fontSize: '0.9rem'
                                         }}>
                                             <div>
-                                                <span style={{ color: '#94a3b8', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase' }}>Dates</span>
-                                                <strong style={{ color: '#334155' }}>{trip.dateDisplay}</strong>
+                                                <span style={{ color: '#94a3b8', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase' }}>Section</span>
+                                                <strong style={{ color: '#334155' }}>{trip.section || 'Upcoming Trips'}</strong>
                                             </div>
                                             <div style={{ textAlign: 'right' }}>
                                                 <span style={{ color: '#94a3b8', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase' }}>Booked</span>

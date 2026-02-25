@@ -21,6 +21,11 @@ const tripSchema = new mongoose.Schema({
         enum: ['Booking Open', 'Coming Soon', 'Completed', 'Cancelled'],
         default: 'Coming Soon'
     },
+    section: {
+        type: String,
+        default: 'Upcoming Trips',
+        trim: true
+    },
     bookingFee: {
         type: Number,
         default: 50 // Advance slot amount in INR

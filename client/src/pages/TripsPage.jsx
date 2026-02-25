@@ -138,7 +138,15 @@ const TripsPage = () => {
     if (loading) return <div className="trips-loader">Loading Epic Journeys...</div>;
 
     const activeTrips = trips.filter(t => t.status === 'Booking Open' || t.status === 'Coming Soon');
-    const pastTrips = trips.filter(t => t.status === 'Completed');
+
+    // Dynamically group ALL trips by their `section` field
+    // Default to 'General Trips' if an old document lacks it
+    const groupedTrips = trips.reduce((acc, trip) => {
+        const sectionName = trip.section || 'Upcoming Trips';
+        if (!acc[sectionName]) acc[sectionName] = [];
+        acc[sectionName].push(trip);
+        return acc;
+    }, {});
 
     return (
         <div className="trips-page-container">
@@ -198,78 +206,61 @@ const TripsPage = () => {
                 )}
             </section>
 
-            {/* UPCOMING & COMPLETED TRIPS GRID */}
+            {/* DYNAMIC TRIP SECTIONS GRID */}
             <div className="trips-grid-wrapper">
-
-                {/* Upcoming Trips */}
-                {activeTrips.length > 0 && (
-                    <section className="trips-grid-section">
+                {Object.keys(groupedTrips).map(sectionTitle => (
+                    <section key={sectionTitle} className={`trips-grid-section ${sectionTitle.toLowerCase().includes('past') || sectionTitle.toLowerCase().includes('completed') ? 'past' : ''}`}>
                         <div className="section-header">
-                            <h2 className="section-title">Upcoming <span>Journeys</span></h2>
-                            <p className="section-subtitle">Grab your bags and book your next adventure!</p>
+                            <h2 className="section-title">
+                                {/* Splitting the title simply to highlight the last word matching our current styling */}
+                                {sectionTitle.split(' ').slice(0, -1).join(' ')} <span>{sectionTitle.split(' ').slice(-1)}</span>
+                            </h2>
+                            <p className="section-subtitle">Explore events under {sectionTitle}</p>
                         </div>
                         <div className="trips-grid">
-                            {activeTrips.map(trip => (
-                                <Link to={`/trips/${trip._id}`} key={trip._id} className="trip-card">
+                            {groupedTrips[sectionTitle].map(trip => (
+                                <Link to={`/trips/${trip._id}`} key={trip._id} className={`trip-card ${trip.status === 'Completed' ? 'completed' : ''}`}>
                                     <div className="trip-card-img" style={{ backgroundImage: `url(${trip.coverImage.startsWith('http') ? trip.coverImage : `${API_BASE_URL}/${trip.coverImage}`})` }}>
-                                        <div className={`trip-card-badge ${trip.status === 'Booking Open' ? 'open' : 'soon'}`}>
-                                            {trip.status === 'Booking Open' ? '🟢 Booking Open' : '⏳ Coming Soon'}
-                                        </div>
+                                        {trip.status === 'Completed' ? (
+                                            <div className="trip-card-badge completed">
+                                                ✅ Attempted successfully
+                                            </div>
+                                        ) : (
+                                            <div className={`trip-card-badge ${trip.status === 'Booking Open' ? 'open' : 'soon'}`}>
+                                                {trip.status === 'Booking Open' ? '🟢 Booking Open' : '⏳ Coming Soon'}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="trip-card-content">
-                                        <h3 className="trip-card-title">{trip.title}</h3>
+                                        <h3 className="trip-card-title" style={{ color: trip.status === 'Completed' ? '#94a3b8' : 'inherit' }}>{trip.title}</h3>
                                         <div className="trip-card-meta">
                                             <span>📍 {trip.destination}</span>
                                             <span>🗓️ {trip.dateDisplay}</span>
                                         </div>
-                                        {trip.shortDescription && <p className="trip-card-desc">{trip.shortDescription}</p>}
-                                        <div className="trip-card-footer">
-                                            <div className="trip-card-cost">
-                                                <span className="cost-label">Booking Advance</span>
-                                                <span className="cost-val">₹{trip.bookingFee}</span>
-                                            </div>
-                                            <div className="trip-card-slots">
-                                                <span>Slots Available</span>
-                                                <strong>{Math.max(0, trip.totalSlots - trip.bookedSlots)}</strong>
-                                            </div>
+                                        {trip.shortDescription && trip.status !== 'Completed' && <p className="trip-card-desc">{trip.shortDescription}</p>}
+
+                                        <div className="trip-card-footer" style={{ justifyContent: trip.status === 'Completed' ? 'center' : 'space-between' }}>
+                                            {trip.status === 'Completed' ? (
+                                                <span style={{ color: '#3b82f6', fontWeight: 'bold' }}>View Gallery & Memories →</span>
+                                            ) : (
+                                                <>
+                                                    <div className="trip-card-cost">
+                                                        <span className="cost-label">Booking Advance</span>
+                                                        <span className="cost-val">₹{trip.bookingFee}</span>
+                                                    </div>
+                                                    <div className="trip-card-slots">
+                                                        <span>Slots Available</span>
+                                                        <strong>{Math.max(0, trip.totalSlots - trip.bookedSlots)}</strong>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </Link>
                             ))}
                         </div>
                     </section>
-                )}
-
-                {/* Completed Trips */}
-                {pastTrips.length > 0 && (
-                    <section className="trips-grid-section past">
-                        <div className="section-header">
-                            <h2 className="section-title">Successful <span>Missions</span></h2>
-                            <p className="section-subtitle">Trips that became lifelong memories.</p>
-                        </div>
-                        <div className="trips-grid">
-                            {pastTrips.map(trip => (
-                                <Link to={`/trips/${trip._id}`} key={trip._id} className="trip-card completed">
-                                    <div className="trip-card-img" style={{ backgroundImage: `url(${trip.coverImage.startsWith('http') ? trip.coverImage : `${API_BASE_URL}/${trip.coverImage}`})` }}>
-                                        <div className="trip-card-badge completed">
-                                            ✅ Attempted successfully
-                                        </div>
-                                    </div>
-                                    <div className="trip-card-content">
-                                        <h3 className="trip-card-title" style={{ color: '#94a3b8' }}>{trip.title}</h3>
-                                        <div className="trip-card-meta">
-                                            <span>📍 {trip.destination}</span>
-                                            <span>🗓️ {trip.dateDisplay}</span>
-                                        </div>
-                                        <div className="trip-card-footer" style={{ justifyContent: 'center' }}>
-                                            <span style={{ color: '#3b82f6', fontWeight: 'bold' }}>View Gallery & Memories →</span>
-                                        </div>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    </section>
-                )}
+                ))}
             </div>
 
             {/* BOOKING MODAL */}
