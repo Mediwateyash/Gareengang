@@ -1,19 +1,16 @@
 .home-trips-section {
-    padding: 5rem 0;
-    background-color: #f8fafc;
+    padding: 2rem 0 5rem 0;
+    /* Add bottom padding, but remove top to blend with above section */
     position: relative;
     overflow: hidden;
+    background: transparent;
+    /* Force transparent to inherit page body background */
 }
 
 /* Decorative background elements */
 .home-trips-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+    display: none;
+    /* Remove harsh line divider */
 }
 
 .ht-header {

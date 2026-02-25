@@ -4,6 +4,20 @@ import groupPhoto from '../assets/group_photo.jpg';
 import './Hero.css';
 
 const Hero = () => {
+    const [textIndex, setTextIndex] = useState(0);
+    const texts = [
+        "Trips & Day-Outs",
+        "Unfiltered College Memories",
+        "Vlogs & Experiences",
+        "More coming soon..."
+    ];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTextIndex((prev) => (prev + 1) % texts.length);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <section className="hero">
@@ -16,8 +30,13 @@ const Hero = () => {
                     <p className="subtitle">Est. Watumull College</p>
                     <div className="tagline">Just some kids making memories...</div>
 
+                    <div className="dynamic-text-wrapper">
+                        <p className="dynamic-text" key={textIndex}>{texts[textIndex]}</p>
+                    </div>
+
                     <div className="hero-buttons">
-                        <Link to="/vlogs" className="btn-hero" style={{ background: 'linear-gradient(135deg, #FF0000, #cc0000)', color: 'white', border: 'none' }}>▶ Watch Vlogs</Link>
+                        <Link to="/trips" className="btn-hero" style={{ background: 'linear-gradient(135deg, #10b981, #059669)', border: 'none', color: 'white', marginRight: '10px' }}>🏕️ Book Trips</Link>
+                        <Link to="/vlogs" className="btn-hero secondary">Watch Vlogs</Link>
                         <Link to="/memories" className="btn-hero secondary">View Gallery</Link>
                     </div>
                 </div>
