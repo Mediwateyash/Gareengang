@@ -36,11 +36,11 @@ router.post('/initiate', async (req, res) => {
 
         const amount = trip.bookingFee;
 
-        // Create Razorpay Order
+        // Create Razorpay Order - max receipt length is 40 chars
         const options = {
             amount: amount * 100, // in paise
             currency: 'INR',
-            receipt: `trip_${tripId}_${Date.now()}`,
+            receipt: `rcpt_${tripId.toString().slice(-6)}_${Date.now().toString().slice(-6)}`,
             payment_capture: 1
         };
 
@@ -67,8 +67,8 @@ router.post('/initiate', async (req, res) => {
         });
 
     } catch (err) {
-        console.error('Trip Registration Init Error:', err);
-        res.status(500).json({ message: 'Server error generating checkout', error: err.message });
+        console.error('Trip Registration Init Error Full Details:', JSON.stringify(err, null, 2));
+        res.status(500).json({ message: 'Server error generating checkout', error: err.error || err.message });
     }
 });
 
