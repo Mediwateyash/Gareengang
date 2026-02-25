@@ -6,11 +6,10 @@
     height: 100vh;
     display: flex;
     align-items: center;
-    background-color: #fdfbf7;
-    background-image:
-        radial-gradient(#e0dcd3 1px, transparent 1px),
-        url("https://www.transparenttextures.com/patterns/notebook-paper.png");
-    background-size: 20px 20px, auto;
+    background: #ffffff;
+    /* Solid white */
+    background-image: radial-gradient(#cccccc 1px, transparent 1px);
+    background-size: 20px 20px;
     overflow: hidden;
     padding-top: 60px;
     /* Navbar space if needed */
@@ -22,7 +21,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.05) 100%);
+    background: none;
     pointer-events: none;
 }
 
