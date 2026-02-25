@@ -13,6 +13,7 @@ import Faces from './components/Faces'
 import VideoReviews from './components/VideoReviews'
 import Vlogs from './pages/Vlogs'
 import HomeVlogs from './components/HomeVlogs'
+import HomeTrips from './components/HomeTrips'
 import TripsPage from './pages/TripsPage'
 import TripDetails from './pages/TripDetails'
 import Stats from './components/Stats'
@@ -26,6 +27,7 @@ const LandingPage = () => (
   <>
     <Hero />
     <MemoriesFeat />
+    <HomeTrips />
     <Stats />
     <HomeVlogs />
     {/* HomeVlogs will be added here later */}

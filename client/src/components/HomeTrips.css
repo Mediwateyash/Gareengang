@@ -1,0 +1,196 @@
+.home-trips-section {
+    padding: 5rem 0;
+    background-color: #f8fafc;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Decorative background elements */
+.home-trips-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+}
+
+.ht-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.ht-header h2 {
+    font-size: 2.5rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    font-weight: 800;
+}
+
+.ht-header p {
+    color: #64748b;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.ht-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.ht-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #f1f5f9;
+}
+
+.ht-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.ht-image-wrapper {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.ht-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.ht-card:hover .ht-image-wrapper img {
+    transform: scale(1.05);
+}
+
+.ht-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ht-badge.open {
+    background: rgba(16, 185, 129, 0.9);
+}
+
+.ht-badge.soon {
+    background: rgba(245, 158, 11, 0.9);
+}
+
+.ht-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.ht-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.ht-title {
+    font-size: 1.4rem;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.ht-desc {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+}
+
+.ht-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.ht-price {
+    display: flex;
+    flex-direction: column;
+}
+
+.ht-price .label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ht-price strong {
+    font-size: 1.3rem;
+    color: #1e293b;
+    font-weight: 800;
+}
+
+.ht-btn {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.ht-btn:hover {
+    background: linear-gradient(135deg, #34d399, #10b981);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4);
+    color: white;
+}
+
+.ht-view-all {
+    text-align: center;
+}
+
+.btn-view-all-trips {
+    display: inline-block;
+    padding: 12px 30px;
+    background: white;
+    color: #0f172a;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 50px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s;
+}
+
+.btn-view-all-trips:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
