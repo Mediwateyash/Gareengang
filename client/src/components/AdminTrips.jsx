@@ -302,36 +302,85 @@ const AdminTrips = ({ onBack }) => {
 
                     <section className="list-section">
                         <h3>Published Trips</h3>
-                        <div className="memories-table-wrapper">
-                            <table className="memories-table">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Slots (Booked/Total)</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {trips.map(trip => (
-                                        <tr key={trip._id}>
-                                            <td><strong>{trip.title}</strong><br />{trip.destination}</td>
-                                            <td>{trip.dateDisplay}</td>
-                                            <td><span style={{
-                                                padding: '4px 8px', borderRadius: '12px', fontSize: '0.8rem',
-                                                background: trip.status === 'Booking Open' ? '#dcfce7' : trip.status === 'Completed' ? '#e0e7ff' : '#fef9c3',
-                                                color: trip.status === 'Booking Open' ? '#166534' : trip.status === 'Completed' ? '#3730a3' : '#854d0e'
-                                            }}>{trip.status}</span></td>
-                                            <td>{trip.bookedSlots} / {trip.totalSlots}</td>
-                                            <td>
-                                                <button onClick={() => handleTripEdit(trip)} className="btn-action edit">Edit</button>
-                                                <button onClick={() => handleTripDelete(trip._id)} className="btn-action delete">Delete</button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem', marginTop: '1.5rem' }}>
+                            {trips.map(trip => (
+                                <div key={trip._id} style={{
+                                    background: 'white',
+                                    borderRadius: '12px',
+                                    overflow: 'hidden',
+                                    boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    border: '1px solid #e2e8f0'
+                                }}>
+                                    {/* Card Header / Image Area */}
+                                    <div style={{
+                                        height: '160px',
+                                        background: trip.coverImageUrl ? `url(${trip.coverImageUrl}) center/cover` : '#cbd5e1',
+                                        position: 'relative'
+                                    }}>
+                                        <div style={{
+                                            position: 'absolute', top: '10px', right: '10px',
+                                            padding: '4px 10px', borderRadius: '50px', fontSize: '0.8rem', fontWeight: 'bold',
+                                            background: trip.status === 'Booking Open' ? '#dcfce7' : trip.status === 'Completed' ? '#e0e7ff' : '#fef9c3',
+                                            color: trip.status === 'Booking Open' ? '#166534' : trip.status === 'Completed' ? '#3730a3' : '#854d0e',
+                                            border: '2px solid white',
+                                            boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
+                                        }}>
+                                            {trip.status}
+                                        </div>
+                                    </div>
+
+                                    {/* Card Content Area */}
+                                    <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                        <h4 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: '#1e293b' }}>{trip.title}</h4>
+                                        <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                            📍 {trip.destination}
+                                        </p>
+
+                                        <div style={{
+                                            display: 'flex', justifyContent: 'space-between',
+                                            paddingTop: '1rem', marginTop: 'auto',
+                                            borderTop: '1px dashed #cbd5e1', fontSize: '0.9rem'
+                                        }}>
+                                            <div>
+                                                <span style={{ color: '#94a3b8', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase' }}>Dates</span>
+                                                <strong style={{ color: '#334155' }}>{trip.dateDisplay}</strong>
+                                            </div>
+                                            <div style={{ textAlign: 'right' }}>
+                                                <span style={{ color: '#94a3b8', display: 'block', fontSize: '0.8rem', textTransform: 'uppercase' }}>Booked</span>
+                                                <strong style={{ color: '#3b82f6' }}>{trip.bookedSlots} / {trip.totalSlots}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Card Footer Actions */}
+                                    <div style={{ display: 'flex', borderTop: '1px solid #e2e8f0' }}>
+                                        <button
+                                            onClick={() => handleTripEdit(trip)}
+                                            style={{ flex: 1, padding: '1rem', background: '#f8fafc', border: 'none', color: '#3b82f6', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.2s' }}
+                                            onMouseOver={(e) => e.target.style.background = '#eff6ff'}
+                                            onMouseOut={(e) => e.target.style.background = '#f8fafc'}
+                                        >
+                                            ✎ Edit Trip
+                                        </button>
+                                        <div style={{ width: '1px', background: '#e2e8f0' }}></div>
+                                        <button
+                                            onClick={() => handleTripDelete(trip._id)}
+                                            style={{ flex: 1, padding: '1rem', background: '#f8fafc', border: 'none', color: '#ef4444', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.2s' }}
+                                            onMouseOver={(e) => e.target.style.background = '#fef2f2'}
+                                            onMouseOut={(e) => e.target.style.background = '#f8fafc'}
+                                        >
+                                            🗑️ Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            {trips.length === 0 && (
+                                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3rem', background: '#f8fafc', borderRadius: '8px', color: '#64748b' }}>
+                                    No trips published yet. Create your first one above!
+                                </div>
+                            )}
                         </div>
                     </section>
                 </div>
