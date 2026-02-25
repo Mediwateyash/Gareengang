@@ -279,7 +279,7 @@ const TripsPage = () => {
                             <>
                                 <h2>Secure Your Slot</h2>
                                 <p className="modal-trip-title">{selectedTrip.title} ({selectedTrip.dateDisplay})</p>
-                                <p className="modal-fee-alert">Advance Booking Fee: <strong>₹{selectedTrip.bookingFee}</strong></p>
+                                <p className="modal-fee-alert">Advance Slot Booking Payment: <strong>₹{selectedTrip.bookingFee}</strong></p>
 
                                 <form onSubmit={handlePaymentSubmit} className="booking-form">
                                     <div className="form-group">
@@ -295,7 +295,7 @@ const TripsPage = () => {
                                         <textarea rows="3" value={formData.queries} onChange={e => setFormData({ ...formData, queries: e.target.value })} disabled={isProcessing} placeholder="Ask us anything here..."></textarea>
                                     </div>
                                     <button type="submit" className="btn-pay-now" disabled={isProcessing}>
-                                        {isProcessing ? 'Processing Securely...' : `Pay ₹${selectedTrip.bookingFee} & Confirm`}
+                                        {isProcessing ? 'Processing Securely...' : `Advance Slot Booking Payment ₹${selectedTrip.bookingFee} & Confirm`}
                                     </button>
                                 </form>
                             </>

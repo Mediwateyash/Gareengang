@@ -240,10 +240,10 @@ const TripDetails = () => {
                         <p className="secure-note">🔒 Payments securely processed by Razorpay</p>
                     </div>
 
-                    {/* Trip Leader */}
+                    {/* Trip Organizer and Manager */}
                     {trip.tripLeader && trip.tripLeader.name && (
                         <div className="sidebar-card leader-widget">
-                            <h3>👤 Trip Leader</h3>
+                            <h3>👤 Trip Organizer and Manager</h3>
                             <div className="leader-info">
                                 <strong>{trip.tripLeader.name}</strong>
                                 {trip.tripLeader.phone && <p>📞 {trip.tripLeader.phone}</p>}
@@ -263,13 +263,13 @@ const TripDetails = () => {
                             <div className="booking-success">
                                 <h2>🎉 Slot Confirmed!</h2>
                                 <p>You have successfully booked your slot for <strong>{trip.title}</strong>.</p>
-                                <p>Wait for instructions from {trip.tripLeader?.name || 'the President'}.</p>
+                                <p>Wait for instructions from {trip.tripLeader?.name || 'the Organizer'}.</p>
                                 <button className="btn-pay-now" onClick={() => setShowModal(false)} style={{ marginTop: '2rem' }}>Close</button>
                             </div>
                         ) : (
                             <>
                                 <h2>Complete Registration</h2>
-                                <p className="modal-fee-alert">Advance Booking Fee: <strong>₹{trip.bookingFee}</strong></p>
+                                <p className="modal-fee-alert">Advance Slot Booking Payment: <strong>₹{trip.bookingFee}</strong></p>
                                 <form onSubmit={handlePaymentSubmit} className="booking-form">
                                     <div className="form-group">
                                         <label>Full Name</label>
@@ -284,7 +284,7 @@ const TripDetails = () => {
                                         <textarea rows="3" value={formData.queries} onChange={e => setFormData({ ...formData, queries: e.target.value })} disabled={isProcessing}></textarea>
                                     </div>
                                     <button type="submit" className="btn-pay-now" disabled={isProcessing}>
-                                        {isProcessing ? 'Processing Securely...' : `Pay ₹${trip.bookingFee}`}
+                                        {isProcessing ? 'Processing Securely...' : `Advance Slot Booking Payment: ₹${trip.bookingFee}`}
                                     </button>
                                 </form>
                             </>

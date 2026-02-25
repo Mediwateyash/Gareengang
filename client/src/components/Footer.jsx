@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Footer.css';
-import { FaArrowUp, FaWhatsapp } from 'react-icons/fa';
+import { FaArrowUp, FaWhatsapp, FaHome } from 'react-icons/fa';
 
 const Footer = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -111,6 +111,12 @@ const Footer = () => {
                 <span className="whatsapp-tooltip">Any Queries? Contact President Yash</span>
                 <FaWhatsapp />
             </a>
+
+            {/* Floating Home Button */}
+            <Link to="/" className="home-float" title="Back to Homepage">
+                <span className="home-tooltip">Go to Home</span>
+                <FaHome />
+            </Link>
 
             {/* Floating Back to Top Button */}
             <button
