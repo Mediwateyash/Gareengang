@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const TripCategory = require('../models/TripCategory');
-const verifyToken = require('../middleware/auth');
 
 // GET all categories
 router.get('/', async (req, res) => {
@@ -13,8 +12,8 @@ router.get('/', async (req, res) => {
     }
 });
 
-// POST a new category (Protected)
-router.post('/', verifyToken, async (req, res) => {
+// POST a new category
+router.post('/', async (req, res) => {
     try {
         const { name } = req.body;
         if (!name) return res.status(400).json({ error: 'Category name is required' });
@@ -30,8 +29,8 @@ router.post('/', verifyToken, async (req, res) => {
     }
 });
 
-// DELETE a category (Protected)
-router.delete('/:id', verifyToken, async (req, res) => {
+// DELETE a category
+router.delete('/:id', async (req, res) => {
     try {
         await TripCategory.findByIdAndDelete(req.params.id);
         res.json({ message: 'Category deleted successfully' });
