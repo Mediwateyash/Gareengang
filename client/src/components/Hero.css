@@ -79,7 +79,6 @@
 .dynamic-text {
     font-family: 'Patrick Hand', cursive;
     font-size: 2rem;
-    color: #e74c3c;
     font-weight: bold;
     animation: slideUp 0.5s ease-out;
 }
