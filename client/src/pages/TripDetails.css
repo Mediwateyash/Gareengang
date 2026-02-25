@@ -1,24 +1,31 @@
-/* --- TRIP DETAILS PAGE --- */
+/* --- TRIP DETAILS PAGE (ADVANCED SCRAPBOOK THEME) --- */
 .trip-details-page {
     width: 100%;
     min-height: 100vh;
-    background-color: #0f172a;
-    color: white;
+    background-color: #f8fafc;
+    /* Light scrapbook paper */
+    background-image: radial-gradient(#cbd5e1 2px, transparent 2px);
+    background-size: 30px 30px;
+    color: var(--light, #F7FFF7);
     font-family: 'Inter', sans-serif;
     padding-bottom: 5rem;
+    overflow-x: hidden;
 }
 
 /* Banner */
 .trip-banner {
     position: relative;
     width: 100%;
-    height: 60vh;
-    min-height: 400px;
+    height: 70vh;
+    min-height: 500px;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     display: flex;
     align-items: flex-end;
+    /* Polaroid ripped edge at the bottom */
+    mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
 }
 
 .trip-banner-overlay {
@@ -27,7 +34,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, rgba(15, 23, 42, 1) 0%, rgba(15, 23, 42, 0.4) 50%, rgba(15, 23, 42, 0.2) 100%);
+    background: linear-gradient(to top, rgba(26, 26, 46, 1) 0%, rgba(26, 26, 46, 0.4) 50%, rgba(26, 26, 46, 0.2) 100%);
 }
 
 .trip-banner-content {
@@ -36,7 +43,7 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 3rem 2rem;
+    padding: 4rem 2rem;
 }
 
 .btn-back-trips {
@@ -45,18 +52,21 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
     padding: 0.8rem 1.5rem;
-    border-radius: 8px;
+    border-radius: 50px;
+    /* Pill shaped */
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 2rem;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .btn-back-trips:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--primary, #FF6B6B);
+    border-color: var(--primary);
+    transform: translateX(-5px);
 }
 
 .trip-banner-badges {
@@ -66,55 +76,63 @@
 }
 
 .status-badge {
-    padding: 0.4rem 1rem;
-    border-radius: 50px;
-    font-size: 0.85rem;
-    font-weight: 700;
+    padding: 0.4rem 1.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 800;
     text-transform: uppercase;
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+    transform: rotate(-2deg);
 }
 
 .status-badge.open {
-    background: rgba(34, 197, 94, 0.2);
-    color: #4ade80;
-    border: 1px solid rgba(34, 197, 94, 0.4);
+    background: var(--secondary, #4ECDC4);
+    color: var(--dark);
+    border: 2px solid white;
 }
 
 .status-badge.soon {
-    background: rgba(234, 179, 8, 0.2);
-    color: #facc15;
-    border: 1px solid rgba(234, 179, 8, 0.4);
+    background: var(--accent, #FFE66D);
+    color: var(--dark);
+    border: 2px solid white;
 }
 
 .status-badge.completed {
-    background: rgba(59, 130, 246, 0.2);
-    color: #60a5fa;
-    border: 1px solid rgba(59, 130, 246, 0.4);
+    background: #cbd5e1;
+    color: var(--dark);
+    border: 2px solid white;
 }
 
 .location-badge {
-    padding: 0.4rem 1rem;
-    border-radius: 50px;
+    padding: 0.4rem 1.5rem;
+    border-radius: 4px;
     font-size: 0.9rem;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    backdrop-filter: blur(5px);
+    font-weight: 700;
+    background: white;
+    color: var(--dark);
+    transform: rotate(2deg);
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
 }
 
 .trip-banner-title {
-    font-size: 4rem;
-    font-weight: 800;
+    font-size: 4.5rem;
+    font-weight: 900;
     margin-bottom: 0.5rem;
     line-height: 1.1;
-    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
-    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: white;
+    text-shadow: 3px 3px 0px var(--primary, #FF6B6B), 0px 4px 15px rgba(0, 0, 0, 0.5);
+    letter-spacing: -1px;
+    font-family: 'Outfit', sans-serif;
 }
 
 .trip-banner-dates {
-    font-size: 1.4rem;
-    color: #cbd5e1;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent, #FFE66D);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    margin-top: 1rem;
 }
 
 /* Layout Container */
@@ -130,179 +148,303 @@
 
 /* Main Content Sections */
 .detail-section {
-    margin-bottom: 4rem;
+    margin-bottom: 5rem;
+    position: relative;
 }
 
+/* Notebook Header Style */
 .detail-section h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: #e2e8f0;
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin-bottom: 2rem;
+    color: var(--dark, #1A1A2E);
+    font-family: 'Outfit', sans-serif;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
 }
 
+.detail-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: -5px;
+    right: -15px;
+    height: 15px;
+    background: var(--primary, #FF6B6B);
+    z-index: -1;
+    transform: rotate(-1deg);
+    opacity: 0.8;
+}
+
+/* Ripped Paper / Polaroid Details Cards */
 .detail-card {
-    background: #1e293b;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: white;
+    border-radius: 4px;
+    padding: 3rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    color: var(--dark);
+    position: relative;
+}
+
+.detail-card::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 40%;
+    transform: rotate(2deg);
+    width: 100px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    backdrop-filter: blur(4px);
 }
 
 .overview-card p {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     line-height: 1.8;
-    color: #cbd5e1;
+    color: #334155;
     white-space: pre-wrap;
+    font-weight: 500;
 }
 
-/* Itinerary Timeline */
+/* Scrapbook Itinerary Timeline */
 .itinerary-timeline {
     position: relative;
     padding-left: 2rem;
 }
 
+/* Hand-drawn looking vertical line */
 .itinerary-timeline::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 5px;
-    width: 2px;
+    left: 15px;
+    width: 6px;
+    border-radius: 10px;
     height: 100%;
-    background: rgba(59, 130, 246, 0.3);
+    background: repeating-linear-gradient(-45deg,
+            var(--secondary),
+            var(--secondary) 10px,
+            transparent 10px,
+            transparent 20px);
 }
 
 .timeline-item {
     position: relative;
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
 }
 
 .timeline-item:last-child {
     margin-bottom: 0;
 }
 
+/* Tape sticker for Day */
 .timeline-dot {
     position: absolute;
-    left: -42px;
-    top: 0;
-    background: #3b82f6;
+    left: -40px;
+    top: 10px;
+    background: var(--dark);
     color: white;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 0.4rem 0.8rem;
-    border-radius: 50px;
-    box-shadow: 0 0 0 4px #0f172a;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    box-shadow: 3px 3px 0px var(--accent);
     z-index: 2;
+    transform: rotate(-5deg);
 }
 
 .timeline-content {
-    background: #1e293b;
-    border-radius: 12px;
-    padding: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: white;
+    border-radius: 4px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-left: 40px;
+    position: relative;
+}
+
+/* Rotate every other timeline card */
+.timeline-item:nth-child(even) .timeline-content {
+    transform: rotate(1deg);
+}
+
+.timeline-item:nth-child(odd) .timeline-content {
+    transform: rotate(-1deg);
 }
 
 .timeline-content h3 {
-    font-size: 1.3rem;
-    color: white;
+    font-size: 1.5rem;
+    color: var(--dark);
     margin-bottom: 0.5rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
 }
 
 .timeline-content p {
-    color: #94a3b8;
+    color: #475569;
     line-height: 1.6;
+    font-size: 1.1rem;
 }
 
-/* Budget Breakdown */
+/* Budget Breakdown - Receipt Style */
+.budget-card {
+    background: #FFFdf0;
+    /* slight yellow paper tint */
+    border-radius: 0;
+    border: 1px dashed #cbd5e1;
+    border-top: 10px solid var(--accent);
+}
+
+.budget-card::before {
+    display: none;
+}
+
+/* remove tape */
+
 .budget-list {
     list-style: none;
     padding: 0;
     margin-bottom: 1.5rem;
+    font-family: monospace;
+    /* Receipt look */
 }
 
 .budget-list li {
     display: flex;
     justify-content: space-between;
     padding: 1rem 0;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-    color: #cbd5e1;
-    font-size: 1.1rem;
+    border-bottom: 1px dashed #94a3b8;
+    color: var(--dark);
+    font-size: 1.2rem;
 }
 
 .b-amount {
     font-weight: 700;
-    color: #10b981;
+    color: var(--primary);
 }
 
 .budget-total {
     display: flex;
     justify-content: space-between;
-    padding-top: 1rem;
-    font-size: 1.3rem;
+    padding-top: 1.5rem;
+    font-size: 1.5rem;
     font-weight: 800;
-    color: white;
+    color: var(--dark);
+    font-family: monospace;
 }
 
-/* Checklist */
+/* Checklist Notepad */
+.checklist-card {
+    background: #f8fafc;
+    background-image: linear-gradient(#e2e8f0 1px, transparent 1px);
+    background-size: 100% 2.5rem;
+    line-height: 2.5rem;
+    padding: 2rem 3rem;
+    border-left: 5px solid var(--primary);
+}
+
 .checklist-card ul {
     list-style: none;
     padding: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .checklist-card li {
-    background: rgba(255, 255, 255, 0.03);
-    padding: 1rem;
-    border-radius: 8px;
-    color: #e2e8f0;
+    color: var(--dark);
+    font-size: 1.2rem;
+    font-weight: 600;
+    position: relative;
+    padding-left: 30px;
+}
+
+.checklist-card li::before {
+    content: '☑';
+    position: absolute;
+    left: 0;
+    color: var(--secondary);
+    font-size: 1.5rem;
 }
 
 /* Map & Gallery */
 .map-container {
     overflow: hidden;
-    padding: 0;
+    padding: 1rem;
+    background: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    transform: rotate(1deg);
 }
 
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .gallery-img {
     width: 100%;
     height: 200px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 4px;
+    background: white;
+    padding: 8px 8px 25px 8px;
+    /* Polaroid edge */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
 
-.gallery-img:hover {
-    transform: scale(1.05);
+.gallery-img:nth-child(even) {
+    transform: rotate(3deg);
 }
 
-/* Sidebar Widgets */
+.gallery-img:nth-child(odd) {
+    transform: rotate(-3deg);
+}
+
+.gallery-img:hover {
+    transform: scale(1.1) rotate(0deg);
+    z-index: 10;
+    position: relative;
+}
+
+/* Sidebar Widgets - Scrapbook pinned cards */
 .trip-sidebar {
     position: sticky;
     top: 2rem;
 }
 
 .sidebar-card {
-    background: #1e293b;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
+    background: white;
+    border-radius: 4px;
     padding: 2.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    margin-bottom: 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2.5rem;
+    color: var(--dark);
+    position: relative;
+}
+
+/* Pin graphic */
+.sidebar-card::after {
+    content: '📌';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    z-index: 10;
 }
 
 .sidebar-card h3 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     margin-bottom: 1.5rem;
-    color: white;
+    color: var(--dark);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    text-align: center;
 }
 
 .widget-price {
@@ -311,19 +453,20 @@
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px dashed #e2e8f0;
 }
 
 .widget-price span {
-    color: #94a3b8;
+    color: #64748b;
     text-transform: uppercase;
     font-size: 0.9rem;
-    letter-spacing: 1px;
+    font-weight: 800;
 }
 
 .widget-price strong {
-    font-size: 2.5rem;
-    color: #4ade80;
+    font-size: 3rem;
+    color: var(--primary);
+    font-weight: 900;
 }
 
 .widget-slots {
@@ -332,8 +475,8 @@
 
 .slot-bar-bg {
     width: 100%;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.1);
+    height: 12px;
+    background: #e2e8f0;
     border-radius: 10px;
     margin-bottom: 0.5rem;
     overflow: hidden;
@@ -341,37 +484,39 @@
 
 .slot-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    background: var(--secondary);
     border-radius: 10px;
 }
 
 .widget-slots p {
-    font-size: 0.9rem;
-    color: #cbd5e1;
+    font-size: 0.95rem;
+    color: #475569;
     text-align: right;
+    font-weight: 700;
 }
 
 .btn-sidebar-book {
     width: 100%;
     padding: 1.2rem;
     border: none;
-    border-radius: 12px;
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: white;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-radius: 50px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--dark);
+    background: var(--accent, #FFE66D);
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 10px 25px rgba(255, 230, 109, 0.4);
+    font-family: 'Outfit', sans-serif;
 }
 
 .btn-sidebar-book:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(255, 230, 109, 0.6);
 }
 
 .btn-sidebar-book.disabled {
-    background: #475569;
+    background: #e2e8f0;
     color: #94a3b8;
     box-shadow: none;
     cursor: not-allowed;
@@ -379,26 +524,33 @@
 
 .secure-note {
     text-align: center;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: #64748b;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    font-weight: 600;
 }
 
 .leader-info strong {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     display: block;
     margin-bottom: 0.5rem;
+    color: var(--dark);
 }
 
 .leader-info p {
-    color: #cbd5e1;
+    color: #475569;
     margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
 .leader-info a {
-    color: #3b82f6;
+    color: var(--secondary);
     text-decoration: none;
+    font-weight: 700;
 }
+
+/* Modal is shared with TripsPage.css, keeping it clean */
 
 /* Responsive */
 @media (max-width: 968px) {
@@ -408,6 +560,7 @@
     }
 
     .trip-banner-title {
-        font-size: 2.5rem;
+        font-size: 3rem;
+        text-shadow: 2px 2px 0px var(--primary);
     }
 }
