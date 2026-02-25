@@ -1,33 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import './Footer.css';
-import { FaArrowUp, FaWhatsapp, FaHome } from 'react-icons/fa';
 
 const Footer = () => {
-    const [isVisible, setIsVisible] = useState(false);
-
-    // Show button when page is scrolled down
-    useEffect(() => {
-        const toggleVisibility = () => {
-            if (window.scrollY > 500) {
-                setIsVisible(true);
-            } else {
-                setIsVisible(false);
-            }
-        };
-
-        window.addEventListener('scroll', toggleVisibility);
-        return () => window.removeEventListener('scroll', toggleVisibility);
-    }, []);
-
-    // Scroll to top smoothly
-    const scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    };
-
     // Helper for smooth scrolling to sections on the homepage
     const scrollToSection = (id) => {
         const element = document.getElementById(id);
@@ -52,7 +27,7 @@ const Footer = () => {
                 <div className="footer-col">
                     <h3>Quick Links</h3>
                     <ul className="footer-links">
-                        <li><Link to="/" onClick={() => scrollToTop()}>Home</Link></li>
+                        <li><Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Home</Link></li>
                         <li><Link to="/memories">Memories</Link></li>
                         <li><Link to="/vlogs">Trips</Link></li>
                         <li><span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('faces-section')}>Pillars</span></li>
@@ -100,32 +75,6 @@ const Footer = () => {
                 </div>
             </div>
 
-            {/* Floating WhatsApp Contact Button */}
-            <a
-                href="https://wa.me/918799903365?text=Hi%20President%20Yash,%20I%20have%20a%20query%20about%20GareebGang!"
-                className="whatsapp-float"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Any Queries? Contact President Yash"
-            >
-                <span className="whatsapp-tooltip">Any Queries? Contact President Yash</span>
-                <FaWhatsapp />
-            </a>
-
-            {/* Floating Home Button */}
-            <Link to="/" className="home-float" title="Back to Homepage">
-                <span className="home-tooltip">Go to Home</span>
-                <FaHome />
-            </Link>
-
-            {/* Floating Back to Top Button */}
-            <button
-                className={`back-to-top ${isVisible ? 'visible' : ''}`}
-                onClick={scrollToTop}
-                aria-label="Back to top"
-            >
-                <FaArrowUp />
-            </button>
         </footer>
     );
 };

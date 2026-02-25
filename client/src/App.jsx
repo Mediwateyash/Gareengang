@@ -19,6 +19,7 @@ import TripDetails from './pages/TripDetails'
 import Stats from './components/Stats'
 import SocialScrapbook from './components/SocialScrapbook'
 import DonateSection from './components/DonateSection'
+import FloatingNav from './components/FloatingNav'
 import './index.css'
 
 // ... existing imports ...
@@ -45,6 +46,7 @@ function App() {
   return (
     <Router>
       <div className="app">
+        <FloatingNav />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
