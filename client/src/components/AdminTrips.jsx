@@ -11,6 +11,7 @@ const AdminTrips = ({ onBack }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [currentTripId, setCurrentTripId] = useState(null);
     const [newCategoryName, setNewCategoryName] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const [formData, setFormData] = useState({
         title: '',
         destination: '',
@@ -174,6 +175,7 @@ const AdminTrips = ({ onBack }) => {
             });
             if (!res.ok) throw new Error('Failed to delete category');
             fetchCategories();
+            if (selectedCategory && selectedCategory._id === id) setSelectedCategory(null);
         } catch (err) { alert(err.message); }
     };
 
@@ -279,29 +281,59 @@ const AdminTrips = ({ onBack }) => {
 
             {activeTab === 'categories' && (
                 <div className="categories-view">
-                    <section className="form-section" style={{ maxWidth: '600px', margin: '0 auto' }}>
-                        <h3>Add New Category / Section</h3>
-                        <form onSubmit={handleAddCategory} className="memory-form" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
-                            <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-                                <label>Category Name</label>
-                                <input type="text" value={newCategoryName} onChange={e => setNewCategoryName(e.target.value)} required placeholder="e.g. Manifested Trips" />
-                            </div>
-                            <button type="submit" className="btn-submit" style={{ padding: '0.8rem 1.5rem' }}>+ Create Section</button>
-                        </form>
-                    </section>
+                    <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
+                        {/* Left: Category List */}
+                        <div style={{ width: '30%', background: 'white', padding: '15px', borderRadius: '8px', border: '1px solid #ddd' }}>
+                            <form onSubmit={handleAddCategory} style={{ display: 'flex', marginBottom: '15px' }}>
+                                <input
+                                    type="text"
+                                    value={newCategoryName}
+                                    onChange={(e) => setNewCategoryName(e.target.value)}
+                                    placeholder="New Category Name"
+                                    style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px 0 0 4px' }}
+                                />
+                                <button type="submit" style={{ padding: '8px', background: '#2ecc71', color: 'white', border: 'none', borderRadius: '0 4px 4px 0', cursor: 'pointer' }}>+</button>
+                            </form>
 
-                    <section className="list-section" style={{ maxWidth: '600px', margin: '3rem auto 0 auto' }}>
-                        <h3>Global Categories</h3>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
-                            {categories.map(cat => (
-                                <div key={cat._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '1rem 1.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                                    <strong style={{ fontSize: '1.1rem', color: '#1e293b' }}>{cat.name}</strong>
-                                    <button onClick={() => handleDeleteCategory(cat._id)} style={{ background: '#fef2f2', color: '#ef4444', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Delete</button>
-                                </div>
-                            ))}
-                            {categories.length === 0 && <p style={{ textAlign: 'center', color: '#64748b' }}>No categories created yet.</p>}
+                            <ul style={{ listStyle: 'none', padding: 0 }}>
+                                {categories.map(cat => (
+                                    <li key={cat._id}
+                                        onClick={() => setSelectedCategory(cat)}
+                                        style={{
+                                            padding: '10px',
+                                            borderBottom: '1px solid #eee',
+                                            cursor: 'pointer',
+                                            background: selectedCategory?._id === cat._id ? '#e8f0fe' : 'transparent',
+                                            display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                                        }}
+                                    >
+                                        <span>{cat.name}</span>
+                                        <button onClick={(e) => { e.stopPropagation(); handleDeleteCategory(cat._id); }} style={{ color: 'red', background: 'none', border: 'none', cursor: 'pointer' }}>×</button>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                    </section>
+
+                        {/* Right: Selected Category Editor */}
+                        <div style={{ flex: 1, background: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #ddd', minHeight: '500px' }}>
+                            {selectedCategory ? (
+                                <>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+                                        <h3>Editing: {selectedCategory.name}</h3>
+                                        <button style={{ background: '#3498db', color: 'white', border: 'none', padding: '8px 15px', borderRadius: '4px', cursor: 'not-allowed', opacity: 0.7 }}>+ Assign Trips (Coming Soon)</button>
+                                    </div>
+                                    <div style={{ textAlign: 'center', marginTop: '50px' }}>
+                                        <p style={{ color: '#888', fontStyle: 'italic', marginBottom: '20px' }}>This category currently groups <strong>{trips.filter(t => t.section === selectedCategory.name).length}</strong> trips on the public page.</p>
+                                        <p style={{ color: '#888', fontStyle: 'italic', marginBottom: '20px' }}>To add or remove trips from this category, edit the trip directly in the 'Add / Manage Trips' menu.</p>
+                                    </div>
+                                </>
+                            ) : (
+                                <div style={{ display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center', color: '#aaa', minHeight: '300px' }}>
+                                    Select a category on the left to view details.
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
 
