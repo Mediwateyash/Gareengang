@@ -9,6 +9,7 @@ import AdminFaces from '../components/AdminFaces'; // Import Faces Manager
 import AdminReviews from '../components/AdminReviews'; // Import Reviews Manager
 import AdminSubPillars from '../components/AdminSubPillars'; // Import Pillar Media Manager
 import AdminSocials from '../components/AdminSocials'; // Import Social Links Manager
+import AdminTrips from '../components/AdminTrips'; // Import Trips & Registrations
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -106,6 +107,12 @@ const Dashboard = () => {
                             <h3>Social Links</h3>
                             <p>Manage Instagram, YouTube, and FB links.</p>
                         </div>
+
+                        <div className="admin-card" onClick={() => setActiveView('trips')}>
+                            <div className="icon">⛺</div>
+                            <h3>Trips & Bookings</h3>
+                            <p>Manage trips & Razorpay slot fees.</p>
+                        </div>
                     </div>
                 )}
 
@@ -118,6 +125,7 @@ const Dashboard = () => {
                 {activeView === 'reviews' && <AdminReviews onBack={() => setActiveView('menu')} />}
                 {activeView === 'pillarmedia' && <AdminSubPillars onBack={() => setActiveView('menu')} />}
                 {activeView === 'socials' && <AdminSocials onBack={() => setActiveView('menu')} />}
+                {activeView === 'trips' && <AdminTrips onBack={() => setActiveView('menu')} />}
             </main>
         </div>
     );
