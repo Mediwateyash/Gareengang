@@ -13,7 +13,7 @@ const TripDetails = () => {
     const [showModal, setShowModal] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [bookingSuccess, setBookingSuccess] = useState(false);
-    const [formData, setFormData] = useState({ name: '', phone: '', email: '' });
+    const [formData, setFormData] = useState({ name: '', phone: '', queries: '' });
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -81,7 +81,7 @@ const TripDetails = () => {
                         alert("An error occurred verifying your slot.");
                     }
                 },
-                prefill: { name: formData.name, contact: formData.phone, email: formData.email },
+                prefill: { name: formData.name, contact: formData.phone },
                 theme: { color: "#10b981" }
             };
             const rzp = new window.Razorpay(options);
@@ -280,8 +280,8 @@ const TripDetails = () => {
                                         <input type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} required disabled={isProcessing} />
                                     </div>
                                     <div className="form-group">
-                                        <label>Email (Optional)</label>
-                                        <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} disabled={isProcessing} />
+                                        <label>Any Queries (Optional)</label>
+                                        <textarea rows="3" value={formData.queries} onChange={e => setFormData({ ...formData, queries: e.target.value })} disabled={isProcessing}></textarea>
                                     </div>
                                     <button type="submit" className="btn-pay-now" disabled={isProcessing}>
                                         {isProcessing ? 'Processing Securely...' : `Pay ₹${trip.bookingFee}`}

@@ -21,7 +21,7 @@ const TripsPage = () => {
     const [formData, setFormData] = useState({
         name: '',
         phone: '',
-        email: ''
+        queries: ''
     });
 
     useEffect(() => {
@@ -49,7 +49,7 @@ const TripsPage = () => {
         if (!isProcessing) {
             setShowModal(false);
             setSelectedTrip(null);
-            setFormData({ name: '', phone: '', email: '' });
+            setFormData({ name: '', phone: '', queries: '' });
         }
     };
 
@@ -115,8 +115,7 @@ const TripsPage = () => {
                 },
                 prefill: {
                     name: formData.name,
-                    contact: formData.phone,
-                    email: formData.email
+                    contact: formData.phone
                 },
                 theme: { color: "#10b981" }
             };
@@ -292,8 +291,8 @@ const TripsPage = () => {
                                         <input type="tel" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} required disabled={isProcessing} placeholder="e.g. 9876543210" />
                                     </div>
                                     <div className="form-group">
-                                        <label>Email (Optional)</label>
-                                        <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} disabled={isProcessing} placeholder="For backup communication" />
+                                        <label>Any Queries (Optional)</label>
+                                        <textarea rows="3" value={formData.queries} onChange={e => setFormData({ ...formData, queries: e.target.value })} disabled={isProcessing} placeholder="Ask us anything here..."></textarea>
                                     </div>
                                     <button type="submit" className="btn-pay-now" disabled={isProcessing}>
                                         {isProcessing ? 'Processing Securely...' : `Pay ₹${selectedTrip.bookingFee} & Confirm`}

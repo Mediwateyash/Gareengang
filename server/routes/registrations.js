@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.post('/initiate', async (req, res) => {
     try {
-        const { tripId, name, phone, email } = req.body;
+        const { tripId, name, phone, queries } = req.body;
 
         const trip = await Trip.findById(tripId);
         if (!trip) return res.status(404).json({ message: 'Trip not found' });
@@ -51,7 +51,7 @@ router.post('/initiate', async (req, res) => {
             tripId,
             name,
             phone,
-            email,
+            queries,
             paymentStatus: 'Pending',
             amountPaid: amount,
             razorpayOrderId: order.id

@@ -580,7 +580,7 @@ const AdminTrips = ({ onBack }) => {
                                             <td>
                                                 <strong>{reg.name}</strong><br />
                                                 {reg.phone}<br />
-                                                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>{reg.email || 'No email'}</span>
+                                                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>{reg.queries || 'No queries'}</span>
                                             </td>
                                             <td>
                                                 <span style={{

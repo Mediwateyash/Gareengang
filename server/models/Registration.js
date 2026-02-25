@@ -16,7 +16,7 @@ const registrationSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    email: {
+    queries: {
         type: String,
         trim: true
     },
