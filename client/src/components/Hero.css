@@ -6,9 +6,11 @@
     height: 100vh;
     display: flex;
     align-items: center;
-    background: #fdfbf7 !important;
-    background-image: url("https://www.transparenttextures.com/patterns/notebook-paper.png") !important;
-    background-size: auto !important;
+    background-color: #fdfbf7 !important;
+    background-image:
+        radial-gradient(#cccccc 1px, transparent 1px),
+        url("https://www.transparenttextures.com/patterns/notebook-paper.png") !important;
+    background-size: 20px 20px, auto !important;
     overflow: hidden;
     padding-top: 60px;
     /* Navbar space if needed */
@@ -45,6 +47,7 @@
     font-family: 'Permanent Marker', cursive;
     font-size: 5rem;
     line-height: 1;
+    color: #1e293b;
     margin-bottom: 0.5rem;
     transform: rotate(-2deg);
     text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.1);
@@ -64,8 +67,9 @@
 
 .tagline {
     font-family: 'Nanum Pen Script', cursive;
-    font-size: 1.8rem;
-    color: #7f8c8d;
+    font-size: 2rem;
+    color: #475569;
+    font-weight: 600;
     margin-bottom: 2rem;
 }
 
