@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Footer.css';
-import { FaArrowUp } from 'react-icons/fa';
+import { FaArrowUp, FaWhatsapp } from 'react-icons/fa';
 
 const Footer = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -67,10 +67,12 @@ const Footer = () => {
                         <p>
                             <span className="contact-name">Yash Diwate</span>
                             <a href="tel:8799903365" className="contact-number">+91 87999 03365</a>
+                            <a href="mailto:diwateyash2004@gmail.com" className="contact-email">diwateyash2004@gmail.com</a>
                         </p>
                         <p>
                             <span className="contact-name">Manjush Farad</span>
                             <a href="tel:9766074255" className="contact-number">+91 97660 74255</a>
+                            <a href="mailto:manjushfarad@gmail.com" className="contact-email">manjushfarad@gmail.com</a>
                         </p>
                     </div>
                 </div>
@@ -97,6 +99,18 @@ const Footer = () => {
                     Designed & Developed with ❤️ by <a href="#" className="portfolio-link">Yash</a>
                 </div>
             </div>
+
+            {/* Floating WhatsApp Contact Button */}
+            <a
+                href="https://wa.me/918799903365?text=Hi%20President%20Yash,%20I%20have%20a%20query%20about%20GareebGang!"
+                className="whatsapp-float"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Any Queries? Contact President Yash"
+            >
+                <span className="whatsapp-tooltip">Any Queries? Contact President Yash</span>
+                <FaWhatsapp />
+            </a>
 
             {/* Floating Back to Top Button */}
             <button
