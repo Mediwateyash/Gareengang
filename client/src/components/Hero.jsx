@@ -37,7 +37,7 @@ const Hero = () => {
                     <div className="hero-buttons">
                         <Link to="/trips" className="btn-hero" style={{ background: 'linear-gradient(135deg, #10b981, #059669)', border: 'none', color: 'white', marginRight: '10px' }}>🏕️ Book Trips</Link>
                         <Link to="/vlogs" className="btn-hero" style={{ background: 'linear-gradient(135deg, #e74c3c, #c0392b)', border: 'none', color: 'white', marginRight: '10px' }}>▶ Watch Vlogs</Link>
-                        <Link to="/memories" className="btn-hero secondary">View Gallery</Link>
+                        <Link to="/memories" className="btn-hero" style={{ background: 'linear-gradient(135deg, #3b82f6, #2563eb)', border: 'none', color: 'white' }}>📸 View Gallery</Link>
                     </div>
                 </div>
 
