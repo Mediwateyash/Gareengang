@@ -4,11 +4,13 @@ import apiUrl from '../config';
 const AdminTrips = ({ onBack }) => {
     const [trips, setTrips] = useState([]);
     const [registrations, setRegistrations] = useState([]);
-    const [activeTab, setActiveTab] = useState('menu'); // 'menu', 'hero', 'trips', or 'registrations'
+    const [categories, setCategories] = useState([]);
+    const [activeTab, setActiveTab] = useState('menu'); // 'menu', 'hero', 'trips', 'registrations', or 'categories'
 
     // Form state for new/edit trip
     const [isEditing, setIsEditing] = useState(false);
     const [currentTripId, setCurrentTripId] = useState(null);
+    const [newCategoryName, setNewCategoryName] = useState('');
     const [formData, setFormData] = useState({
         title: '',
         destination: '',
@@ -31,7 +33,16 @@ const AdminTrips = ({ onBack }) => {
     useEffect(() => {
         fetchTrips();
         fetchRegistrations();
+        fetchCategories();
     }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const res = await fetch(`${apiUrl}/trip-categories`);
+            const data = await res.json();
+            setCategories(data);
+        } catch (err) { console.error(err); }
+    };
 
     const fetchTrips = async () => {
         try {
@@ -138,6 +149,34 @@ const AdminTrips = ({ onBack }) => {
         window.scrollTo(0, 0);
     };
 
+    const handleAddCategory = async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        try {
+            const res = await fetch(`${apiUrl}/trip-categories`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ name: newCategoryName })
+            });
+            if (!res.ok) throw new Error('Failed to create category');
+            setNewCategoryName('');
+            fetchCategories();
+        } catch (err) { alert(err.message); }
+    };
+
+    const handleDeleteCategory = async (id) => {
+        if (!window.confirm('Delete this category? Trips using it will keep their string label until edited.')) return;
+        const token = localStorage.getItem('token');
+        try {
+            const res = await fetch(`${apiUrl}/trip-categories/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error('Failed to delete category');
+            fetchCategories();
+        } catch (err) { alert(err.message); }
+    };
+
     const handleTripDelete = async (id) => {
         if (!window.confirm('Are you sure you want to delete this trip? This cannot be undone.')) return;
         const token = localStorage.getItem('token');
@@ -220,6 +259,49 @@ const AdminTrips = ({ onBack }) => {
                             {registrations.length} Total Bookings
                         </div>
                     </div>
+
+                    {/* Card 4: Categories Manager */}
+                    <div
+                        onClick={() => setActiveTab('categories')}
+                        style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', color: 'white', padding: '3rem 2rem', borderRadius: '16px', cursor: 'pointer', textAlign: 'center', boxShadow: '0 10px 30px rgba(139,92,246,0.3)', transition: 'transform 0.3s' }}
+                        onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'}
+                        onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
+                    >
+                        <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>🗂️</div>
+                        <h3 style={{ fontSize: '1.6rem', marginBottom: '0.8rem', fontWeight: '800' }}>Manage Trip Categories</h3>
+                        <p style={{ color: '#ddd6fe', lineHeight: '1.5' }}>Create Global Sections for dynamic Frontend sorting.</p>
+                        <div style={{ marginTop: '1.5rem', background: 'rgba(255,255,255,0.2)', padding: '6px 16px', borderRadius: '50px', display: 'inline-block', fontSize: '1rem', fontWeight: 'bold' }}>
+                            {categories.length} Sections
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'categories' && (
+                <div className="categories-view">
+                    <section className="form-section" style={{ maxWidth: '600px', margin: '0 auto' }}>
+                        <h3>Add New Category / Section</h3>
+                        <form onSubmit={handleAddCategory} className="memory-form" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
+                            <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                                <label>Category Name</label>
+                                <input type="text" value={newCategoryName} onChange={e => setNewCategoryName(e.target.value)} required placeholder="e.g. Manifested Trips" />
+                            </div>
+                            <button type="submit" className="btn-submit" style={{ padding: '0.8rem 1.5rem' }}>+ Create Section</button>
+                        </form>
+                    </section>
+
+                    <section className="list-section" style={{ maxWidth: '600px', margin: '3rem auto 0 auto' }}>
+                        <h3>Global Categories</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
+                            {categories.map(cat => (
+                                <div key={cat._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '1rem 1.5rem', borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+                                    <strong style={{ fontSize: '1.1rem', color: '#1e293b' }}>{cat.name}</strong>
+                                    <button onClick={() => handleDeleteCategory(cat._id)} style={{ background: '#fef2f2', color: '#ef4444', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Delete</button>
+                                </div>
+                            ))}
+                            {categories.length === 0 && <p style={{ textAlign: 'center', color: '#64748b' }}>No categories created yet.</p>}
+                        </div>
+                    </section>
                 </div>
             )}
 
@@ -265,8 +347,14 @@ const AdminTrips = ({ onBack }) => {
                             </div>
                             <div className="form-group">
                                 <label>Trip Section / Category</label>
-                                <input type="text" value={formData.section} onChange={e => setFormData({ ...formData, section: e.target.value })} required placeholder="e.g. Upcoming Trips, Manifested Trips" />
-                                <small style={{ color: '#64748b' }}>Groups trips together on the public page under this exact exact spelling.</small>
+                                <select value={formData.section} onChange={e => setFormData({ ...formData, section: e.target.value })} required>
+                                    <option value="" disabled>Select a predefined section...</option>
+                                    {categories.map(cat => (
+                                        <option key={cat._id} value={cat.name}>{cat.name}</option>
+                                    ))}
+                                    {categories.length === 0 && <option value="Upcoming Trips">Upcoming Trips (Default)</option>}
+                                </select>
+                                <small style={{ color: '#64748b' }}>Groups trips together on the public page. Edit globally in 'Manage Trip Categories'.</small>
                             </div>
                             <div className="form-group">
                                 <label>Advance Booking Fee (₹)</label>
