@@ -4,7 +4,7 @@ import apiUrl from '../config';
 const AdminTrips = ({ onBack }) => {
     const [trips, setTrips] = useState([]);
     const [registrations, setRegistrations] = useState([]);
-    const [activeTab, setActiveTab] = useState('trips'); // 'trips' or 'registrations'
+    const [activeTab, setActiveTab] = useState('menu'); // 'menu', 'hero', 'trips', or 'registrations'
 
     // Form state for new/edit trip
     const [isEditing, setIsEditing] = useState(false);
@@ -166,24 +166,67 @@ const AdminTrips = ({ onBack }) => {
     return (
         <div className="admin-subview">
             <div className="subview-header">
-                <button className="btn-back" onClick={onBack}>← Back to Menu</button>
+                {activeTab === 'menu' ? (
+                    <button className="btn-back" onClick={onBack}>← Back to Main Dashboard</button>
+                ) : (
+                    <button className="btn-back" onClick={() => setActiveTab('menu')}>← Back to Trips Menu</button>
+                )}
                 <h2>Manage Trips & Bookings</h2>
             </div>
 
-            <div className="admin-tabs" style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
-                <button
-                    onClick={() => setActiveTab('trips')}
-                    style={{ padding: '10px 20px', background: activeTab === 'trips' ? '#3b82f6' : '#e2e8f0', color: activeTab === 'trips' ? 'white' : 'black', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
-                >
-                    Trips ({trips.length})
-                </button>
-                <button
-                    onClick={() => setActiveTab('registrations')}
-                    style={{ padding: '10px 20px', background: activeTab === 'registrations' ? '#10b981' : '#e2e8f0', color: activeTab === 'registrations' ? 'white' : 'black', border: 'none', borderRadius: '8px', cursor: 'pointer' }}
-                >
-                    Registrations ({registrations.length})
-                </button>
-            </div>
+            {activeTab === 'menu' && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginTop: '3rem', marginBottom: '3rem' }}>
+                    {/* Card 1: Hero Section */}
+                    <div
+                        onClick={() => setActiveTab('hero')}
+                        style={{ background: 'linear-gradient(135deg, #1e293b, #0f172a)', color: 'white', padding: '3rem 2rem', borderRadius: '16px', cursor: 'pointer', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', transition: 'transform 0.3s' }}
+                        onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'}
+                        onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
+                    >
+                        <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>🖼️</div>
+                        <h3 style={{ fontSize: '1.6rem', marginBottom: '0.8rem', fontWeight: '800' }}>Manage Hero Section</h3>
+                        <p style={{ color: '#94a3b8', lineHeight: '1.5' }}>Update the main slider images and featured trips on the homepage.</p>
+                    </div>
+
+                    {/* Card 2: Trips */}
+                    <div
+                        onClick={() => setActiveTab('trips')}
+                        style={{ background: 'linear-gradient(135deg, #3b82f6, #2563eb)', color: 'white', padding: '3rem 2rem', borderRadius: '16px', cursor: 'pointer', textAlign: 'center', boxShadow: '0 10px 30px rgba(59,130,246,0.3)', transition: 'transform 0.3s' }}
+                        onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'}
+                        onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
+                    >
+                        <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>✈️</div>
+                        <h3 style={{ fontSize: '1.6rem', marginBottom: '0.8rem', fontWeight: '800' }}>Add / Manage Trips</h3>
+                        <p style={{ color: '#bfdbfe', lineHeight: '1.5' }}>Create new detailed trips, edit itineraries, and manage published grid.</p>
+                        <div style={{ marginTop: '1.5rem', background: 'rgba(255,255,255,0.2)', padding: '6px 16px', borderRadius: '50px', display: 'inline-block', fontSize: '1rem', fontWeight: 'bold' }}>
+                            {trips.length} Active Trips
+                        </div>
+                    </div>
+
+                    {/* Card 3: Registrations */}
+                    <div
+                        onClick={() => setActiveTab('registrations')}
+                        style={{ background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white', padding: '3rem 2rem', borderRadius: '16px', cursor: 'pointer', textAlign: 'center', boxShadow: '0 10px 30px rgba(16,185,129,0.3)', transition: 'transform 0.3s' }}
+                        onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'}
+                        onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
+                    >
+                        <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>💳</div>
+                        <h3 style={{ fontSize: '1.6rem', marginBottom: '0.8rem', fontWeight: '800' }}>View Registrations</h3>
+                        <p style={{ color: '#a7f3d0', lineHeight: '1.5' }}>Check Razorpay bookings, payment statuses, and user details.</p>
+                        <div style={{ marginTop: '1.5rem', background: 'rgba(255,255,255,0.2)', padding: '6px 16px', borderRadius: '50px', display: 'inline-block', fontSize: '1rem', fontWeight: 'bold' }}>
+                            {registrations.length} Total Bookings
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'hero' && (
+                <div style={{ textAlign: 'center', padding: '6rem 2rem', background: 'white', borderRadius: '16px', marginTop: '2rem', boxShadow: '0 10px 25px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' }}>
+                    <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🚧</div>
+                    <h2 style={{ fontSize: '2rem', color: '#1e293b', marginBottom: '1rem' }}>Hero Slider Management</h2>
+                    <p style={{ color: '#64748b', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto', lineHeight: '1.6' }}>This feature allows customizing the front-page Swiper slider. Coming soon in a later update!</p>
+                </div>
+            )}
 
             {activeTab === 'trips' && (
                 <div className="trips-view">
