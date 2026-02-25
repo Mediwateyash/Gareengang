@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
 import 'swiper/css';
@@ -197,10 +198,79 @@ const TripsPage = () => {
                 )}
             </section>
 
-            {/* UPCOMING & COMPLETED TRIPS GRID WILL GO HERE */}
-            <section className="past-journeys-section">
-                {/* Placeholder for future implementation */}
-            </section>
+            {/* UPCOMING & COMPLETED TRIPS GRID */}
+            <div className="trips-grid-wrapper">
+
+                {/* Upcoming Trips */}
+                {activeTrips.length > 0 && (
+                    <section className="trips-grid-section">
+                        <div className="section-header">
+                            <h2 className="section-title">Upcoming <span>Journeys</span></h2>
+                            <p className="section-subtitle">Grab your bags and book your next adventure!</p>
+                        </div>
+                        <div className="trips-grid">
+                            {activeTrips.map(trip => (
+                                <Link to={`/trips/${trip._id}`} key={trip._id} className="trip-card">
+                                    <div className="trip-card-img" style={{ backgroundImage: `url(${trip.coverImage.startsWith('http') ? trip.coverImage : `${API_BASE_URL}/${trip.coverImage}`})` }}>
+                                        <div className={`trip-card-badge ${trip.status === 'Booking Open' ? 'open' : 'soon'}`}>
+                                            {trip.status === 'Booking Open' ? '🟢 Booking Open' : '⏳ Coming Soon'}
+                                        </div>
+                                    </div>
+                                    <div className="trip-card-content">
+                                        <h3 className="trip-card-title">{trip.title}</h3>
+                                        <div className="trip-card-meta">
+                                            <span>📍 {trip.destination}</span>
+                                            <span>🗓️ {trip.dateDisplay}</span>
+                                        </div>
+                                        {trip.shortDescription && <p className="trip-card-desc">{trip.shortDescription}</p>}
+                                        <div className="trip-card-footer">
+                                            <div className="trip-card-cost">
+                                                <span className="cost-label">Booking Advance</span>
+                                                <span className="cost-val">₹{trip.bookingFee}</span>
+                                            </div>
+                                            <div className="trip-card-slots">
+                                                <span>Slots Available</span>
+                                                <strong>{Math.max(0, trip.totalSlots - trip.bookedSlots)}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* Completed Trips */}
+                {pastTrips.length > 0 && (
+                    <section className="trips-grid-section past">
+                        <div className="section-header">
+                            <h2 className="section-title">Successful <span>Missions</span></h2>
+                            <p className="section-subtitle">Trips that became lifelong memories.</p>
+                        </div>
+                        <div className="trips-grid">
+                            {pastTrips.map(trip => (
+                                <Link to={`/trips/${trip._id}`} key={trip._id} className="trip-card completed">
+                                    <div className="trip-card-img" style={{ backgroundImage: `url(${trip.coverImage.startsWith('http') ? trip.coverImage : `${API_BASE_URL}/${trip.coverImage}`})` }}>
+                                        <div className="trip-card-badge completed">
+                                            ✅ Attempted successfully
+                                        </div>
+                                    </div>
+                                    <div className="trip-card-content">
+                                        <h3 className="trip-card-title" style={{ color: '#94a3b8' }}>{trip.title}</h3>
+                                        <div className="trip-card-meta">
+                                            <span>📍 {trip.destination}</span>
+                                            <span>🗓️ {trip.dateDisplay}</span>
+                                        </div>
+                                        <div className="trip-card-footer" style={{ justifyContent: 'center' }}>
+                                            <span style={{ color: '#3b82f6', fontWeight: 'bold' }}>View Gallery & Memories →</span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                )}
+            </div>
 
             {/* BOOKING MODAL */}
             {showModal && selectedTrip && (

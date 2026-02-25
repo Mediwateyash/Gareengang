@@ -37,17 +37,39 @@ const tripSchema = new mongoose.Schema({
         type: String, // Banner image for the slider
         required: true
     },
-    description: {
-        type: String,
+    shortDescription: {
+        type: String, // For the grid cards
         trim: true
     },
-    itinerary: {
-        type: [String], // Array of daily plans or features
+    overview: {
+        type: String, // Full rich description on detailed page
+        trim: true
+    },
+    itinerary: [{
+        day: { type: Number },
+        title: { type: String },
+        description: { type: String }
+    }],
+    budgetBreakdown: [{
+        category: { type: String }, // e.g. Transport, Stay, Food
+        amount: { type: Number }
+    }],
+    mapEmbedUrl: {
+        type: String, // Iframe src string
+        trim: true
+    },
+    checklist: {
+        type: [String], // Array of strings like "Warm clothes", "ID"
         default: []
     },
-    galleryReferenceLink: {
-        type: String, // Link to external album or internal memory ID if status is 'Completed'
-        default: ''
+    gallery: {
+        type: [String], // Array of gallery image URLs uploaded via Cloudinary
+        default: []
+    },
+    tripLeader: {
+        name: { type: String, default: 'Yash Diwate' },
+        phone: { type: String, default: '8799903365' },
+        instagram: { type: String, default: '' }
     }
 }, { timestamps: true });
 

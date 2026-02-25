@@ -16,9 +16,15 @@ const AdminTrips = ({ onBack }) => {
         status: 'Coming Soon',
         bookingFee: 50,
         totalSlots: 20,
-        itinerary: '',
-        galleryReferenceLink: '',
-        coverImage: null // will handle file later
+        shortDescription: '',
+        overview: '',
+        coverImage: null, // file
+        mapEmbedUrl: '',
+        checklist: '', // comma separated strings
+        gallery: '',   // comma separated strings
+        tripLeader: { name: 'Yash Diwate', phone: '8799903365', instagram: '' },
+        itinerary: [{ day: 1, title: '', description: '' }],
+        budgetBreakdown: [{ category: '', amount: 0 }]
     });
 
     useEffect(() => {
@@ -42,6 +48,23 @@ const AdminTrips = ({ onBack }) => {
         } catch (err) { console.error(err); }
     };
 
+    // Dynamic Array Handlers
+    const addItineraryDay = () => setFormData(f => ({ ...f, itinerary: [...f.itinerary, { day: f.itinerary.length + 1, title: '', description: '' }] }));
+    const removeItineraryDay = (index) => setFormData(f => ({ ...f, itinerary: f.itinerary.filter((_, i) => i !== index) }));
+    const updateItinerary = (index, field, value) => {
+        const newItin = [...formData.itinerary];
+        newItin[index][field] = value;
+        setFormData({ ...formData, itinerary: newItin });
+    };
+
+    const addBudgetRow = () => setFormData(f => ({ ...f, budgetBreakdown: [...f.budgetBreakdown, { category: '', amount: 0 }] }));
+    const removeBudgetRow = (index) => setFormData(f => ({ ...f, budgetBreakdown: f.budgetBreakdown.filter((_, i) => i !== index) }));
+    const updateBudget = (index, field, value) => {
+        const newBudget = [...formData.budgetBreakdown];
+        newBudget[index][field] = value;
+        setFormData({ ...formData, budgetBreakdown: newBudget });
+    };
+
     const handleTripSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
@@ -53,8 +76,21 @@ const AdminTrips = ({ onBack }) => {
         submitData.append('status', formData.status);
         submitData.append('bookingFee', formData.bookingFee);
         submitData.append('totalSlots', formData.totalSlots);
-        submitData.append('itinerary', formData.itinerary);
-        submitData.append('galleryReferenceLink', formData.galleryReferenceLink);
+        submitData.append('shortDescription', formData.shortDescription);
+        submitData.append('overview', formData.overview);
+        submitData.append('mapEmbedUrl', formData.mapEmbedUrl);
+
+        // Convert comma separated to array
+        const checklistArr = formData.checklist.split(',').map(s => s.trim()).filter(s => s);
+        const galleryArr = formData.gallery.split(',').map(s => s.trim()).filter(s => s);
+
+        submitData.append('checklist', JSON.stringify(checklistArr));
+        submitData.append('gallery', JSON.stringify(galleryArr));
+
+        submitData.append('itinerary', JSON.stringify(formData.itinerary));
+        submitData.append('budgetBreakdown', JSON.stringify(formData.budgetBreakdown));
+        submitData.append('tripLeader', JSON.stringify(formData.tripLeader));
+
         if (formData.coverImage) submitData.append('coverImage', formData.coverImage);
 
         try {
@@ -84,8 +120,14 @@ const AdminTrips = ({ onBack }) => {
             status: trip.status,
             bookingFee: trip.bookingFee,
             totalSlots: trip.totalSlots,
-            itinerary: trip.itinerary ? trip.itinerary.join('\n') : '',
-            galleryReferenceLink: trip.galleryReferenceLink || '',
+            shortDescription: trip.shortDescription || '',
+            overview: trip.overview || '',
+            mapEmbedUrl: trip.mapEmbedUrl || '',
+            checklist: trip.checklist ? trip.checklist.join(', ') : '',
+            gallery: trip.gallery ? trip.gallery.join(', ') : '',
+            tripLeader: trip.tripLeader || { name: 'Yash Diwate', phone: '8799903365', instagram: '' },
+            itinerary: trip.itinerary && trip.itinerary.length > 0 ? trip.itinerary : [{ day: 1, title: '', description: '' }],
+            budgetBreakdown: trip.budgetBreakdown && trip.budgetBreakdown.length > 0 ? trip.budgetBreakdown : [{ category: '', amount: 0 }],
             coverImage: null
         });
         setCurrentTripId(trip._id);
@@ -111,7 +153,11 @@ const AdminTrips = ({ onBack }) => {
     const resetTripForm = () => {
         setFormData({
             title: '', destination: '', dateDisplay: '', status: 'Coming Soon',
-            bookingFee: 50, totalSlots: 20, itinerary: '', galleryReferenceLink: '', coverImage: null
+            bookingFee: 50, totalSlots: 20, shortDescription: '', overview: '', mapEmbedUrl: '',
+            checklist: '', gallery: '', coverImage: null,
+            tripLeader: { name: 'Yash Diwate', phone: '8799903365', instagram: '' },
+            itinerary: [{ day: 1, title: '', description: '' }],
+            budgetBreakdown: [{ category: '', amount: 0 }]
         });
         setIsEditing(false);
         setCurrentTripId(null);
@@ -141,9 +187,15 @@ const AdminTrips = ({ onBack }) => {
 
             {activeTab === 'trips' && (
                 <div className="trips-view">
-                    <section className="form-section">
+                    <section className="form-section" style={{ maxWidth: '1000px' }}>
                         <h3>{isEditing ? 'Edit Trip' : 'Create New Trip'}</h3>
-                        <form onSubmit={handleTripSubmit} className="memory-form">
+                        <form onSubmit={handleTripSubmit} className="memory-form" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+
+                            {/* --- BASIC INFO --- */}
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1', background: '#f8fafc', padding: '1rem', borderRadius: '8px' }}>
+                                <h4>1. Basic Information</h4>
+                            </div>
+
                             <div className="form-group">
                                 <label>Trip Title</label>
                                 <input type="text" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} required placeholder="e.g. The Ultimate Kokan Trip" />
@@ -161,32 +213,95 @@ const AdminTrips = ({ onBack }) => {
                                 <select value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value })}>
                                     <option value="Coming Soon">Coming Soon (Disabled Button)</option>
                                     <option value="Booking Open">Booking Open (Razorpay Active)</option>
-                                    <option value="Completed">Completed (Shows Internal Gallery Link)</option>
+                                    <option value="Completed">Completed (Shows External Gallery)</option>
                                     <option value="Cancelled">Cancelled</option>
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label>Booking Advance Amount (₹)</label>
+                                <label>Advance Booking Fee (₹)</label>
                                 <input type="number" value={formData.bookingFee} onChange={e => setFormData({ ...formData, bookingFee: e.target.value })} required />
                             </div>
                             <div className="form-group">
                                 <label>Total Available Slots</label>
                                 <input type="number" value={formData.totalSlots} onChange={e => setFormData({ ...formData, totalSlots: e.target.value })} required />
                             </div>
-                            <div className="form-group full-width">
-                                <label>Cover Image (Required for slider)</label>
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1' }}>
+                                <label>Cover Image (Required for Slider & Card)</label>
                                 <input type="file" accept="image/*" onChange={e => setFormData({ ...formData, coverImage: e.target.files[0] })} required={!isEditing} />
                             </div>
 
-                            <div className="form-actions">
-                                <button type="submit" className="btn-submit">{isEditing ? 'Update Trip' : 'Create Trip'}</button>
-                                {isEditing && <button type="button" className="btn-cancel" onClick={resetTripForm}>Cancel Edit</button>}
+                            {/* --- CONTENT --- */}
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1', background: '#f8fafc', padding: '1rem', borderRadius: '8px', marginTop: '1rem' }}>
+                                <h4>2. Detail Content</h4>
+                            </div>
+
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1' }}>
+                                <label>Short Description (For Grid Cards)</label>
+                                <textarea value={formData.shortDescription} onChange={e => setFormData({ ...formData, shortDescription: e.target.value })} rows="2" placeholder="Brief tagline..." />
+                            </div>
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1' }}>
+                                <label>Detailed Overview (For dedicated page)</label>
+                                <textarea value={formData.overview} onChange={e => setFormData({ ...formData, overview: e.target.value })} rows="4" placeholder="Full rich description..." />
+                            </div>
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1' }}>
+                                <label>Google Maps Iframe URL</label>
+                                <input type="text" value={formData.mapEmbedUrl} onChange={e => setFormData({ ...formData, mapEmbedUrl: e.target.value })} placeholder="https://www.google.com/maps/embed?..." />
+                            </div>
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1' }}>
+                                <label>Checklist (Comma separated)</label>
+                                <input type="text" value={formData.checklist} onChange={e => setFormData({ ...formData, checklist: e.target.value })} placeholder="Warm Clothes, ID Card, Water Bottle..." />
+                            </div>
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1' }}>
+                                <label>Gallery Image Links (Comma separated URLs for now)</label>
+                                <input type="text" value={formData.gallery} onChange={e => setFormData({ ...formData, gallery: e.target.value })} placeholder="https://image1.jpg, https://image2.jpg..." />
+                            </div>
+
+                            {/* --- ITINERARY --- */}
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1', background: '#f8fafc', padding: '1rem', borderRadius: '8px', marginTop: '1rem' }}>
+                                <h4>3. Interactive Itinerary</h4>
+                                {formData.itinerary.map((item, index) => (
+                                    <div key={index} style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'flex-start' }}>
+                                        <input type="number" value={item.day} onChange={e => updateItinerary(index, 'day', e.target.value)} style={{ width: '80px' }} placeholder="Day" />
+                                        <input type="text" value={item.title} onChange={e => updateItinerary(index, 'title', e.target.value)} style={{ flex: 1 }} placeholder="Day Title (e.g. Arrival)" />
+                                        <input type="text" value={item.description} onChange={e => updateItinerary(index, 'description', e.target.value)} style={{ flex: 2 }} placeholder="Day Description..." />
+                                        <button type="button" onClick={() => removeItineraryDay(index)} style={{ padding: '10px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px' }}>X</button>
+                                    </div>
+                                ))}
+                                <button type="button" onClick={addItineraryDay} style={{ padding: '8px 16px', background: '#e2e8f0', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer' }}>+ Add Day</button>
+                            </div>
+
+                            {/* --- BUDGET --- */}
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1', background: '#f8fafc', padding: '1rem', borderRadius: '8px', marginTop: '1rem' }}>
+                                <h4>4. Budget Breakdown</h4>
+                                {formData.budgetBreakdown.map((item, index) => (
+                                    <div key={index} style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'center' }}>
+                                        <input type="text" value={item.category} onChange={e => updateBudget(index, 'category', e.target.value)} style={{ flex: 1 }} placeholder="Category (e.g. Stay, Food)" />
+                                        <input type="number" value={item.amount} onChange={e => updateBudget(index, 'amount', e.target.value)} style={{ flex: 1 }} placeholder="Amount (₹)" />
+                                        <button type="button" onClick={() => removeBudgetRow(index)} style={{ padding: '10px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px' }}>X</button>
+                                    </div>
+                                ))}
+                                <button type="button" onClick={addBudgetRow} style={{ padding: '8px 16px', background: '#e2e8f0', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer' }}>+ Add Expense Category</button>
+                            </div>
+
+                            {/* --- TEAM LEADER --- */}
+                            <div className="form-group full-width" style={{ gridColumn: '1 / -1', background: '#f8fafc', padding: '1rem', borderRadius: '8px', marginTop: '1rem' }}>
+                                <h4>5. Trip Leader Details</h4>
+                                <div style={{ display: 'flex', gap: '1rem' }}>
+                                    <input type="text" value={formData.tripLeader.name} onChange={e => setFormData({ ...formData, tripLeader: { ...formData.tripLeader, name: e.target.value } })} placeholder="Leader Name" style={{ flex: 1 }} />
+                                    <input type="text" value={formData.tripLeader.phone} onChange={e => setFormData({ ...formData, tripLeader: { ...formData.tripLeader, phone: e.target.value } })} placeholder="Leader Phone" style={{ flex: 1 }} />
+                                    <input type="text" value={formData.tripLeader.instagram} onChange={e => setFormData({ ...formData, tripLeader: { ...formData.tripLeader, instagram: e.target.value } })} placeholder="Leader Instagram URL" style={{ flex: 1 }} />
+                                </div>
+                            </div>
+
+                            <div className="form-actions" style={{ gridColumn: '1 / -1', marginTop: '2rem' }}>
+                                <button type="submit" className="btn-submit" style={{ padding: '1rem 3rem', fontSize: '1.2rem', background: '#10b981' }}>{isEditing ? 'Save Massive Trip Updates' : 'Launch New Trip'}</button>
+                                {isEditing && <button type="button" className="btn-cancel" onClick={resetTripForm} style={{ padding: '1rem 3rem', fontSize: '1.2rem', marginLeft: '1rem' }}>Cancel</button>}
                             </div>
                         </form>
                     </section>
 
                     <section className="list-section">
-                        <h3>All Trips</h3>
+                        <h3>Published Trips</h3>
                         <div className="memories-table-wrapper">
                             <table className="memories-table">
                                 <thead>

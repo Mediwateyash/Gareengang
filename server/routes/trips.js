@@ -34,8 +34,20 @@ router.post('/', upload.single('coverImage'), async (req, res) => {
             return res.status(400).json({ message: 'Cover Image is required' });
         }
 
+        // Parse complex JSON fields sent via FormData
+        const parsedItinerary = req.body.itinerary ? JSON.parse(req.body.itinerary) : [];
+        const parsedBudgetBreakdown = req.body.budgetBreakdown ? JSON.parse(req.body.budgetBreakdown) : [];
+        const parsedChecklist = req.body.checklist ? JSON.parse(req.body.checklist) : [];
+        const parsedGallery = req.body.gallery ? JSON.parse(req.body.gallery) : [];
+        const parsedTripLeader = req.body.tripLeader ? JSON.parse(req.body.tripLeader) : undefined;
+
         const tripData = {
             ...req.body,
+            itinerary: parsedItinerary,
+            budgetBreakdown: parsedBudgetBreakdown,
+            checklist: parsedChecklist,
+            gallery: parsedGallery,
+            ...(parsedTripLeader && { tripLeader: parsedTripLeader }),
             coverImage: req.file ? req.file.path : req.body.coverImage
         };
 
@@ -81,6 +93,13 @@ router.put('/:id', upload.single('coverImage'), async (req, res) => {
         if (req.file) {
             updateData.coverImage = req.file.path;
         }
+
+        // Parse complex JSON fields
+        if (req.body.itinerary) updateData.itinerary = JSON.parse(req.body.itinerary);
+        if (req.body.budgetBreakdown) updateData.budgetBreakdown = JSON.parse(req.body.budgetBreakdown);
+        if (req.body.checklist) updateData.checklist = JSON.parse(req.body.checklist);
+        if (req.body.gallery) updateData.gallery = JSON.parse(req.body.gallery);
+        if (req.body.tripLeader) updateData.tripLeader = JSON.parse(req.body.tripLeader);
 
         const trip = await Trip.findByIdAndUpdate(req.params.id, updateData, { new: true });
         if (!trip) return res.status(404).json({ message: 'Trip not found' });
