@@ -13,6 +13,7 @@ import Faces from './components/Faces'
 import VideoReviews from './components/VideoReviews'
 import Vlogs from './pages/Vlogs'
 import HomeVlogs from './components/HomeVlogs'
+import TripsPage from './pages/TripsPage'
 import Stats from './components/Stats'
 import SocialScrapbook from './components/SocialScrapbook'
 import DonateSection from './components/DonateSection'
@@ -49,6 +50,7 @@ function App() {
           <Route path="/memories" element={<MemoriesTimeline />} />
           <Route path="/memories/:id" element={<MemoryDetail />} />
           <Route path="/vlogs" element={<Vlogs />} />
+          <Route path="/trips" element={<TripsPage />} />
         </Routes>
       </div>
     </Router>

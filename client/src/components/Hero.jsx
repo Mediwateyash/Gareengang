@@ -35,7 +35,8 @@ const Hero = () => {
                     </div>
 
                     <div className="hero-buttons">
-                        <Link to="/vlogs" className="btn-hero">Watch Vlogs</Link>
+                        <Link to="/trips" className="btn-hero" style={{ background: 'linear-gradient(135deg, #10b981, #059669)', border: 'none', color: 'white', marginRight: '10px' }}>🏕️ Book Trips</Link>
+                        <Link to="/vlogs" className="btn-hero secondary">Watch Vlogs</Link>
                         <Link to="/memories" className="btn-hero secondary">View Gallery</Link>
                     </div>
                 </div>
