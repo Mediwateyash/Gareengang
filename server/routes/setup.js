@@ -38,13 +38,12 @@ router.get('/', async (req, res) => {
 
         // 1. Setup Admin
         const adminUser = 'admin';
-        const exists = await User.findOne({ username: adminUser });
-        if (!exists) {
-            await User.create({ name: 'Super Admin', username: adminUser, password: 'password123', role: 'admin' });
-            log.push("Admin user 'admin' created with password 'password123'.");
-        } else {
-            log.push("Admin user already exists.");
-        }
+        await User.findOneAndUpdate(
+            { username: adminUser },
+            { name: 'Super Admin', password: 'password123', role: 'admin' },
+            { upsert: true, new: true }
+        );
+        log.push("Admin user 'admin' has been forcefully created/updated with password 'password123'.");
 
         // 2. Setup Memories
         const memCount = await Memory.countDocuments();
