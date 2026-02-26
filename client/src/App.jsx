@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import Hero from './components/Hero'
 import About from './components/About'
-import Footer from './components/Footer'
 import Login from './pages/Login'
+import AdminLogin from './pages/AdminLogin'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
@@ -66,6 +66,7 @@ function App() {
           <WelcomeToast />
           <FloatingNav />
           <Routes>
+            <Route path="/admin" element={<AdminLogin />} />
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Navigate to="/" replace />} />
             <Route path="/register" element={<Navigate to="/" replace />} />

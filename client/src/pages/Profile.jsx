@@ -11,6 +11,9 @@ const Profile = () => {
     const [profileData, setProfileData] = useState(null);
     const [activeTab, setActiveTab] = useState('bookings'); // bookings, likes
     const [loading, setLoading] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editForm, setEditForm] = useState({ name: '', phone: '' });
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -35,6 +38,7 @@ const Profile = () => {
             if (res.ok) {
                 const data = await res.json();
                 setProfileData(data);
+                setEditForm({ name: data.name || '', phone: data.phone || '' });
             }
         } catch (err) {
             console.error("Failed to fetch profile", err);
@@ -46,6 +50,31 @@ const Profile = () => {
     const handleLogout = () => {
         logout();
         navigate('/');
+    };
+
+    const handleSaveProfile = async () => {
+        setSaving(true);
+        try {
+            const res = await fetch(`${API_URL}/users/profile/${user.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(editForm)
+            });
+            if (res.ok) {
+                const updatedUser = await res.json();
+                setProfileData(updatedUser);
+                setIsEditing(false);
+                alert("Profile updated successfully!");
+                // Optionally update context user name if needed
+            } else {
+                alert("Failed to update profile.");
+            }
+        } catch (err) {
+            console.error("Save error", err);
+            alert("Network error saving profile.");
+        } finally {
+            setSaving(false);
+        }
     };
 
     if (loading) return <div className="loading-spinner">Loading Profile...</div>;
@@ -65,12 +94,37 @@ const Profile = () => {
                     <button className="btn-edit-avatar">✏️ Edit</button>
                 </div>
                 <div className="profile-info">
-                    <h1>{profileData.name}</h1>
-                    <p>📞 {profileData.phone}</p>
-                    <div className="profile-actions">
-                        <button className="btn-outline-primary">Change Password</button>
-                        <button onClick={handleLogout} className="btn-outline-danger">Logout</button>
-                    </div>
+                    {isEditing ? (
+                        <div className="edit-profile-form">
+                            <input
+                                type="text"
+                                value={editForm.name}
+                                onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                                placeholder="Your Name"
+                            />
+                            <input
+                                type="tel"
+                                value={editForm.phone}
+                                onChange={e => setEditForm({ ...editForm, phone: e.target.value })}
+                                placeholder="WhatsApp (Optional)"
+                            />
+                            <div className="edit-actions">
+                                <button onClick={handleSaveProfile} disabled={saving} className="btn-save">
+                                    {saving ? 'Saving...' : 'Save Details'}
+                                </button>
+                                <button onClick={() => setIsEditing(false)} className="btn-cancel">Cancel</button>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <h1>{profileData.name}</h1>
+                            <p>📞 {profileData.username || profileData.phone || 'No phone set'}</p>
+                            <div className="profile-actions">
+                                <button onClick={() => setIsEditing(true)} className="btn-outline-primary">Edit Profile</button>
+                                <button onClick={handleLogout} className="btn-outline-danger">Logout</button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </header>
 

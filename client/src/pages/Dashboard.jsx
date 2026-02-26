@@ -25,9 +25,14 @@ const Dashboard = () => {
             navigate('/');
             setTimeout(() => showAuthModal('login'), 0);
         } else {
-            setUser(JSON.parse(storedUser));
+            const parsedUser = JSON.parse(storedUser);
+            if (parsedUser.role !== 'admin') {
+                navigate('/'); // Kick non-admins out of the dashboard
+            } else {
+                setUser(parsedUser);
+            }
         }
-    }, [navigate]);
+    }, [navigate, showAuthModal]);
 
     const handleLogout = () => {
         logout();

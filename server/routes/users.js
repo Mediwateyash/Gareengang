@@ -66,4 +66,31 @@ router.put('/role/:id', async (req, res) => {
     }
 });
 
+// @route   PUT /api/users/profile/:id
+// @desc    Update user profile data (name, phone)
+// @access  Protected (User themselves physically logged in)
+router.put('/profile/:id', async (req, res) => {
+    try {
+        const { name, phone } = req.body;
+
+        const updateData = {};
+        if (name) updateData.name = name;
+        if (phone !== undefined) updateData.phone = phone; // Allow emptying out the phone number voluntarily
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            updateData,
+            { new: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (err) {
+        console.error("Profile Edit Error:", err);
+        res.status(500).json({ message: 'Server error updating profile' });
+    }
+});
+
 module.exports = router;

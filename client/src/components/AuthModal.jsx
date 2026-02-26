@@ -10,7 +10,7 @@ const AuthModal = () => {
 
     // Form States
     const [loginData, setLoginData] = useState({ loginId: '', password: '' });
-    const [registerData, setRegisterData] = useState({ name: '', phone: '', password: '' });
+    const [registerData, setRegisterData] = useState({ name: '', username: '', phone: '', password: '' });
     const [isLoading, setIsLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -117,10 +117,10 @@ const AuthModal = () => {
                     {authModalTab === 'login' ? (
                         <form onSubmit={handleLoginSubmit} className="auth-modal-form">
                             <div className="form-group">
-                                <label>WhatsApp Number or Username</label>
+                                <label>Username</label>
                                 <input
                                     type="text"
-                                    placeholder="Enter WhatsApp Number"
+                                    placeholder="Enter Username"
                                     required
                                     value={loginData.loginId}
                                     onChange={(e) => setLoginData({ ...loginData, loginId: e.target.value })}
@@ -153,11 +153,20 @@ const AuthModal = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>WhatsApp Number</label>
+                                <label>Username <span style={{ color: '#ef4444' }}>*</span></label>
+                                <input
+                                    type="text"
+                                    placeholder="Choose a unique username"
+                                    required
+                                    value={registerData.username}
+                                    onChange={(e) => setRegisterData({ ...registerData, username: e.target.value })}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>WhatsApp Number (Optional)</label>
                                 <input
                                     type="tel"
                                     placeholder="10-digit number"
-                                    required
                                     pattern="[0-9]{10}"
                                     title="Please enter a valid 10 digit number"
                                     value={registerData.phone}

@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     username: {
-        type: String, // Optional for admin backward compatibility
+        type: String,
+        required: true,
         unique: true,
-        sparse: true,
         trim: true
     },
     password: {
@@ -17,9 +17,9 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: String,
-        required: true,
-        unique: true,
-        trim: true
+        trim: true,
+        // unique: true, // Removed so multiple nulls don't clash, or handle null uniquely
+        default: ''
     },
     image: {
         type: String,
