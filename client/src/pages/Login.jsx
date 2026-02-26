@@ -4,7 +4,7 @@ import API_URL from '../config';
 import './Auth.css';
 
 const Login = () => {
-    const [formData, setFormData] = useState({ username: '', password: '' });
+    const [formData, setFormData] = useState({ loginId: '', password: '' });
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -18,8 +18,14 @@ const Login = () => {
             const data = await res.json();
 
             if (res.ok) {
-                localStorage.setItem('user', JSON.stringify({ name: data.username }));
-                navigate('/dashboard');
+                localStorage.setItem('user', JSON.stringify(data.user));
+
+                // Route based on role
+                if (data.user.role === 'admin') {
+                    navigate('/dashboard');
+                } else {
+                    navigate('/'); // Back to homepage for normal users
+                }
             } else {
                 alert(data.message);
             }
@@ -32,13 +38,14 @@ const Login = () => {
     return (
         <div className="auth-container">
             <div className="auth-box">
-                <h2>Admin Login</h2>
+                <h2>Welcome Back</h2>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        placeholder="Username"
-                        value={formData.username}
-                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                        placeholder="WhatsApp Number or Username"
+                        required
+                        value={formData.loginId}
+                        onChange={(e) => setFormData({ ...formData, loginId: e.target.value })}
                     />
                     <input
                         type="password"
@@ -48,7 +55,7 @@ const Login = () => {
                     />
                     <button type="submit" className="btn btn-primary">Login</button>
                 </form>
-                {/* <p>Don't have an account? <Link to="/register">Register</Link></p> */}
+                <p>New to GareebGang? <Link to="/register">Create an Account</Link></p>
                 <Link to="/" className="back-link">Back to Home</Link>
             </div>
         </div>

@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import API_URL, { API_BASE_URL } from '../config';
 
 const MemoriesFeat = () => {
+    const navigate = useNavigate();
     const [memories, setMemories] = useState([]);
 
     useEffect(() => {
@@ -26,6 +27,16 @@ const MemoriesFeat = () => {
         if (!imagePath) return '';
         if (imagePath.startsWith('http')) return imagePath;
         return `${API_BASE_URL}${imagePath}`;
+    };
+
+    const handleProtectedNavigation = (path) => {
+        const user = localStorage.getItem('user');
+        if (!user) {
+            alert("Please login or create an account to view these memories.");
+            navigate('/login');
+        } else {
+            navigate(path);
+        }
     };
 
     return (
@@ -159,19 +170,19 @@ const MemoriesFeat = () => {
                 <div className="collage-container">
                     {memories.length > 0 ? (
                         memories.map((m) => (
-                            <Link key={m._id} to={`/memories/${m._id}`} className="scrap-card">
+                            <div key={m._id} onClick={() => handleProtectedNavigation(`/memories/${m._id}`)} className="scrap-card" style={{ cursor: 'pointer' }}>
                                 <img src={getImageUrl(m.image)} alt={m.title} className="scrap-img" />
                                 <div className="scrap-caption">{m.title}</div>
-                            </Link>
+                            </div>
                         ))
                     ) : (
                         <p>Loading best moments...</p>
                     )}
                 </div>
 
-                <Link to="/memories" className="btn-explore">
+                <button onClick={() => handleProtectedNavigation('/memories')} className="btn-explore" style={{ background: 'none', border: 'none' }}>
                     Open the Full Gallery &rarr;
-                </Link>
+                </button>
             </div>
         </section>
     );

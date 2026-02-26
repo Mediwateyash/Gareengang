@@ -4,7 +4,7 @@ import API_URL from '../config';
 import './Auth.css';
 
 const Register = () => {
-    const [formData, setFormData] = useState({ username: '', password: '' });
+    const [formData, setFormData] = useState({ name: '', phone: '', password: '' });
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -32,17 +32,26 @@ const Register = () => {
     return (
         <div className="auth-container">
             <div className="auth-box">
-                <h2>Admin Register</h2>
+                <h2>Create Account</h2>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        placeholder="Username"
-                        value={formData.username}
-                        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                        placeholder="Full Name"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    />
+                    <input
+                        type="tel"
+                        placeholder="WhatsApp Number"
+                        required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     />
                     <input
                         type="password"
                         placeholder="Password"
+                        required
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     />

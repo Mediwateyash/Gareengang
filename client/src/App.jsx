@@ -1,10 +1,11 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import Hero from './components/Hero'
 import About from './components/About'
 import Footer from './components/Footer'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import Profile from './pages/Profile'
 import Leaders from './components/Leaders'
 import MemoriesTimeline from './pages/MemoriesTimeline'
 import MemoryDetail from './pages/MemoryDetail'
@@ -42,6 +43,15 @@ const LandingPage = () => (
   </>
 );
 
+const ProtectedRoute = ({ children }) => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) {
+    alert("Please login or create an account to access this feature.");
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
 function App() {
   return (
     <Router>
@@ -52,8 +62,21 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/memories" element={<MemoriesTimeline />} />
-          <Route path="/memories/:id" element={<MemoryDetail />} />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/memories" element={
+            <ProtectedRoute>
+              <MemoriesTimeline />
+            </ProtectedRoute>
+          } />
+          <Route path="/memories/:id" element={
+            <ProtectedRoute>
+              <MemoryDetail />
+            </ProtectedRoute>
+          } />
           <Route path="/vlogs" element={<Vlogs />} />
           <Route path="/trips" element={<TripsPage />} />
           <Route path="/trips/:id" element={<TripDetails />} />

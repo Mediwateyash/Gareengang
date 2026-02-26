@@ -40,6 +40,12 @@ const TripsPage = () => {
     }, []);
 
     const handleBookingClick = (trip) => {
+        const user = localStorage.getItem('user');
+        if (!user) {
+            alert("Please login or create an account to book your trip.");
+            navigate('/login');
+            return;
+        }
         setSelectedTrip(trip);
         setBookingSuccess(false);
         setShowModal(true);

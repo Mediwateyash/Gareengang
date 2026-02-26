@@ -30,6 +30,21 @@ const Footer = () => {
                         <li><Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Home</Link></li>
                         <li><Link to="/memories">Memories</Link></li>
                         <li><Link to="/vlogs">Trips</Link></li>
+                        <li>
+                            <span
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                    if (localStorage.getItem('user')) {
+                                        window.location.href = '/profile';
+                                    } else {
+                                        alert("Please log in to view your profile");
+                                        window.location.href = '/login';
+                                    }
+                                }}
+                            >
+                                My Profile
+                            </span>
+                        </li>
                         <li><span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('faces-section')}>Pillars</span></li>
                         <li><span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('donate-section')}>Preserve The Memories</span></li>
                     </ul>

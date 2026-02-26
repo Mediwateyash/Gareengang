@@ -32,6 +32,7 @@ app.use('/api/payment', require('./routes/payment')); // Razorpay Payments
 app.use('/api/trips', require('./routes/trips')); // Trips
 app.use('/api/registrations', require('./routes/registrations')); // Trip Registrations
 app.use('/api/trip-categories', require('./routes/tripCategories')); // Trip Categories
+app.use('/api/users', require('./routes/users')); // Generic User Profile data
 
 
 const path = require('path');

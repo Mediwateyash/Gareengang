@@ -15,6 +15,17 @@ const TripDetails = () => {
     const [bookingSuccess, setBookingSuccess] = useState(false);
     const [formData, setFormData] = useState({ name: '', phone: '', queries: '' });
 
+    const handleBookingClick = () => {
+        const user = localStorage.getItem('user');
+        if (!user) {
+            alert("Please login or create an account to secure your slot.");
+            navigate('/login');
+            return;
+        }
+        setBookingSuccess(false);
+        setShowModal(true);
+    };
+
     useEffect(() => {
         window.scrollTo(0, 0);
         const fetchTrip = async () => {
@@ -229,7 +240,7 @@ const TripDetails = () => {
                         </div>
 
                         {trip.status === 'Booking Open' ? (
-                            <button className="btn-sidebar-book" onClick={() => { setBookingSuccess(false); setShowModal(true); }}>
+                            <button className="btn-sidebar-book" onClick={handleBookingClick}>
                                 Book Now
                             </button>
                         ) : (
