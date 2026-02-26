@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import apiUrl, { API_BASE_URL } from '../config';
 import { useAuth } from '../context/AuthContext';
+import CommentSection from '../components/CommentSection';
 import './TripDetails.css';
 
 const TripDetails = () => {

@@ -33,7 +33,7 @@ app.use('/api/trips', require('./routes/trips')); // Trips
 app.use('/api/registrations', require('./routes/registrations')); // Trip Registrations
 app.use('/api/trip-categories', require('./routes/tripCategories')); // Trip Categories
 app.use('/api/users', require('./routes/users')); // Generic User Profile data
-
+app.use('/api/comments', require('./routes/comments')); // Interactive Comments
 
 const path = require('path');
 // Serve uploaded files statically

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import API_URL from '../config';
+import CommentSection from '../components/CommentSection';
 
 const MemoryDetail = () => {
     const { id } = useParams();
@@ -665,6 +666,11 @@ const MemoryDetail = () => {
                     </div>
                 </section>
             )}
+
+            {/* F) UNIVERSAL COMMENTS */}
+            <section style={{ maxWidth: '800px', margin: '0 auto 4rem auto', padding: '0 1rem' }}>
+                <CommentSection targetId={memory._id} targetModel="Memory" />
+            </section>
 
             {/* G) REACTIONS (Dummy for UI) */}
             <section className="reactions-bar">
