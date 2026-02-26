@@ -40,8 +40,8 @@ router.get('/', async (req, res) => {
         const adminUser = 'admin';
         const exists = await User.findOne({ username: adminUser });
         if (!exists) {
-            await User.create({ username: adminUser, password: 'admin123' });
-            log.push("Admin user 'admin' created.");
+            await User.create({ name: 'Super Admin', username: adminUser, password: 'password123', role: 'admin' });
+            log.push("Admin user 'admin' created with password 'password123'.");
         } else {
             log.push("Admin user already exists.");
         }
