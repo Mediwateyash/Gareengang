@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FaArrowUp, FaWhatsapp, FaHome } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaArrowUp, FaWhatsapp, FaHome, FaUserCircle } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
 import './FloatingNav.css';
 
 const FloatingNav = () => {
+    const { user, showAuthModal } = useAuth();
+    const navigate = useNavigate();
     const [isVisible, setIsVisible] = useState(false);
 
     // Show top button when page is scrolled down
@@ -29,6 +32,20 @@ const FloatingNav = () => {
 
     return (
         <div className="floating-nav-container">
+            {/* Floating Profile Button */}
+            <button
+                onClick={() => user ? navigate('/profile') : showAuthModal('login')}
+                className="profile-float"
+                title={user ? "My Profile" : "Login / Register"}
+            >
+                <span className="profile-tooltip">{user ? "My Profile" : "Login"}</span>
+                {user && user.image ? (
+                    <img src={user.image} alt="Profile" className="nav-profile-image" />
+                ) : (
+                    <FaUserCircle />
+                )}
+            </button>
+
             {/* Floating Home Button */}
             <Link to="/" className="home-float" title="Back to Homepage">
                 <span className="home-tooltip">Go to Home</span>

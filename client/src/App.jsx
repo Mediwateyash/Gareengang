@@ -23,6 +23,7 @@ import DonateSection from './components/DonateSection'
 import FloatingNav from './components/FloatingNav'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import AuthModal from './components/AuthModal'
+import WelcomeToast from './components/WelcomeToast'
 import './index.css'
 
 // ... existing imports ...
@@ -62,6 +63,7 @@ function App() {
       <Router>
         <div className="app">
           <AuthModal />
+          <WelcomeToast />
           <FloatingNav />
           <Routes>
             <Route path="/" element={<LandingPage />} />

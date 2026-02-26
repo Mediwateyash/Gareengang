@@ -7,6 +7,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [showWelcomeToast, setShowWelcomeToast] = useState(false);
 
     // Default to 'login', can be 'register'
     const [authModalTab, setAuthModalTab] = useState('login');
@@ -52,7 +53,9 @@ export const AuthProvider = ({ children }) => {
             authModalTab,
             setAuthModalTab,
             showAuthModal,
-            hideAuthModal
+            hideAuthModal,
+            showWelcomeToast,
+            setShowWelcomeToast
         }}>
             {children}
         </AuthContext.Provider>

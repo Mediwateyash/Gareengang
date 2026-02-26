@@ -16,7 +16,7 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'An account with this phone number already exists' });
         }
 
-        const user = await User.create({ name, phone, password, role: 'user' });
+        const user = await User.create({ name, phone, password, role: 'visitor' });
         res.status(201).json({
             message: 'Registered successfully',
             user: { id: user._id, name: user.name, phone: user.phone, role: user.role, image: user.image }

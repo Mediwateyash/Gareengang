@@ -27,8 +27,8 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'admin'],
-        default: 'user',
+        enum: ['visitor', 'member', 'admin'],
+        default: 'visitor',
     },
     likedMemories: [{
         type: mongoose.Schema.Types.ObjectId,

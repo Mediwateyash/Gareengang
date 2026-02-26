@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import './AuthModal.css'; // We'll create this next
 
 const AuthModal = () => {
-    const { isAuthModalOpen, hideAuthModal, authModalTab, setAuthModalTab, login } = useAuth();
+    const { isAuthModalOpen, hideAuthModal, authModalTab, setAuthModalTab, login, setShowWelcomeToast } = useAuth();
     const navigate = useNavigate();
 
     // Form States
@@ -32,6 +32,7 @@ const AuthModal = () => {
             if (res.ok) {
                 login(data.user);
                 hideAuthModal();
+                setShowWelcomeToast(true);
 
                 // If admin logs in from modal, optionally redirect them to dashboard
                 if (data.user.role === 'admin') {

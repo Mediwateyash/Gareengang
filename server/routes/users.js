@@ -40,4 +40,30 @@ router.get('/profile/:id', async (req, res) => {
     }
 });
 
+// @route   PUT /api/users/role/:id
+// @desc    Update user role (visitor -> member -> admin)
+// @access  Protected (Admin only ideally)
+router.put('/role/:id', async (req, res) => {
+    try {
+        const { role } = req.body;
+        if (!['visitor', 'member', 'admin'].includes(role)) {
+            return res.status(400).json({ message: 'Invalid role' });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { role },
+            { new: true }
+        ).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (err) {
+        console.error("Role Update Error:", err);
+        res.status(500).json({ message: 'Server error updating role' });
+    }
+});
+
 module.exports = router;

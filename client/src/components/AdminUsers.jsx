@@ -21,6 +21,27 @@ const AdminUsers = ({ onBack }) => {
         }
     };
 
+    const handleRoleChange = async (userId, newRole) => {
+        try {
+            const res = await fetch(`${API_URL}/users/role/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ role: newRole })
+            });
+
+            if (res.ok) {
+                // Update local state without refetching
+                setUsers(users.map(u => u._id === userId ? { ...u, role: newRole } : u));
+                alert(`Role updated to ${newRole} successfully.`);
+            } else {
+                alert('Failed to update role.');
+            }
+        } catch (err) {
+            console.error('Error updating role:', err);
+            alert('Error updating role.');
+        }
+    };
+
     return (
         <div className="admin-subview animate-fade-in">
             <div className="admin-header-flex">
@@ -56,13 +77,21 @@ const AdminUsers = ({ onBack }) => {
                                         </td>
                                         <td>{user.phone || 'N/A'}</td>
                                         <td>
-                                            <span style={{
-                                                padding: '4px 8px', borderRadius: '12px', fontSize: '0.8rem',
-                                                background: user.role === 'admin' ? '#fef08a' : '#e0e7ff',
-                                                color: user.role === 'admin' ? '#854d0e' : '#3730a3'
-                                            }}>
-                                                {user.role}
-                                            </span>
+                                            <select
+                                                value={user.role}
+                                                onChange={(e) => handleRoleChange(user._id, e.target.value)}
+                                                style={{
+                                                    padding: '4px 8px', borderRadius: '12px', fontSize: '0.8rem',
+                                                    background: user.role === 'admin' ? '#fef08a' : user.role === 'member' ? '#dcfce7' : '#e0e7ff',
+                                                    color: user.role === 'admin' ? '#854d0e' : user.role === 'member' ? '#166534' : '#3730a3',
+                                                    border: '1px solid #cbd5e1',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                <option value="visitor">Visitor</option>
+                                                <option value="member">Member</option>
+                                                <option value="admin">Admin</option>
+                                            </select>
                                         </td>
                                         <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                                     </tr>
