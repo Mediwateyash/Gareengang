@@ -251,17 +251,19 @@ const TripDetails = () => {
                         <p className="secure-note">🔒 Payments securely processed by Razorpay</p>
                     </div>
 
-                    {/* Trip Organizer and Manager */}
-                    {trip.tripLeader && trip.tripLeader.name && (
+                    {/* Trip Organizers and Managers */}
+                    {(trip.tripLeaders && trip.tripLeaders.length > 0) || (trip.tripLeader && trip.tripLeader.name) ? (
                         <div className="sidebar-card leader-widget">
-                            <h3>👤 Trip Organizer and Manager</h3>
-                            <div className="leader-info">
-                                <strong>{trip.tripLeader.name}</strong>
-                                {trip.tripLeader.phone && <p>📞 {trip.tripLeader.phone}</p>}
-                                {trip.tripLeader.instagram && <a href={trip.tripLeader.instagram} target="_blank" rel="noreferrer">📱 Instagram Profile</a>}
-                            </div>
+                            <h3>👤 Trip Organizers and Managers</h3>
+                            {(trip.tripLeaders && trip.tripLeaders.length > 0 ? trip.tripLeaders : [trip.tripLeader]).map((leader, idx) => (
+                                <div key={idx} className="leader-info" style={{ marginTop: idx > 0 ? '1rem' : '0', paddingTop: idx > 0 ? '1rem' : '0', borderTop: idx > 0 ? '1px dashed #cbd5e1' : 'none' }}>
+                                    <strong>{leader.name}</strong>
+                                    {leader.phone && <p>📞 {leader.phone}</p>}
+                                    {leader.instagram && <a href={leader.instagram} target="_blank" rel="noreferrer">📱 Instagram Profile</a>}
+                                </div>
+                            ))}
                         </div>
-                    )}
+                    ) : null}
                 </div>
             </div>
 

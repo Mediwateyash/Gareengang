@@ -26,7 +26,7 @@ const AdminTrips = ({ onBack }) => {
         mapEmbedUrl: '',
         checklist: '', // comma separated strings
         gallery: '',   // comma separated strings
-        tripLeader: { name: 'Yash Diwate', phone: '8799903365', instagram: '' },
+        tripLeaders: [{ name: 'Yash Diwate', phone: '8799903365', instagram: '' }],
         itinerary: [{ day: 1, title: '', description: '' }],
         budgetBreakdown: [{ category: '', amount: 0 }]
     });
@@ -78,6 +78,14 @@ const AdminTrips = ({ onBack }) => {
         setFormData({ ...formData, budgetBreakdown: newBudget });
     };
 
+    const addTripLeader = () => setFormData(f => ({ ...f, tripLeaders: [...f.tripLeaders, { name: '', phone: '', instagram: '' }] }));
+    const removeTripLeader = (index) => setFormData(f => ({ ...f, tripLeaders: f.tripLeaders.filter((_, i) => i !== index) }));
+    const updateTripLeader = (index, field, value) => {
+        const newLeaders = [...formData.tripLeaders];
+        newLeaders[index][field] = value;
+        setFormData({ ...formData, tripLeaders: newLeaders });
+    };
+
     const handleTripSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
@@ -103,7 +111,7 @@ const AdminTrips = ({ onBack }) => {
 
         submitData.append('itinerary', JSON.stringify(formData.itinerary));
         submitData.append('budgetBreakdown', JSON.stringify(formData.budgetBreakdown));
-        submitData.append('tripLeader', JSON.stringify(formData.tripLeader));
+        submitData.append('tripLeaders', JSON.stringify(formData.tripLeaders));
 
         if (formData.coverImage) submitData.append('coverImage', formData.coverImage);
 
@@ -140,7 +148,7 @@ const AdminTrips = ({ onBack }) => {
             mapEmbedUrl: trip.mapEmbedUrl || '',
             checklist: trip.checklist ? trip.checklist.join(', ') : '',
             gallery: trip.gallery ? trip.gallery.join(', ') : '',
-            tripLeader: trip.tripLeader || { name: 'Yash Diwate', phone: '8799903365', instagram: '' },
+            tripLeaders: trip.tripLeaders && trip.tripLeaders.length > 0 ? trip.tripLeaders : (trip.tripLeader && trip.tripLeader.name ? [trip.tripLeader] : [{ name: 'Yash Diwate', phone: '8799903365', instagram: '' }]),
             itinerary: trip.itinerary && trip.itinerary.length > 0 ? trip.itinerary : [{ day: 1, title: '', description: '' }],
             budgetBreakdown: trip.budgetBreakdown && trip.budgetBreakdown.length > 0 ? trip.budgetBreakdown : [{ category: '', amount: 0 }],
             coverImage: null
@@ -199,7 +207,7 @@ const AdminTrips = ({ onBack }) => {
             title: '', destination: '', dateDisplay: '', status: 'Coming Soon', section: 'Upcoming Trips',
             bookingFee: 50, totalSlots: 20, shortDescription: '', overview: '', mapEmbedUrl: '',
             checklist: '', gallery: '', coverImage: null,
-            tripLeader: { name: 'Yash Diwate', phone: '8799903365', instagram: '' },
+            tripLeaders: [{ name: 'Yash Diwate', phone: '8799903365', instagram: '' }],
             itinerary: [{ day: 1, title: '', description: '' }],
             budgetBreakdown: [{ category: '', amount: 0 }]
         });
@@ -457,11 +465,17 @@ const AdminTrips = ({ onBack }) => {
                             {/* --- TEAM LEADER --- */}
                             <div className="form-group full-width" style={{ gridColumn: '1 / -1', background: '#f8fafc', padding: '1rem', borderRadius: '8px', marginTop: '1rem' }}>
                                 <h4>5. Trip Leader Details</h4>
-                                <div style={{ display: 'flex', gap: '1rem' }}>
-                                    <input type="text" value={formData.tripLeader.name} onChange={e => setFormData({ ...formData, tripLeader: { ...formData.tripLeader, name: e.target.value } })} placeholder="Leader Name" style={{ flex: 1 }} />
-                                    <input type="text" value={formData.tripLeader.phone} onChange={e => setFormData({ ...formData, tripLeader: { ...formData.tripLeader, phone: e.target.value } })} placeholder="Leader Phone" style={{ flex: 1 }} />
-                                    <input type="text" value={formData.tripLeader.instagram} onChange={e => setFormData({ ...formData, tripLeader: { ...formData.tripLeader, instagram: e.target.value } })} placeholder="Leader Instagram URL" style={{ flex: 1 }} />
-                                </div>
+                                {formData.tripLeaders.map((leader, index) => (
+                                    <div key={index} style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', alignItems: 'center' }}>
+                                        <input type="text" value={leader.name} onChange={e => updateTripLeader(index, 'name', e.target.value)} placeholder="Leader Name" style={{ flex: 1 }} />
+                                        <input type="text" value={leader.phone} onChange={e => updateTripLeader(index, 'phone', e.target.value)} placeholder="Leader Phone" style={{ flex: 1 }} />
+                                        <input type="text" value={leader.instagram} onChange={e => updateTripLeader(index, 'instagram', e.target.value)} placeholder="Leader Instagram URL" style={{ flex: 1 }} />
+                                        {formData.tripLeaders.length > 1 && (
+                                            <button type="button" onClick={() => removeTripLeader(index)} style={{ padding: '10px', background: '#ef4444', color: 'white', border: 'none', borderRadius: '4px' }}>X</button>
+                                        )}
+                                    </div>
+                                ))}
+                                <button type="button" onClick={addTripLeader} style={{ padding: '8px 16px', background: '#e2e8f0', border: '1px solid #cbd5e1', borderRadius: '4px', cursor: 'pointer' }}>+ Add Trip Leader</button>
                             </div>
 
                             <div className="form-actions" style={{ gridColumn: '1 / -1', marginTop: '2rem' }}>

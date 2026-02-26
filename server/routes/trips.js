@@ -39,7 +39,7 @@ router.post('/', upload.single('coverImage'), async (req, res) => {
         const parsedBudgetBreakdown = req.body.budgetBreakdown ? JSON.parse(req.body.budgetBreakdown) : [];
         const parsedChecklist = req.body.checklist ? JSON.parse(req.body.checklist) : [];
         const parsedGallery = req.body.gallery ? JSON.parse(req.body.gallery) : [];
-        const parsedTripLeader = req.body.tripLeader ? JSON.parse(req.body.tripLeader) : undefined;
+        const parsedTripLeaders = req.body.tripLeaders ? JSON.parse(req.body.tripLeaders) : undefined;
 
         const tripData = {
             ...req.body,
@@ -47,7 +47,7 @@ router.post('/', upload.single('coverImage'), async (req, res) => {
             budgetBreakdown: parsedBudgetBreakdown,
             checklist: parsedChecklist,
             gallery: parsedGallery,
-            ...(parsedTripLeader && { tripLeader: parsedTripLeader }),
+            ...(parsedTripLeaders && { tripLeaders: parsedTripLeaders }),
             coverImage: req.file ? req.file.path : req.body.coverImage
         };
 
@@ -99,7 +99,7 @@ router.put('/:id', upload.single('coverImage'), async (req, res) => {
         if (req.body.budgetBreakdown) updateData.budgetBreakdown = JSON.parse(req.body.budgetBreakdown);
         if (req.body.checklist) updateData.checklist = JSON.parse(req.body.checklist);
         if (req.body.gallery) updateData.gallery = JSON.parse(req.body.gallery);
-        if (req.body.tripLeader) updateData.tripLeader = JSON.parse(req.body.tripLeader);
+        if (req.body.tripLeaders) updateData.tripLeaders = JSON.parse(req.body.tripLeaders);
 
         const trip = await Trip.findByIdAndUpdate(req.params.id, updateData, { new: true });
         if (!trip) return res.status(404).json({ message: 'Trip not found' });

@@ -71,11 +71,11 @@ const tripSchema = new mongoose.Schema({
         type: [String], // Array of gallery image URLs uploaded via Cloudinary
         default: []
     },
-    tripLeader: {
+    tripLeaders: [{
         name: { type: String, default: 'Yash Diwate' },
         phone: { type: String, default: '8799903365' },
         instagram: { type: String, default: '' }
-    }
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Trip', tripSchema);
