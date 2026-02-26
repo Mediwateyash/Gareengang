@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import groupPhoto from '../assets/group_photo.jpg';
+import { useAuth } from '../context/AuthContext';
 import './Hero.css';
 
 const Hero = () => {
+    const { user, showAuthModal } = useAuth();
     const navigate = useNavigate();
     const [textIndex, setTextIndex] = useState(0);
     const texts = [
@@ -21,10 +23,8 @@ const Hero = () => {
     }, []);
 
     const handleProtectedNavigation = (path) => {
-        const user = localStorage.getItem('user');
         if (!user) {
-            alert("Please login or create an account to unlock this feature.");
-            navigate('/login');
+            showAuthModal('login');
         } else {
             navigate(path);
         }

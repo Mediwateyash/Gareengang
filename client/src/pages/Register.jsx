@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import API_URL from '../config';
+import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
 const Register = () => {
+    const { showAuthModal } = useAuth();
     const [formData, setFormData] = useState({ name: '', phone: '', password: '' });
     const navigate = useNavigate();
 
@@ -18,7 +20,8 @@ const Register = () => {
 
             if (res.ok) {
                 alert('Registration successful! Please login.');
-                navigate('/login');
+                navigate('/');
+                setTimeout(() => showAuthModal('login'), 0);
             } else {
                 const data = await res.json();
                 alert(data.message);

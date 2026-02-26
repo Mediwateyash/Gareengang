@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API_URL, { API_BASE_URL } from '../config';
+import { useAuth } from '../context/AuthContext';
 import './Profile.css';
 
 const Profile = () => {
+    const { logout, showAuthModal } = useAuth();
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [profileData, setProfileData] = useState(null);
@@ -14,7 +16,8 @@ const Profile = () => {
         window.scrollTo(0, 0);
         const storedUser = localStorage.getItem('user');
         if (!storedUser) {
-            navigate('/login');
+            navigate('/');
+            setTimeout(() => showAuthModal('login'), 0);
             return;
         }
 
@@ -41,8 +44,8 @@ const Profile = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('user');
-        navigate('/login');
+        logout();
+        navigate('/');
     };
 
     if (loading) return <div className="loading-spinner">Loading Profile...</div>;

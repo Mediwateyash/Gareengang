@@ -8,8 +8,10 @@ import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 import './TripsPage.css';
 import apiUrl, { API_BASE_URL } from '../config';
+import { useAuth } from '../context/AuthContext';
 
 const TripsPage = () => {
+    const { user, showAuthModal } = useAuth();
     const [trips, setTrips] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -40,10 +42,8 @@ const TripsPage = () => {
     }, []);
 
     const handleBookingClick = (trip) => {
-        const user = localStorage.getItem('user');
         if (!user) {
-            alert("Please login or create an account to book your trip.");
-            navigate('/login');
+            showAuthModal('login');
             return;
         }
         setSelectedTrip(trip);

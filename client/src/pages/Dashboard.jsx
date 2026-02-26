@@ -10,9 +10,11 @@ import AdminReviews from '../components/AdminReviews'; // Import Reviews Manager
 import AdminSubPillars from '../components/AdminSubPillars'; // Import Pillar Media Manager
 import AdminSocials from '../components/AdminSocials'; // Import Social Links Manager
 import AdminTrips from '../components/AdminTrips'; // Import Trips & Registrations
+import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
 
 const Dashboard = () => {
+    const { logout, showAuthModal } = useAuth();
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [activeView, setActiveView] = useState('menu'); // 'menu', 'memories', 'vlogs', 'users', 'home', 'faces'
@@ -20,16 +22,16 @@ const Dashboard = () => {
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
         if (!storedUser) {
-            navigate('/login');
+            navigate('/');
+            setTimeout(() => showAuthModal('login'), 0);
         } else {
             setUser(JSON.parse(storedUser));
         }
     }, [navigate]);
 
     const handleLogout = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        navigate('/login');
+        logout();
+        navigate('/');
     };
 
     if (!user) return null;

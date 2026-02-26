@@ -21,6 +21,8 @@ import Stats from './components/Stats'
 import SocialScrapbook from './components/SocialScrapbook'
 import DonateSection from './components/DonateSection'
 import FloatingNav from './components/FloatingNav'
+import { AuthProvider, useAuth } from './context/AuthContext'
+import AuthModal from './components/AuthModal'
 import './index.css'
 
 // ... existing imports ...
@@ -44,45 +46,50 @@ const LandingPage = () => (
 );
 
 const ProtectedRoute = ({ children }) => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { user, showAuthModal } = useAuth();
+
   if (!user) {
-    alert("Please login or create an account to access this feature.");
-    return <Navigate to="/login" replace />;
+    // Show modal instead of redirecting
+    setTimeout(() => showAuthModal('login'), 0);
+    return <Navigate to="/" replace />;
   }
   return children;
 };
 
 function App() {
   return (
-    <Router>
-      <div className="app">
-        <FloatingNav />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          } />
-          <Route path="/memories" element={
-            <ProtectedRoute>
-              <MemoriesTimeline />
-            </ProtectedRoute>
-          } />
-          <Route path="/memories/:id" element={
-            <ProtectedRoute>
-              <MemoryDetail />
-            </ProtectedRoute>
-          } />
-          <Route path="/vlogs" element={<Vlogs />} />
-          <Route path="/trips" element={<TripsPage />} />
-          <Route path="/trips/:id" element={<TripDetails />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="app">
+          <AuthModal />
+          <FloatingNav />
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Navigate to="/" replace />} />
+            <Route path="/register" element={<Navigate to="/" replace />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/memories" element={
+              <ProtectedRoute>
+                <MemoriesTimeline />
+              </ProtectedRoute>
+            } />
+            <Route path="/memories/:id" element={
+              <ProtectedRoute>
+                <MemoryDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/vlogs" element={<Vlogs />} />
+            <Route path="/trips" element={<TripsPage />} />
+            <Route path="/trips/:id" element={<TripDetails />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   )
 }
 

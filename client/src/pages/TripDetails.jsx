@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import apiUrl, { API_BASE_URL } from '../config';
+import { useAuth } from '../context/AuthContext';
 import './TripDetails.css';
 
 const TripDetails = () => {
+    const { user, showAuthModal } = useAuth();
     const { id } = useParams();
     const navigate = useNavigate();
     const [trip, setTrip] = useState(null);
@@ -16,10 +18,8 @@ const TripDetails = () => {
     const [formData, setFormData] = useState({ name: '', phone: '', queries: '' });
 
     const handleBookingClick = () => {
-        const user = localStorage.getItem('user');
         if (!user) {
-            alert("Please login or create an account to secure your slot.");
-            navigate('/login');
+            showAuthModal('login');
             return;
         }
         setBookingSuccess(false);

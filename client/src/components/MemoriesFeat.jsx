@@ -1,8 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import API_URL, { API_BASE_URL } from '../config';
+import { useAuth } from '../context/AuthContext';
 
 const MemoriesFeat = () => {
+    const { user, showAuthModal } = useAuth();
     const navigate = useNavigate();
     const [memories, setMemories] = useState([]);
 
@@ -30,10 +32,8 @@ const MemoriesFeat = () => {
     };
 
     const handleProtectedNavigation = (path) => {
-        const user = localStorage.getItem('user');
         if (!user) {
-            alert("Please login or create an account to view these memories.");
-            navigate('/login');
+            showAuthModal('login');
         } else {
             navigate(path);
         }
