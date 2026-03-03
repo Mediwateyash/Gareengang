@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import API_URL from '../config';
 import CommentSection from '../components/CommentSection';
+import { useAuth } from '../context/AuthContext';
 
 const MemoryDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user, showAuthModal } = useAuth();
+
     const [memory, setMemory] = useState(null);
     const [loading, setLoading] = useState(true);
     const [allMemories, setAllMemories] = useState([]);
@@ -139,6 +142,16 @@ const MemoryDetail = () => {
         return (match && match[2].length === 11) ? match[2] : null;
     };
     const youtubeId = getYouTubeId(memory.relatedVlogUrl);
+
+    const handleTelegramClick = () => {
+        if (!user) {
+            showAuthModal('login');
+        } else if (user.role === 'visitor') {
+            alert("🔒 Access Denied: This link is accessible only for members of Gareebgang.");
+        } else if (memory.telegramLink) {
+            window.open(memory.telegramLink, '_blank');
+        }
+    };
 
     return (
         <div className="memory-detail-page">
@@ -625,7 +638,39 @@ const MemoryDetail = () => {
             {/* C) GALLERY */}
             {memory.gallery && memory.gallery.length > 0 && (
                 <section className="gallery-section">
-                    <h2 className="section-heading" style={{ textAlign: 'center' }}>Photo Dump</h2>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+                        <h2 className="section-heading" style={{ margin: 0 }}>Photo Dump</h2>
+
+                        {memory.telegramLink && (
+                            <button
+                                onClick={handleTelegramClick}
+                                style={{
+                                    background: '#0088cc',
+                                    color: 'white',
+                                    border: 'none',
+                                    padding: '10px 20px',
+                                    borderRadius: '30px',
+                                    fontFamily: 'Inter, sans-serif',
+                                    fontWeight: 'bold',
+                                    fontSize: '1rem',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    boxShadow: '0 4px 10px rgba(0, 136, 204, 0.3)',
+                                    transition: 'transform 0.2s',
+                                }}
+                                onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                                onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                                View all images on Telegram
+                            </button>
+                        )}
+                    </div>
                     <div className="gallery-grid">
                         {memory.gallery.map((item, i) => {
                             const isObj = typeof item === 'object';

@@ -7,8 +7,14 @@ const AdminMemories = ({ onBack }) => {
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({
         title: '', date: '', location: '', category: 'Uncategorized', caption: '', image: '', imageFile: null,
-        story: '', peopleText: '', relatedVlogUrl: '', galleryText: '', featured: false
+        story: '', peopleText: '', relatedVlogUrl: '', telegramLink: '', galleryText: '', featured: false
     });
+
+    // New State for Faces Dropdown
+    const [facesList, setFacesList] = useState([]);
+    const [showFacesDropdown, setShowFacesDropdown] = useState(false);
+    // Dropdown ref for closing on outside click
+    const dropdownRef = useRef(null);
 
     // Restored State
     const [isEditing, setIsEditing] = useState(false);
@@ -23,7 +29,47 @@ const AdminMemories = ({ onBack }) => {
     useEffect(() => {
         fetchMemories();
         fetchCategories(); // Fetch on load
+        fetchFaces();
     }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowFacesDropdown(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const fetchFaces = async () => {
+        try {
+            const res = await fetch(`${API_URL}/faces`);
+            if (res.ok) setFacesList(await res.json());
+        } catch (err) { console.error(err); }
+    };
+
+    const handleFaceSelect = (name) => {
+        const currentPeople = formData.peopleText.split(',').map(s => s.trim()).filter(Boolean);
+        if (!currentPeople.includes(name)) {
+            currentPeople.push(name);
+            setFormData({ ...formData, peopleText: currentPeople.join(', ') });
+        }
+        setShowFacesDropdown(false);
+    };
+
+    const handleFaceRemove = (name) => {
+        const currentPeople = formData.peopleText.split(',').map(s => s.trim()).filter(Boolean);
+        const updatedPeople = currentPeople.filter(p => p !== name);
+        setFormData({ ...formData, peopleText: updatedPeople.join(', ') });
+    };
+
+    const handleManualFaceAdd = () => {
+        const name = window.prompt("Enter the person's name:");
+        if (name && name.trim()) {
+            handleFaceSelect(name.trim());
+        }
+    };
 
     const fetchCategories = async () => {
         try {
@@ -100,6 +146,7 @@ const AdminMemories = ({ onBack }) => {
             data.append('caption', formData.caption);
             data.append('story', formData.story);
             data.append('relatedVlogUrl', formData.relatedVlogUrl);
+            data.append('telegramLink', formData.telegramLink);
             data.append('people', JSON.stringify(peopleArray));
             data.append('gallery', JSON.stringify(galleryArray));
             data.append('featured', formData.featured); // Add Featured
@@ -168,6 +215,7 @@ const AdminMemories = ({ onBack }) => {
             story: memory.story || '',
             peopleText: memory.people ? memory.people.join(', ') : '',
             relatedVlogUrl: memory.relatedVlogUrl || '',
+            telegramLink: memory.telegramLink || '',
             galleryText: memory.gallery ? memory.gallery.map(g => typeof g === 'string' ? g : g.url).join(', ') : '',
             featured: memory.featured || false
         });
@@ -180,7 +228,7 @@ const AdminMemories = ({ onBack }) => {
     const resetForm = () => {
         setFormData({
             title: '', date: '', location: '', category: 'Uncategorized', caption: '', image: '', imageFile: null,
-            story: '', peopleText: '', relatedVlogUrl: '', galleryText: '', featured: false
+            story: '', peopleText: '', relatedVlogUrl: '', telegramLink: '', galleryText: '', featured: false
         });
         setPreview(null);
         setIsEditing(false);
@@ -269,14 +317,72 @@ const AdminMemories = ({ onBack }) => {
                         <textarea name="story" value={formData.story} onChange={handleChange} rows="5" placeholder="Write the full memory story here..."></textarea>
                     </div>
 
-                    <div className="form-group">
-                        <label>People Involved (comma separated)</label>
-                        <input type="text" name="peopleText" value={formData.peopleText} onChange={handleChange} placeholder="Yash, Manjush, Aditya" />
+                    <div className="form-group" style={{ position: 'relative' }} ref={dropdownRef}>
+                        <label>People Involved</label>
+
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '8px', padding: '8px', border: '1px solid #ccc', borderRadius: '5px', minHeight: '42px', alignItems: 'center', background: '#fff' }}>
+                            {formData.peopleText.split(',').map(s => s.trim()).filter(Boolean).map((person, idx) => (
+                                <span key={idx} style={{ background: '#e0e7ff', color: '#3730a3', padding: '4px 8px', borderRadius: '12px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    {person}
+                                    <button type="button" onClick={() => handleFaceRemove(person)} style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '1.2rem', lineHeight: 1, padding: 0 }}>&times;</button>
+                                </span>
+                            ))}
+                            <button
+                                type="button"
+                                onClick={() => setShowFacesDropdown(!showFacesDropdown)}
+                                style={{ background: 'transparent', border: '1px dashed #aaa', padding: '4px 8px', borderRadius: '12px', fontSize: '0.9rem', color: '#666', cursor: 'pointer' }}
+                            >
+                                + Select / Add Person
+                            </button>
+                        </div>
+
+                        {/* Hidden input to maintain form state compatibility */}
+                        <input type="hidden" name="peopleText" value={formData.peopleText} />
+
+                        {showFacesDropdown && (
+                            <div style={{ position: 'absolute', top: 'calc(100% - 8px)', left: 0, right: 0, background: '#fff', border: '1px solid #ddd', borderRadius: '5px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)', zIndex: 10, maxHeight: '250px', display: 'flex', flexDirection: 'column' }}>
+                                <div style={{ overflowY: 'auto', flex: 1, padding: '5px' }}>
+                                    {facesList.map(face => (
+                                        <div
+                                            key={face._id}
+                                            onClick={() => handleFaceSelect(face.name)}
+                                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px', cursor: 'pointer', borderRadius: '4px', transition: 'background 0.2s' }}
+                                        >
+                                            <img
+                                                src={face.imageUrl?.startsWith('http') ? face.imageUrl : `${API_BASE_URL}/${face.imageUrl}`}
+                                                alt={face.name}
+                                                style={{ width: '30px', height: '30px', borderRadius: '50%', objectFit: 'cover' }}
+                                                onError={(e) => e.target.style.display = 'none'}
+                                            />
+                                            <span style={{ fontWeight: '500' }}>{face.name}</span>
+                                            <span style={{ fontSize: '0.8rem', color: '#888', marginLeft: 'auto' }}>{face.uniqueTrait}</span>
+                                        </div>
+                                    ))}
+                                    {facesList.length === 0 && <div style={{ padding: '8px', color: '#666', textAlign: 'center' }}>No faces found.</div>}
+                                </div>
+                                <div style={{ borderTop: '1px solid #eee', padding: '8px', background: '#f9fafb', borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px' }}>
+                                    <button
+                                        type="button"
+                                        onClick={handleManualFaceAdd}
+                                        style={{ width: '100%', padding: '8px', background: '#3498db', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                                    >
+                                        + Add Manually
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="form-group">
                         <label>Related Vlog URL (YouTube)</label>
                         <input type="text" name="relatedVlogUrl" value={formData.relatedVlogUrl} onChange={handleChange} placeholder="https://youtube.com/..." />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Telegram Link (For more images)</label>
+                        <input type="text" name="telegramLink" value={formData.telegramLink} onChange={handleChange} placeholder="https://t.me/..." />
                     </div>
 
                     <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px', background: '#fff3cd', padding: '10px', borderRadius: '5px', border: '1px solid #ffeeba' }}>

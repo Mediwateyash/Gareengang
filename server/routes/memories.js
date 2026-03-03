@@ -82,7 +82,7 @@ router.post('/', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'gal
     try {
         const {
             title, date, location, category, caption, image, featured, featuredOrder,
-            story, gallery, people, relatedVlogUrl, highlights
+            story, gallery, people, relatedVlogUrl, telegramLink, highlights
         } = req.body;
 
         // Determine image source
@@ -122,6 +122,7 @@ router.post('/', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'gal
             gallery: galleryObjects,
             people: parseJSON(people),
             relatedVlogUrl: relatedVlogUrl || '',
+            telegramLink: telegramLink || '',
             highlights: parseJSON(highlights)
         });
 
@@ -139,7 +140,7 @@ router.put('/:id', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'g
     try {
         const {
             title, date, location, category, caption, image, featured, featuredOrder,
-            story, gallery, people, relatedVlogUrl, highlights
+            story, gallery, people, relatedVlogUrl, telegramLink, highlights
         } = req.body;
 
         let memory = await Memory.findById(req.params.id);
@@ -157,6 +158,7 @@ router.put('/:id', upload.fields([{ name: 'imageFile', maxCount: 1 }, { name: 'g
         // Update detail fields
         if (story !== undefined) memory.story = story;
         if (relatedVlogUrl !== undefined) memory.relatedVlogUrl = relatedVlogUrl;
+        if (telegramLink !== undefined) memory.telegramLink = telegramLink;
 
         const parseJSON = (field) => {
             if (typeof field === 'string') {

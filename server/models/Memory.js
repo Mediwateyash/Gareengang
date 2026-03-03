@@ -51,6 +51,10 @@ const MemorySchema = new mongoose.Schema({
         type: String, // Optional YouTube link
         default: ''
     },
+    telegramLink: {
+        type: String, // Optional Telegram link
+        default: ''
+    },
     highlights: [{
         title: String,
         description: String,
