@@ -58,7 +58,7 @@ router.get('/target/:target', async (req, res) => {
 // @access  Private/Admin
 router.post('/', upload.single('mediaFile'), async (req, res) => {
     try {
-        const { pillarTarget, caption, order } = req.body;
+        const { pillarTarget, caption, order, description } = req.body;
 
         let mediaUrl = '';
         let cloudinaryId = '';
@@ -79,6 +79,7 @@ router.post('/', upload.single('mediaFile'), async (req, res) => {
         const newMedia = new SubPillar({
             pillarTarget,
             caption,
+            description,
             mediaUrl,
             cloudinaryId,
             mediaType,
@@ -125,7 +126,7 @@ router.put('/bulk/reorder', async (req, res) => {
 // @access  Private/Admin
 router.put('/:id', upload.single('mediaFile'), async (req, res) => {
     try {
-        const { pillarTarget, caption } = req.body;
+        const { pillarTarget, caption, description } = req.body;
         let media = await SubPillar.findById(req.params.id);
 
         if (!media) {
@@ -134,6 +135,7 @@ router.put('/:id', upload.single('mediaFile'), async (req, res) => {
 
         media.pillarTarget = pillarTarget || media.pillarTarget;
         media.caption = caption || media.caption;
+        if (description !== undefined) media.description = description;
 
         if (req.file) {
             // Delete old file from Cloudinary if it exists

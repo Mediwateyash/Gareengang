@@ -6,6 +6,7 @@ import './Leaders.css';
 
 const Leaders = () => {
     const [mediaItems, setMediaItems] = useState([]);
+    const [expandedItems, setExpandedItems] = useState({});
 
     useEffect(() => {
         const fetchMedia = async () => {
@@ -25,6 +26,14 @@ const Leaders = () => {
     const presidentMedia = mediaItems.filter(m => m.pillarTarget === 'President');
     const vpMedia = mediaItems.filter(m => m.pillarTarget === 'VP');
 
+    const toggleExpand = (id, e) => {
+        e.stopPropagation(); // Prevent filmstrip hover issues or other parent events
+        setExpandedItems(prev => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
+
     const renderFilmstrip = (items) => {
         if (items.length === 0) return null;
 
@@ -36,7 +45,7 @@ const Leaders = () => {
                         const srcUrl = item.mediaUrl.startsWith('http') ? item.mediaUrl : `${API_BASE_URL}/${item.mediaUrl}`;
 
                         return (
-                            <div key={item._id} className="filmstrip-item">
+                            <div key={item._id} className={`filmstrip-item ${expandedItems[item._id] ? 'expanded-wrapper' : ''}`}>
                                 {item.mediaType === 'video' ? (
                                     <>
                                         <video src={srcUrl} className="filmstrip-media" muted loop onMouseOver={e => e.target.play()} onMouseOut={e => e.target.pause()} />
@@ -46,6 +55,21 @@ const Leaders = () => {
                                     <img src={srcUrl} alt={item.caption} className="filmstrip-media" />
                                 )}
                                 <div className="filmstrip-caption">{item.caption}</div>
+
+                                {item.description && (
+                                    <div className="pillar-desc-container">
+                                        <div className={`pillar-desc-text ${!expandedItems[item._id] ? 'collapsed' : ''}`}>
+                                            {item.description}
+                                        </div>
+                                        {!expandedItems[item._id] && <div className="pillar-desc-fade"></div>}
+                                        <button
+                                            className="read-more-btn"
+                                            onClick={(e) => toggleExpand(item._id, e)}
+                                        >
+                                            {expandedItems[item._id] ? 'Show Less' : 'Read More...'}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         );
                     })}

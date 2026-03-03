@@ -4,7 +4,7 @@ import API_URL from '../config';
 const AdminHome = ({ onBack }) => {
     const [memories, setMemories] = useState([]);
     const [vlogs, setVlogs] = useState([]);
-    const [stats, setStats] = useState({ trips: 0, cities: 0, memories: 0, years: 0 });
+    const [stats, setStats] = useState({ trips: 0, cities: 0, memories: 0, years: 0, donationGoal: 3000, donationRaised: 1450 });
     const [loading, setLoading] = useState(true);
     const [saveLoading, setSaveLoading] = useState(false);
 
@@ -171,6 +171,19 @@ const AdminHome = ({ onBack }) => {
                         <input type="number" name="years" value={stats.years} onChange={handleStatChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ced4da' }} />
                     </div>
                 </div>
+
+                <h3 style={{ margin: '1.5rem 0 1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>💰 Manage Donation Goals</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+                    <div className="input-group">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: '#666' }}>Donation Goal (₹)</label>
+                        <input type="number" name="donationGoal" value={stats.donationGoal} onChange={handleStatChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ced4da' }} />
+                    </div>
+                    <div className="input-group">
+                        <label style={{ display: 'block', fontSize: '0.8rem', color: '#666' }}>Amount Raised (₹)</label>
+                        <input type="number" name="donationRaised" value={stats.donationRaised} onChange={handleStatChange} style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ced4da' }} />
+                    </div>
+                </div>
+
                 <button
                     onClick={saveStats}
                     disabled={saveLoading}

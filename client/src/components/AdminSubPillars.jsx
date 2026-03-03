@@ -9,6 +9,7 @@ const AdminSubPillars = ({ onBack }) => {
     // Form state
     const [pillarTarget, setPillarTarget] = useState('President');
     const [caption, setCaption] = useState('');
+    const [description, setDescription] = useState('');
     const [file, setFile] = useState(null);
     const [editingId, setEditingId] = useState(null);
     const [orderChanged, setOrderChanged] = useState(false);
@@ -43,6 +44,7 @@ const AdminSubPillars = ({ onBack }) => {
         const formData = new FormData();
         formData.append('pillarTarget', pillarTarget);
         formData.append('caption', caption);
+        formData.append('description', description);
         if (file) formData.append('mediaFile', file);
 
         // Automatically set order to the end if adding new
@@ -80,6 +82,7 @@ const AdminSubPillars = ({ onBack }) => {
     const handleEdit = (item) => {
         setPillarTarget(item.pillarTarget);
         setCaption(item.caption);
+        setDescription(item.description || '');
         setEditingId(item._id);
         setFile(null); // File is optional on edit
         window.scrollTo(0, 0);
@@ -105,6 +108,7 @@ const AdminSubPillars = ({ onBack }) => {
     const resetForm = () => {
         setPillarTarget('President');
         setCaption('');
+        setDescription('');
         setFile(null);
         setEditingId(null);
         // Clear file input
@@ -188,6 +192,17 @@ const AdminSubPillars = ({ onBack }) => {
                     <div className="form-group">
                         <label>Caption (e.g. "Collecting Tickets", "Serving Food")</label>
                         <input type="text" value={caption} onChange={(e) => setCaption(e.target.value)} required />
+                    </div>
+
+                    <div className="form-group full-width">
+                        <label>Description (Optional, longer text)</label>
+                        <textarea
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            rows="4"
+                            placeholder="Enter a detailed description about this moment..."
+                            style={{ width: '100%', padding: '0.75rem', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
+                        />
                     </div>
 
                     <div className="form-group full-width">

@@ -5,7 +5,9 @@ const SettingsSchema = new mongoose.Schema({
         trips: { type: Number, default: 0 },
         cities: { type: Number, default: 0 },
         memories: { type: Number, default: 0 },
-        years: { type: Number, default: 0 }
+        years: { type: Number, default: 0 },
+        donationGoal: { type: Number, default: 3000 },
+        donationRaised: { type: Number, default: 1450 }
     }
 }, { timestamps: true });
 

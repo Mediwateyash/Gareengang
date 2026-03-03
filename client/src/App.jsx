@@ -10,6 +10,7 @@ import Profile from './pages/Profile'
 import Leaders from './components/Leaders'
 import MemoriesTimeline from './pages/MemoriesTimeline'
 import MemoryDetail from './pages/MemoryDetail'
+import MemberMemories from './pages/MemberMemories'
 import MemoriesFeat from './components/MemoriesFeat'
 import Faces from './components/Faces'
 import VideoReviews from './components/VideoReviews'
@@ -85,6 +86,11 @@ function App() {
             <Route path="/memories/:id" element={
               <ProtectedRoute>
                 <MemoryDetail />
+              </ProtectedRoute>
+            } />
+            <Route path="/faces/:name" element={
+              <ProtectedRoute>
+                <MemberMemories />
               </ProtectedRoute>
             } />
             <Route path="/vlogs" element={<Vlogs />} />

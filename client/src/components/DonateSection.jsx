@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import apiUrl from '../config';
 import './DonateSection.css';
 
@@ -9,11 +9,32 @@ const DonateSection = () => {
     const [showCustomInput, setShowCustomInput] = useState(false);
     const [customAmountStr, setCustomAmountStr] = useState('');
 
-    // Hardcoded goal and raised amounts
-    // Ideally this could be pulled from the backend in the future based on successful payments
-    const goal = 3000;
-    const raised = 1450;
-    const progressPercent = Math.min((raised / goal) * 100, 100);
+    const [donationStats, setDonationStats] = useState({
+        goal: 3000,
+        raised: 1450
+    });
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const res = await fetch(`${apiUrl}/settings`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.stats && data.stats.donationGoal && data.stats.donationRaised !== undefined) {
+                        setDonationStats({
+                            goal: data.stats.donationGoal,
+                            raised: data.stats.donationRaised
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error("Error fetching donation stats:", err);
+            }
+        };
+        fetchStats();
+    }, []);
+
+    const progressPercent = Math.min((donationStats.raised / donationStats.goal) * 100, 100);
 
     const handlePayment = async (amount) => {
         setIsProcessing(true);
@@ -154,8 +175,8 @@ const DonateSection = () => {
 
                                 <div className="donate-progress-container">
                                     <div className="progress-labels">
-                                        <span className="raised">Raised: ₹{raised}</span>
-                                        <span className="goal">Goal: ₹{goal}</span>
+                                        <span className="raised">Raised: ₹{donationStats.raised}</span>
+                                        <span className="goal">Goal: ₹{donationStats.goal}</span>
                                     </div>
                                     <div className="progress-bar-bg">
                                         <div

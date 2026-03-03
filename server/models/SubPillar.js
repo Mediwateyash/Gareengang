@@ -24,6 +24,10 @@ const subPillarSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    description: {
+        type: String,
+        default: ''
+    },
     order: {
         type: Number,
         default: 0

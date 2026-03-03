@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import apiUrl, { API_BASE_URL } from '../config';
 import './Faces.css';
 
 const Faces = () => {
+    const navigate = useNavigate();
     const [faces, setFaces] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -65,7 +67,12 @@ const Faces = () => {
                 <div className={`faces-grid-wrapper ${isExpanded ? 'expanded' : ''} ${!needsExpansion ? 'no-expansion-needed' : ''}`}>
                     <div className="faces-grid">
                         {faces.map((face, index) => (
-                            <div key={face._id} className="face-card">
+                            <div
+                                key={face._id}
+                                className="face-card"
+                                onClick={() => navigate(`/faces/${encodeURIComponent(face.name)}`)}
+                                style={{ cursor: 'pointer' }}
+                            >
                                 <div className="face-image-container">
                                     <img
                                         src={face.imageUrl.startsWith('http') ? face.imageUrl : `${API_BASE_URL}/${face.imageUrl}`}
