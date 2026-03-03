@@ -55,7 +55,6 @@ const AdminMemories = ({ onBack }) => {
             currentPeople.push(name);
             setFormData({ ...formData, peopleText: currentPeople.join(', ') });
         }
-        setShowFacesDropdown(false);
     };
 
     const handleFaceRemove = (name) => {
