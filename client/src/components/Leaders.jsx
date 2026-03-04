@@ -43,15 +43,17 @@ const Leaders = () => {
 
                         return (
                             <div key={item._id} className={`filmstrip-item ${expandedItems[item._id] ? 'expanded-wrapper' : ''}`}>
-                                {item.mediaType === 'video' ? (
-                                    <>
-                                        <video src={srcUrl} className="filmstrip-media" muted loop onMouseOver={e => e.target.play()} onMouseOut={e => e.target.pause()} />
-                                        <div className="video-icon-overlay">▶</div>
-                                    </>
-                                ) : (
-                                    <img src={srcUrl} alt={item.caption} className="filmstrip-media" />
-                                )}
-                                <div className="filmstrip-caption">{item.pillarTarget || 'Action Moment'}</div>
+                                <div className="filmstrip-media-container">
+                                    {item.mediaType === 'video' ? (
+                                        <>
+                                            <video src={srcUrl} className="filmstrip-media" muted loop onMouseOver={e => e.target.play()} onMouseOut={e => e.target.pause()} />
+                                            <div className="video-icon-overlay">▶</div>
+                                        </>
+                                    ) : (
+                                        <img src={srcUrl} alt={item.pillarTarget} className="filmstrip-media" />
+                                    )}
+                                    <div className="filmstrip-caption-overlay">{item.pillarTarget || 'Action Moment'}</div>
+                                </div>
 
                                 {item.caption && (
                                     <div className="pillar-desc-container">
