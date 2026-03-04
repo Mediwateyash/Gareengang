@@ -7,9 +7,8 @@ const AdminSubPillars = ({ onBack }) => {
     const [error, setError] = useState(null);
 
     // Form state
-    const [pillarTarget, setPillarTarget] = useState('President');
+    const [pillarTarget, setPillarTarget] = useState('');
     const [caption, setCaption] = useState('');
-    const [description, setDescription] = useState('');
     const [file, setFile] = useState(null);
     const [editingId, setEditingId] = useState(null);
     const [orderChanged, setOrderChanged] = useState(false);
@@ -44,7 +43,6 @@ const AdminSubPillars = ({ onBack }) => {
         const formData = new FormData();
         formData.append('pillarTarget', pillarTarget);
         formData.append('caption', caption);
-        formData.append('description', description);
         if (file) formData.append('mediaFile', file);
 
         // Automatically set order to the end if adding new
@@ -82,7 +80,6 @@ const AdminSubPillars = ({ onBack }) => {
     const handleEdit = (item) => {
         setPillarTarget(item.pillarTarget);
         setCaption(item.caption);
-        setDescription(item.description || '');
         setEditingId(item._id);
         setFile(null); // File is optional on edit
         window.scrollTo(0, 0);
@@ -106,9 +103,8 @@ const AdminSubPillars = ({ onBack }) => {
     };
 
     const resetForm = () => {
-        setPillarTarget('President');
+        setPillarTarget('');
         setCaption('');
-        setDescription('');
         setFile(null);
         setEditingId(null);
         // Clear file input
@@ -177,30 +173,25 @@ const AdminSubPillars = ({ onBack }) => {
                 <h3>{editingId ? 'Edit Media' : 'Add New Media'}</h3>
                 <form onSubmit={handleSubmit} className="memory-form">
                     <div className="form-group">
-                        <label>Target Pillar</label>
-                        <select
+                        <label>Title</label>
+                        <input
+                            type="text"
                             value={pillarTarget}
                             onChange={(e) => setPillarTarget(e.target.value)}
                             required
+                            placeholder="e.g. Diwate Yash spreading smiles..."
                             style={{ width: '100%', padding: '0.75rem', borderRadius: '4px', border: '1px solid #ccc' }}
-                        >
-                            <option value="President">President (Diwate Yash)</option>
-                            <option value="VP">Vice President (Manjush Farad)</option>
-                        </select>
-                    </div>
-
-                    <div className="form-group">
-                        <label>Caption (e.g. "Collecting Tickets", "Serving Food")</label>
-                        <input type="text" value={caption} onChange={(e) => setCaption(e.target.value)} required />
+                        />
                     </div>
 
                     <div className="form-group full-width">
-                        <label>Description (Optional, longer text)</label>
+                        <label>Caption / Narrative Content</label>
                         <textarea
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
+                            value={caption}
+                            onChange={(e) => setCaption(e.target.value)}
+                            required
                             rows="4"
-                            placeholder="Enter a detailed description about this moment..."
+                            placeholder="Type out the story for this moment..."
                             style={{ width: '100%', padding: '0.75rem', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
                         />
                     </div>
@@ -249,9 +240,7 @@ const AdminSubPillars = ({ onBack }) => {
                             <tr>
                                 <th style={{ width: '40px' }}>≡</th>
                                 <th>Preview</th>
-                                <th>Pillar</th>
-                                <th>Caption</th>
-                                <th>Type</th>
+                                <th>Title</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -283,9 +272,7 @@ const AdminSubPillars = ({ onBack }) => {
                                                     <img src={mediaSrc} alt={item.caption} className="thumb-img" />
                                                 )}
                                             </td>
-                                            <td><strong style={{ color: item.pillarTarget === 'President' ? '#2563eb' : '#059669' }}>{item.pillarTarget}</strong></td>
-                                            <td>{item.caption}</td>
-                                            <td>{item.mediaType.toUpperCase()}</td>
+                                            <td><strong style={{ color: '#2563eb' }}>{item.pillarTarget}</strong></td>
                                             <td>
                                                 <button onClick={() => handleEdit(item)} className="btn-action edit">Edit</button>
                                                 <button onClick={() => handleDelete(item._id)} className="btn-action delete">Delete</button>

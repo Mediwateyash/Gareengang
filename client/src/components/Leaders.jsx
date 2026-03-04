@@ -23,9 +23,6 @@ const Leaders = () => {
         fetchMedia();
     }, []);
 
-    const presidentMedia = mediaItems.filter(m => m.pillarTarget === 'President');
-    const vpMedia = mediaItems.filter(m => m.pillarTarget === 'VP');
-
     const toggleExpand = (id, e) => {
         e.stopPropagation(); // Prevent filmstrip hover issues or other parent events
         setExpandedItems(prev => ({
@@ -54,12 +51,12 @@ const Leaders = () => {
                                 ) : (
                                     <img src={srcUrl} alt={item.caption} className="filmstrip-media" />
                                 )}
-                                <div className="filmstrip-caption">{item.caption}</div>
+                                <div className="filmstrip-caption">{item.pillarTarget || 'Action Moment'}</div>
 
-                                {item.description && (
+                                {item.caption && (
                                     <div className="pillar-desc-container">
                                         <div className={`pillar-desc-text ${!expandedItems[item._id] ? 'collapsed' : ''}`}>
-                                            {item.description}
+                                            {item.caption}
                                         </div>
                                         {!expandedItems[item._id] && <div className="pillar-desc-fade"></div>}
                                         <button
@@ -98,7 +95,6 @@ const Leaders = () => {
                             </div>
                             <span className="note-deco">Leader #1</span>
                         </div>
-                        {renderFilmstrip(presidentMedia)}
                     </div>
 
                     {/* Vice President Column */}
@@ -114,9 +110,13 @@ const Leaders = () => {
                             </div>
                             <span className="note-deco">The VP</span>
                         </div>
-                        {renderFilmstrip(vpMedia)}
                     </div>
 
+                </div>
+
+                {/* Unified Action Moments */}
+                <div style={{ marginTop: '3rem' }}>
+                    {renderFilmstrip(mediaItems)}
                 </div>
             </div>
         </section>

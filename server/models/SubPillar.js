@@ -4,7 +4,6 @@ const subPillarSchema = new mongoose.Schema({
     pillarTarget: {
         type: String,
         required: true,
-        enum: ['President', 'VP'], // To identify whose section it belongs to
     },
     mediaUrl: {
         type: String,
