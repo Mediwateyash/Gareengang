@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import Hero from './components/Hero'
 import About from './components/About'
@@ -27,6 +28,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import AuthModal from './components/AuthModal'
 import WelcomeToast from './components/WelcomeToast'
 import DonationPopup from './components/DonationPopup'
+import ServerLoader from './components/ServerLoader'
 import './index.css'
 
 // ... existing imports ...
@@ -61,46 +63,52 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  const [isServerReady, setIsServerReady] = useState(false);
+
   return (
     <AuthProvider>
-      <Router>
-        <div className="app">
-          <AuthModal />
-          <WelcomeToast />
-          <DonationPopup />
-          <FloatingNav />
-          <Routes>
-            <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<Navigate to="/" replace />} />
-            <Route path="/register" element={<Navigate to="/" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } />
-            <Route path="/memories" element={
-              <ProtectedRoute>
-                <MemoriesTimeline />
-              </ProtectedRoute>
-            } />
-            <Route path="/memories/:id" element={
-              <ProtectedRoute>
-                <MemoryDetail />
-              </ProtectedRoute>
-            } />
-            <Route path="/faces/:name" element={
-              <ProtectedRoute>
-                <MemberMemories />
-              </ProtectedRoute>
-            } />
-            <Route path="/vlogs" element={<Vlogs />} />
-            <Route path="/trips" element={<TripsPage />} />
-            <Route path="/trips/:id" element={<TripDetails />} />
-          </Routes>
-        </div>
-      </Router>
+      {!isServerReady ? (
+        <ServerLoader onReady={() => setIsServerReady(true)} />
+      ) : (
+        <Router>
+          <div className="app">
+            <AuthModal />
+            <WelcomeToast />
+            <DonationPopup />
+            <FloatingNav />
+            <Routes>
+              <Route path="/admin" element={<AdminLogin />} />
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<Navigate to="/" replace />} />
+              <Route path="/register" element={<Navigate to="/" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
+              <Route path="/memories" element={
+                <ProtectedRoute>
+                  <MemoriesTimeline />
+                </ProtectedRoute>
+              } />
+              <Route path="/memories/:id" element={
+                <ProtectedRoute>
+                  <MemoryDetail />
+                </ProtectedRoute>
+              } />
+              <Route path="/faces/:name" element={
+                <ProtectedRoute>
+                  <MemberMemories />
+                </ProtectedRoute>
+              } />
+              <Route path="/vlogs" element={<Vlogs />} />
+              <Route path="/trips" element={<TripsPage />} />
+              <Route path="/trips/:id" element={<TripDetails />} />
+            </Routes>
+          </div>
+        </Router>
+      )}
     </AuthProvider>
   )
 }
