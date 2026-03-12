@@ -3,13 +3,13 @@ import apiUrl from '../config';
 import './ServerLoader.css';
 
 const loadingMessages = [
-    "Waking up the GareebGang servers... 😴",
     "Hold on, data is getting loaded for you! 🚀",
-    "Almost there! Our free server is doing some stretching... 🧘‍♂️",
-    "Still loading? It's not you, our free hosting is just taking a power nap! 🛌",
-    "Processing memories... packing bags... finding tickets... 🎒",
+    "Processing memories... gathering trips... finding photos... 🎒",
+    "Almost there! We have a lot of amazing moments to load... ⏳",
+    "Still loading? It's not you, we're just processing a huge amount of data! 📊",
+    "Hang tight! Organizing our adventures for the best experience... 🏕️",
     "Any second now! Don't leave us hanging! 🥺",
-    "Seriously, almost done... Just putting on shoes... 👟",
+    "Seriously, almost done... Just putting on our shoes... 👟",
 ];
 
 const ServerLoader = ({ onReady }) => {
