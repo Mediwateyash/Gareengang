@@ -26,6 +26,7 @@ import FloatingNav from './components/FloatingNav'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import AuthModal from './components/AuthModal'
 import WelcomeToast from './components/WelcomeToast'
+import DonationPopup from './components/DonationPopup'
 import './index.css'
 
 // ... existing imports ...
@@ -66,6 +67,7 @@ function App() {
         <div className="app">
           <AuthModal />
           <WelcomeToast />
+          <DonationPopup />
           <FloatingNav />
           <Routes>
             <Route path="/admin" element={<AdminLogin />} />

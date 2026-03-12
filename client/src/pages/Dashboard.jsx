@@ -75,8 +75,8 @@ const Dashboard = () => {
 
                         <div className="admin-card" onClick={() => setActiveView('home')}>
                             <div className="icon">🏠</div>
-                            <h3>Home Page Manager</h3>
-                            <p>Feature top content.</p>
+                            <h3>Home & Donations Manager</h3>
+                            <p>Manage stats, donation goals & featured content.</p>
                         </div>
 
                         <div className="admin-card" onClick={() => setActiveView('users')}>
