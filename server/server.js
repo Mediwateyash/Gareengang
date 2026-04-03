@@ -34,6 +34,7 @@ app.use('/api/registrations', require('./routes/registrations')); // Trip Regist
 app.use('/api/trip-categories', require('./routes/tripCategories')); // Trip Categories
 app.use('/api/users', require('./routes/users')); // Generic User Profile data
 app.use('/api/comments', require('./routes/comments')); // Interactive Comments
+app.use('/api/secret-codes', require('./routes/secretCodes')); // Interactive Approval Workflow
 
 const path = require('path');
 // Serve uploaded files statically

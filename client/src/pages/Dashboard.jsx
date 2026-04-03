@@ -10,6 +10,7 @@ import AdminReviews from '../components/AdminReviews'; // Import Reviews Manager
 import AdminSubPillars from '../components/AdminSubPillars'; // Import Pillar Media Manager
 import AdminSocials from '../components/AdminSocials'; // Import Social Links Manager
 import AdminTrips from '../components/AdminTrips'; // Import Trips & Registrations
+import AdminCodes from '../components/AdminCodes'; // Import Interactive Codes
 import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
 
@@ -17,7 +18,7 @@ const Dashboard = () => {
     const { logout, showAuthModal } = useAuth();
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    const [activeView, setActiveView] = useState('menu'); // 'menu', 'memories', 'vlogs', 'users', 'home', 'faces'
+    const [activeView, setActiveView] = useState('menu'); // 'menu', 'memories', 'vlogs', 'users', 'home', 'faces', 'codes'
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -115,10 +116,16 @@ const Dashboard = () => {
                             <p>Manage Instagram, YouTube, and FB links.</p>
                         </div>
 
-                        <div className="admin-card" onClick={() => setActiveView('trips')}>
-                            <div className="icon">⛺</div>
-                            <h3>Trips & Bookings</h3>
-                            <p>Manage trips & Razorpay slot fees.</p>
+                        <div className="admin-card highlight-card" onClick={() => setActiveView('trips')}>
+                            <div className="icon">🗺️</div>
+                            <h3>Trip Bookings</h3>
+                            <p>Manage Trips & Registrations.</p>
+                        </div>
+
+                        <div className="admin-card highlight-card" onClick={() => setActiveView('codes')} style={{background: '#0f172a', color: 'white'}}>
+                            <div className="icon">🤫</div>
+                            <h3>Interactive Codes</h3>
+                            <p>Secret unlocks & approvals.</p>
                         </div>
                     </div>
                 )}
@@ -133,6 +140,12 @@ const Dashboard = () => {
                 {activeView === 'pillarmedia' && <AdminSubPillars onBack={() => setActiveView('menu')} />}
                 {activeView === 'socials' && <AdminSocials onBack={() => setActiveView('menu')} />}
                 {activeView === 'trips' && <AdminTrips onBack={() => setActiveView('menu')} />}
+                {activeView === 'codes' && (
+                    <div className="glass-panel">
+                        <button className="btn-back-dash" onClick={() => setActiveView('menu')}>← Back to Main Menu</button>
+                        <AdminCodes />
+                    </div>
+                )}
             </main>
         </div>
     );
