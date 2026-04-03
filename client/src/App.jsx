@@ -30,6 +30,7 @@ import WelcomeToast from './components/WelcomeToast'
 import DonationPopup from './components/DonationPopup'
 import ServerLoader from './components/ServerLoader'
 import SecretUnlock from './pages/SecretUnlock'
+import AdvanceRewards from './pages/AdvanceRewards'
 import './index.css'
 
 // ... existing imports ...
@@ -80,6 +81,7 @@ function App() {
             <Routes>
               <Route path="/admin" element={<AdminLogin />} />
               <Route path="/unlock" element={<SecretUnlock />} />
+              <Route path="/advancerewards" element={<AdvanceRewards />} />
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Navigate to="/" replace />} />
               <Route path="/register" element={<Navigate to="/" replace />} />
