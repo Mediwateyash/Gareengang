@@ -5,6 +5,7 @@ import Confetti from 'react-confetti';
 const AdvanceRewards = () => {
     const [timeLeft, setTimeLeft] = useState(null);
     const [isUnlocked, setIsUnlocked] = useState(false);
+    const [showRewardDetails, setShowRewardDetails] = useState(false);
     const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
     
     // 3D Parallax Engine State
@@ -141,9 +142,30 @@ const AdvanceRewards = () => {
                         {isUnlocked ? (
                             <div className="reward-treasure">
                                 <h3 className="treasure-title">🎁 YOUR REWARD</h3>
-                                <div className="golden-ticket">
+                                <div className="golden-ticket" onClick={() => setShowRewardDetails(true)}>
                                     <div className="ticket-borders"></div>
-                                    💸 Exclusive Early Bird Discount Applied
+                                    {!showRewardDetails ? (
+                                        <>
+                                            💸 Exclusive Early Bird Discount Applied<br/>
+                                            <span className="click-to-reveal">Click here to view your reward</span>
+                                        </>
+                                    ) : (
+                                        <div className="detailed-reward-box">
+                                            <div className="reward-tier">
+                                                <div className="tier-name">Full Payment Discount</div>
+                                                <div className="tier-price">
+                                                    <span className="price-strike">₹2000</span> <span className="arrow-glow">→</span> <strong className="price-final">₹1970</strong> <span className="tick-mark">✅</span>
+                                                </div>
+                                            </div>
+                                            <div className="tier-divider"></div>
+                                            <div className="reward-tier">
+                                                <div className="tier-name">Advance Payment Discount</div>
+                                                <div className="tier-price">
+                                                    <span className="price-strike">₹2000</span> <span className="arrow-glow">→</span> <strong className="price-final">₹1785</strong> <span className="tick-mark">✅</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                                 <p className="treasure-desc">🎉 This special offer is unlocked only for selected participants like you</p>
                             </div>
